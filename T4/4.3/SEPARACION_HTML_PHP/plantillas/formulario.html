@@ -1,0 +1,25 @@
+<h1>Encuesta</h1>
+<form action = "{scriptUrl}" method = "post">
+    <fieldset>
+        <label for="nombre" {validacionNombreUsuario}>Introduce tu nombre * </label>
+        <input type = "text" name = "nombreUsuario" id="nombreUsuario" value="{valorNombreUsuario}">
+        <label for="apellidos" {validacionApellidos}>y tus apellidos *</label>
+        <input type = "text" name = "apellidos" id="apellidos" value="{valorApellidos}" ><br><br>
+        <label for="tipoMusica">¿Qué tipo de música te gusta escuchar?</label>
+        <select name="tipoMusica[]" id="tipoMusica" size="4" multiple="multiple">
+            <option value="Rock"{tipoMusica Rock}>Rock </option>
+            <option value="Pop"{tipoMusica Pop}>Pop </option>
+            <option value="Regee"{tipoMusica Regee}>Regee </option>
+            <option value="Clasica"{tipoMusica Clasica}>Clásica </option>
+        </select><br><br>
+        ¿Que tipo de libros lees? <br>
+        <label for="novelaNegra">Novela Negra</label>
+        <input type="checkbox" name="tipoLibros[]" id="novelaNegra"
+               value="Novela Negra"{tipoLibros novelaNegra}><br>
+        <label for="cienciaFiccion">Ciencia Ficción</label>
+        <input type="checkbox" name="tipoLibros[]" id="cienciaFiccion"
+               value="Ciencia Ficcion" {tipoLibros cienciaFiccion}><br>
+        <label for="fantasia">Fantasía</label>
+        <input type="checkbox" name="tipoLibros[]" id="fantasia" value="Fantasia" {tipoLibros fantasia}><br><br>
+        <input type = "submit" name="enviar" value="Enviar">
+    </fieldset>

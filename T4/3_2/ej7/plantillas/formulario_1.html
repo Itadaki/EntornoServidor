@@ -1,0 +1,19 @@
+<h1>Solicitud de información: paso 1</h1>
+{error}
+<form action = "{scriptUrl}" method = "post">
+    <form method="POST" action="" enctype="multipart/form-data">
+                <span {validacionNombre}>Nombre*</span>
+                <input type="text" name="nombre" value="{valorNombre}" /> 
+                <span {validacionApellidos}>Apellidos* </span>
+                <input type="text" name="apellidos" value="{valorApellidos}" /><br>
+                <span {validacionDireccion}>Direccion </span>
+                <input type="text" name="direccion" value="{valorDireccion}" /> 
+                <span {validacionTelefono}>Telf </span>
+                <input type="text" name="telefono" value="{valorTelefono}" /><br>
+                <span {validacionEmail}>eMail </span>
+                <input type="text" name="email" value="{valorEmail}" /><br>
+                Foto: <input type="file" name="foto" /><br>
+                <input type="submit" value="Next >" name="toStep2" />
+                {ocultosCiudades}
+                {ocultosInformacion}
+            </form>

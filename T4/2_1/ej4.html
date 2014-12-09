@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<!--
+Autor = Diego Rodríguez Suárez-Bustillo
+Fecha = 06-oct-2014
+Licencia = default 
+Version = 1.0
+Descripcion = Del pdf 'Ejercicio1.pdf'
+<!--
+
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<html>
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <form method="POST" action="ej4.php">
+            Escribe tu nombre: 
+            <input type="text" name="nombre" value="Diego" /><br>
+            Escribe tus apellidos: 
+            <input type="text" name="apellidos" value="Rodríguez Suárez-Bustillo" /><br>
+            Indica el número de habitaciones de tu vivienda:<br>
+            <input type="radio" name="habitaciones" value="Una" />Una<br>
+            <input type="radio" name="habitaciones" value="Dos" checked="checked" />Dos<br>
+            <input type="radio" name="habitaciones" value="Tres" />Tres<br>
+            <input type="radio" name="habitaciones" value="Cuatro o más" />Cuatro o más<br>
+            ¿Qué medio de transporte utilizas?<br>
+            <input type="checkbox" name="medios[]" value="Bicicleta" />Bicicleta<br>
+            <input type="checkbox" name="medios[]" value="Autobus" checked />Autobus<br>
+            <input type="checkbox" name="medios[]" value="Particular" />Coche particular<br>
+            <input type="checkbox" name="medios[]" value="Tren" />Tren<br>
+            <input type="submit" value="Enviar" />
+            <input type="reset" value="Borrar" />
+        </form>
+    </body>
+</html>

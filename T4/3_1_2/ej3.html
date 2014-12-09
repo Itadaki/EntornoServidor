@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<!--
+Autor = Diego Rodríguez Suárez-Bustillo
+Fecha = 06-oct-2014
+Licencia = default 
+Version = 1.0
+Descripcion = 
+<!--
+
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<html>
+    <head>
+        <title>Cuestionario</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <form method="POST" action="ej3.php">
+            <h1>Cuestionario</h1>
+            Escribe tu nombre 
+            <input type="text" name="nombre" value="Diego" /><br>
+            Escribe tu clave
+            <input type="password" name="pass" value="psswd" /><br>
+            Elige tu color de coche favorito<br>
+            <input type="radio" name="color" value="Rojo" />Rojo<br>
+            <input type="radio" name="color" value="Verde" checked />Verde<br>
+            <input type="radio" name="color" value="Azul" />Azul<br>
+            Elige los extras<br>
+            <input type="checkbox" name="aa" value="true" />Aire Acondicionado<br>
+            <input type="checkbox" name="piel" value="true" checked/>Tapicería de piel<br>
+            <input type="checkbox" name="aluminio" value="true" />Llantas de aluminio<br>
+            ¿Cual es el precio máximo<br>que estas dispuesto a pagar?<br>
+            <select name="precio">
+                <option>Menos de 6.000 euros</option>
+                <option>6.001 - 8.000 euros</option>
+                <option selected>8.001 - 10.000 euros</option>
+                <option>10.001 - 12.000 euros</option>
+                <option>12.001 - 14.000 euros</option>
+                <option>Más de 14.000 euros</option>
+            </select><br>
+            Comentarios:<br>
+            <textarea name="comentarios" rows="4" cols="20">O Ferrari o nada</textarea><br>
+
+            <input type="submit" value="Enviar" />
+            <input type="reset" value="Borrar" />
+        </form>
+    </body>
+</html>

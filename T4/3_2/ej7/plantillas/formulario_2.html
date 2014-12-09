@@ -1,0 +1,21 @@
+<h1>Solicitud de información: paso 1</h1>
+<form method="POST" action="">
+    <select name="ciudades[]" size="6" multiple="multiple">
+        <option {ciudades Roma}>Roma</option>
+        <option {ciudades Paris}>París</option>
+        <option value="NuevaYork" {ciudades NuevaYork}>Nueva York</option>
+        <option {ciudades Londres}>Londres</option>
+        <option {ciudades Berlin}>Berlin</option>
+        <option {ciudades Atenas}>Atenas</option>
+    </select><br>
+    correo postal <input type="checkbox" name="info[]" value="CorreoPostal" {info CorreoPostal}/><br>
+    email <input type="checkbox" name="info[]" value="Email" {info Email}/><br>
+    <input type="submit" value="< Back" name="toStep1" />
+    <input type="submit" value="Next >" name="toEnd" />
+    <input type="hidden" name="nombre" value="{valorNombre}" />
+    <input type="hidden" name="apellidos" value="{valorApellidos}" />
+    <input type="hidden" name="direccion" value="{valorDireccion}" />
+    <input type="hidden" name="telefono" value="{valorTelefono}" />
+    <input type="hidden" name="email" value="{valorEmail}" />
+    <!--<input type="hidden" name="foto" value="{valorFoto}" />-->
+</form>
