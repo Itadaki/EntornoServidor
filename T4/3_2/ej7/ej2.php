@@ -59,14 +59,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             ?>
             <h1>Solicitud información: paso 1</h1>
             <?php
-            if ($campospendientes or $message <> "correcto") {
+            if ($campospendientes or $message != "correcto") {
                 if ($campospendientes) {
                     ?>
                     <p class="error">Hubo algunos problemas con el formulario que presentaste.
                         Por favor, completa los campos en negrita de abajo y haz clic en Enviar
                         para volver a enviar el formulario.</p> <?php
                 }
-                if ($message <> 'correcto') {
+                if ($message != 'correcto') {
                     ?>
                     <p class="error">Hubo algunos problemas con la foto</p>
                     <?php
@@ -173,7 +173,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         $message = "Ponte en contacto con el administrador del servidor para obtener ayuda.";
                 }
             }
-            if ($campospendientes or $message <> 'correcto') {
+            if ($campospendientes or $message != 'correcto') {
                 displaypaso1($campospendientes, $message);
             } else {
                 displaypaso2();
