@@ -1,0 +1,14 @@
+<h2>A cambio sólo pedimos que nos facilites tu email y dos imágenes de cine que te gusten</h2>
+{error}
+<form method="POST" action="" enctype="multipart/form-data">
+    <span {validacionNombre}>Nombre*</span> 
+    <input type="text" name="nombre" value="{valorNombre}" /> 
+    <span {validacionEdad}>Edad*</span> 
+    <input type="text" name="edad" value="{valorEdad}" /><br>
+    <span {validacionEmail}>Email*</span> 
+    <input type="text" name="email" value="{valorEmail}" /><br>
+    Foto nº1 <input type="file" name="foto1" /><br>
+    Foto nº2 <input type="file" name="foto2" /><br>
+    <input type="hidden" name="genero" value="{valorGenero}" />
+    <input type="submit" value="Siguiente >" name="alPaso2"/>
+</form>

@@ -1,0 +1,14 @@
+<form method="POST" action="{scriptUrl}">
+    ¿Cuál es tu género preferido? <select name="genero">
+        <option value="western" {genero western}>western</option>
+        <option value="comedia" {genero comedia}>comedia</option>
+        <option value="drama" {genero drama}>drama</option>
+    </select>
+    <input type="hidden" name="nombre" value="{valorNombre}" /> 
+    <input type="hidden" name="edad" value="{valorEdad}" /><br>
+    <input type="hidden" name="email" value="{valorEmail}" /><br>
+    <input type="hidden" name="foto1" value="{valorFoto1}" /><br>
+    <input type="hidden" name="foto2" value="{valorFoto2}" /><br>
+    <input type="submit" value="< Anterior" name="alPaso1" />
+    <input type="submit" value="Siguiente >" name="alFinal"/>
+</form>
