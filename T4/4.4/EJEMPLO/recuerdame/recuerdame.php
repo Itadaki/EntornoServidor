@@ -6,7 +6,7 @@ if (isset($_POST["enviarInfo"])) {
 } elseif (isset($_GET["accion"]) and $_GET["accion"] == "olvida") {
     olvidarInfo();
 } else {
-    visualizarPagina();
+    verFormulario();
 }
 
 function guardarInfo() {
@@ -26,7 +26,7 @@ function olvidarInfo() {
     header("Location: recuerdame.php");
 }
 
-function visualizarPagina() {
+function verFormulario() {
     $nombre = (isset($_COOKIE["nombre"])) ? $_COOKIE["nombre"] : "";
     $localizacion = (isset($_COOKIE["localizacion"])) ? $_COOKIE["localizacion"] : "";
     if ($nombre and $localizacion) {

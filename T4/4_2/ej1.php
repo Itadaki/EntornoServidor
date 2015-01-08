@@ -11,7 +11,7 @@
     } elseif (isset($_GET["accion"]) and $_GET["accion"] == "olvidar") {
         olvidarInfo();
     } else {
-        visualizarPagina();
+        verFormulario();
     }
 
     function guardarInfo() {
@@ -44,7 +44,7 @@
         header('Location: ej1.php');
     }
 
-    function visualizarPagina() {
+    function verFormulario() {
         ?>
         <form method="POST" action="">
             Modelo <input type="text" name="modelo" value="" /><br>
