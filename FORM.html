@@ -12,10 +12,21 @@ and open the template in the editor.
     </head>
     <body>
         <form method="POST" action="">
-            Nombre: <input type="text" name="nombre" value="" required=""/><br>
-            <input type="checkbox" name="velociraptor" value="" checked="checked" /><br>
-            <input type="checkbox" name="" value="" /><br>
-            <input type="submit" value="Enviar" name="send" />
+            Nombre <input type="text" name="nombre" value="" /><br>
+            Apellidos <input type="text" name="apellidos" value="" /><br>
+            Calorias a quemar:<br>
+            <input type="radio" name="calorias" value="0" checked /> 0<br>
+            <input type="radio" name="calorias" value="50" /> 50<br>
+            <input type="radio" name="calorias" value="100" /> 100<br>
+            <input type="radio" name="calorias" value="101" /> +100<br>
+            Transporte<br>
+            <select name="transporte">
+                <option>Litera romana</option>
+                <option>Palanquin</option>
+                <option>Bici-taxi</option>
+                <option>Limusina</option>
+            </select><br>
+            <input type="submit" value="Enviar" name="enviar" />
         </form>
 
     </body>
