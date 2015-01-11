@@ -41,7 +41,8 @@
  */
 
 /*NO FUNCIONA Y ES POR ALGUN TEMA DE PERMISOS PORQUE HACERLO EN ESCRITORIO SI DEJA*/
-$nombre_archivo = 'C:\Users\Usuario\Desktop\archivo.txt';
+/*QUIZA ES PORQUE HAY QUE CREAR EL ARCHIVO EN LA CARPETA DEL WAMP*/
+$nombre_archivo = 'archivo.txt';
 $contenido = "Añade esto al archivo\n";
 
 // Primero vamos a asegurarnos de que el archivo existe y es escribible.
@@ -50,7 +51,7 @@ if (is_writable($nombre_archivo)) {
     // En nuestro ejemplo estamos abriendo $nombre_archivo en modo de adición.
     // El puntero al archivo está al final del archivo
     // donde irá $contenido cuando usemos fwrite() sobre él.
-    if (!$gestor = fopen($nombre_archivo, 'a')) {
+    if (!$gestor = fopen($nombre_archivo, 'w')) {
         echo "No se puede abrir el archivo ($nombre_archivo)<br>";
         exit;
     }
