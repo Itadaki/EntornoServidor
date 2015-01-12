@@ -1,0 +1,13 @@
+<h2>Editando {nomFich}</h2>
+<!--hay que acostubrarse a poner el fichero en el action porque si no lo ponemos, por defecto
+se establecen las variables que se establecen con la última llamada. por ejemplo: index.php?nomFich=fich1 -->
+<form action="index.php" method="post">
+    <div style="width: 40em;">
+        <input type="hidden" name="nomFich" value="{nomFichFiltrado}" />
+        <textarea name="contenidosFich" id="contenidosFich" rows="20" cols="80" style="width: 100%;">{contenidoFich}</textarea>
+        <div style="clear: both;">
+            <input type="submit" name="salvarFich" value="Salvar Fichero" >
+            <input type="submit" name="cancelar" value="cancelar" style="margin-right: 20px;" >
+        </div>
+    </div>
+</form>
