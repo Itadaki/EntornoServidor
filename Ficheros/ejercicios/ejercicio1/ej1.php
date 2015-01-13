@@ -49,13 +49,26 @@ echo fgets(fopen("fich1.txt", "r"));
  * “Esto se sobreescribe” se escriba al principio del fichero sobreescribiendo 
  * el contenido del fichero.*/
 $indicador1 = fopen("fich1.txt", "r+");
-$frase = "Esto se sobreescribe";
-fwrite($indicador1, $frase, 20);
-echo "<h2>Este es el resultado después del segundo fwrite</h2>";
+fwrite($indicador1, "Esto se sobreescribe");
 fclose($indicador1);
+echo "<h2>Este es el resultado después del segundo fwrite</h2>";
 echo fgets(fopen("fich1.txt", "r"));
 
 /*5 Abre el fichero de forma que al añadir la frase: 
  * "Esto se añadirá al final", que añadirá al final del fichero.*/
-
+$indicador2 = fopen("fich1.txt", "a");
+fwrite($indicador2, "Esto se añade al final");
+fclose($indicador2);
 echo "<h2>Este es el resultado después del tercer fwrite</h2>";
+echo fgets(fopen("fich1.txt", "r")).'<br>';
+
+/*6. Abre el fichero, lee el primer carácter del fichero y visualízalo*/
+$indicador3 = fopen("fich1.txt", "r");
+for ($i = 0; $i < 3; $i++) {
+    echo "Caracter número $i: ".fgetc($indicador3).'<br>';
+}
+fclose($indicador3);
+
+/*11. Abre el fichero y visualiza todo el contenido.*/
+$indicador4 = fopen("fich1.txt", "r");
+readfile("fich1.txt");
