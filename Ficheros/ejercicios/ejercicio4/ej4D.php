@@ -25,7 +25,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 displayDatos();
 
 function displayDatos() {
@@ -51,7 +50,20 @@ function recorrer($path = '.') {
         }
     }
     sort($files);
+    
+    $archivo = fopen("lista.txt", "w+");
     foreach ($files as $value) {
-        echo '<li>' . $value . '</li>';
+        fwrite($archivo, $value . PHP_EOL);
     }
+    rewind($archivo);
+    
+    while($linea = fgets($archivo)){
+        if(is_dir(rtrim($path.'/'.$linea, PHP_EOL))){
+            echo "<img src='./dir.png' width='10'>";
+        } else {
+            echo "<img src='./file.png' width='10'>";
+        }
+        echo "$linea</br>";
+    }
+    fclose($archivo);
 }

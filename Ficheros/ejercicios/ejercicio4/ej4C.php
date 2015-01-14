@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Autor = Diego Rodríguez Suárez-Bustillo
  * Fecha = 14-ene-2015
@@ -24,23 +25,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$dirPath = ".";
-if (!($indicador = opendir($dirPath))) {
-    die("No puede abrirse el directorio");
-}
-?>
-<h1><?php echo $dirPath ?> contiene los siguientes ficheros y carpetas:</h1>
-<ul>
-    <?php
-    $entradas = array();
-    while ($fichero = readdir($indicador)) {
-        $entradas[] = $fichero;
+
+displayDatos();
+
+function displayDatos() {
+    if (isset($_GET['path'])) {
+        if (is_dir($_GET['path'])) {
+            recorrer($_GET['path']);
+        }
+    } else {
+        recorrer();
     }
-    closedir($indicador);
-    sort($entradas);
-    foreach ($entradas as $fichero) {
-        if ($fichero != "." && $fichero != "..") {
-            echo "<li>$fichero</li>";
+}
+
+function recorrer($path = '.') {
+    echo "<h1>Contenido del directorio '$path'</h1>";
+    $dir = opendir($path);
+    $files = array();
+    while (false !== ($file = readdir($dir))) {
+        if ($file != "." && $file != "..") {
+            if (is_dir($path.'/'.$file)) {
+                $file .= "/";
+            }
+            $files[] = $file;
         }
     }
-    ?>
+    sort($files);
+    
+    $archivo = fopen("lista.txt", "a+");
+    foreach ($files as $value) {
+        fwrite($archivo, $value . PHP_EOL);
+    }
+    fwrite($archivo,PHP_EOL);
+    rewind($archivo);
+    
+    while($linea = fgets($archivo)){
+        echo "<li>$linea</li>";
+    }
+    fclose($archivo);
+}

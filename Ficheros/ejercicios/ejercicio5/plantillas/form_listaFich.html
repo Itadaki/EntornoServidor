@@ -1,0 +1,21 @@
+<h2>Selecciona un fichero para editar:</h2>
+{mensaje}
+<table cellspacing="0" border="0" style="width:40em;border:1px solid #666;">
+    <tr>
+        <th>Nombre Fichero</th>
+        <th>Tamaño (bytes)</th>
+        <th>Última modificación</th>
+    </tr>
+    {listaFich}
+</table>
+<h2>...o crea un nuevo fichero:</h2>
+<form action="" method="post">
+    <div style="width: 20em;">
+        <label for="nomFich">Nombre de Fichero</label>
+        <div style="float: right; width: 7%; margin-top: 0.7em;">.txt</div>
+        <input type="text" name="nomFich" id="nomFich" style="width: 50%;" value="" >
+        <div style="clear: both;">
+            <input type="submit" name="crearFich" value="Crear Fichero" >
+        </div>
+    </div>
+</form>
