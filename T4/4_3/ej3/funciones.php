@@ -2,21 +2,19 @@
 
 function login() {
     $usuarios = array(
-    array("user"=>"diego", "pass"=>"123"),
-    array("user"=>"luis", "pass"=>"321"),
-    array("user"=>"pepe", "pass"=>"213")
+    "diego"=>"123",
+    "luis"=>"321",
+    "pepe"=>"213"
 );
     if (isset($_POST["username"]) and isset($_POST["password"])) {
-//        foreach ($usuarios as $login_data) {
-//            if (in_array($_POST["username"], $login_data)){
-//                $_SESSION["username"] = $_POST["username"];
-//                header("Location: login.php");
-//            }
-//        }
-        if ($_POST["username"] == USERNAME and $_POST["password"] == PASSWORD) {
-            $_SESSION["username"] = USERNAME;
-            session_write_close();
-            header("Location: login.php");
+        if(isset($usuarios[$_POST['username']])){
+            if ($usuarios[$_POST['username']] == $_POST['password']){
+                $_SESSION["username"] = $_POST['username'];
+                session_write_close();
+                header("Location: login.php");
+            } else {
+                displayForm("Perdón, usuario/password no existe. Por favor inténtelo de nuevo.");
+            }
         } else {
             displayForm("Perdón, usuario/password no existe. Por favor inténtelo de nuevo.");
         }

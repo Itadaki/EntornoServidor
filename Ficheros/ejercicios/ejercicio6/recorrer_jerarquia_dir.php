@@ -11,10 +11,10 @@
     <body>
         <h1>Mostrar el contenido de un directorio</h1>
         <?php
-        if(isset($_GET['path']) && is_dir($_GET['path'])){
+        if (isset($_GET['path']) && is_dir($_GET['path'])) {
             $dirPath = $_GET['path'];
         } else {
-        $dirPath = ".";
+            $dirPath = ".";
         }
 
         /**
@@ -46,7 +46,7 @@
             foreach ($files as $file) {
                 echo "<li>$file</li>";
             }
-            
+
             //Busca en la lista aquel que tena / en el nombre y le aplica recursividad
             foreach ($files as $file) {
                 if (substr($file, -1) == "/") {
