@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!--
+    Autor=Laura Lozano Calvo
+    Fecha=30-ene-2014
+    Licencia=GPL v3
+    Versión=1.0
+    Descripción= Al pulsar un botón se realiza una petición asíncrona con AJAX para obetner una fecha y el resultado es mostrado como text de un div
+-->
+<html>
+    <head>
+        <title>Ejemplo 3a</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script>
+            var xhr;
+            function enviarPeticionAJAX() {
+                document.getElementById('boton').disabled = true;
+                xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = gestionarRespuesta;
+                xhr.open('GET', 'validaDatos1.php', true);
+                xhr.send(null);
+            }
+            function gestionarRespuesta(evento) {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    document.getElementById('encabezados').innerHTML = xhr.getAllResponseHeaders();
+                    document.getElementById('contenido').innerHTML = xhr.responseText;
+                    document.getElementById('boton').disabled = false;
+                }
+            }
+        </script>
+
+    </head>
+    <body>
+        <input id='boton' type='button' onclick='enviarPeticionAJAX();' value="Enviar petición AJAX"/>
+        <h1>Encabezados respuesta</h1>
+        <div id='encabezados'></div>
+        <h1>Contenido respuesta</h1>
+        <div id='contenido'></div>	
+
+    </body>
+</html>

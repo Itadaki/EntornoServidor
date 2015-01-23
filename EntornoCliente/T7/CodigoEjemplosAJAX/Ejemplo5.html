@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<!--
+    Autor=Laura Lozano Calvo
+    Fecha=30-ene-2014
+    Licencia=GPL v3
+    Versión=1.0
+    Descripción= Ejemplo de envio y recepción de datos al servidor en formato XML utilizando AJAX
+-->
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+
+
+            var READY_STATE_COMPLETE = 4;
+            var peticion_http = null;
+            //Función para obtener la instancia del objeto XMLHttpRequest
+            function inicializa_xhr() {
+                if (window.XMLHttpRequest) {
+                    return new XMLHttpRequest();
+                }
+                else if (window.ActiveXObject) {
+                    return new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+
+            //Función de escapado para carácteres especiales
+            /*function escaparXML(cadena) {
+                if (typeof cadena !== 'string') {
+                    return '';
+                }
+                ;
+                cadena = cadena.replace('&', '&amp;')
+                        .replace('<', '&lt;')
+                        .replace('>', '&gt;')
+                        .replace('"', '&quot;');
+                return cadena;
+            }*/
+
+            /*
+             * la función crea_xml() que se encarga de construir el documento XML 
+             * que contiene los parámetros enviados al servidor
+             * El código de la función anterior emplea el carácter \ en el cierre de todas las etiquetas XML. 
+             * El motivo es que las etiquetas de cierre XML y HTML (al contrario que las etiquetas de apertura) 
+             * se interpretan en el mismo lugar en el que se encuentran, por lo que si no se incluyen esos caracteres \ 
+             * el código no validaría siguiendo el estándar XHTML de forma estricta.
+             */
+            function crea_xml() {
+                var fecha = document.getElementById("fecha_nacimiento");
+                var cp = document.getElementById("codigo_postal");
+                var telefono = document.getElementById("telefono");
+
+                var xml = "<?xml version='1.0' encoding='UTF-8' ?> <parametros>";
+                xml = xml + "<fecha_nacimiento>" + fecha.value + "<\/fecha_nacimiento>";
+                xml = xml + "<codigo_postal>" + cp.value + "<\/codigo_postal>";
+                xml = xml + "<telefono>" + telefono.value + "<\/telefono>";
+                xml = xml + "<\/parametros>";
+                return xml;
+            }
+            function valida() {
+                peticion_http = inicializa_xhr();
+                if (peticion_http) {
+                    peticion_http.onreadystatechange = procesaRespuesta;
+                    peticion_http.open("POST", "validaDatos2.php", true);
+                    var parametros_xml = "xml=" + crea_xml();
+                    peticion_http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    /*
+                     * El método send() del objeto XMLHttpRequest permite el envío de una cadena de texto y 
+                     * de un documento XML. Sin embargo, en el ejemplo anterior se ha optado por una solución intermedia: 
+                     * una cadena de texto que representa un documento XML. 
+                     */
+                    peticion_http.send(parametros_xml);
+                }
+            }
+
+            /*
+             * se modifica la respuesta del servidor para que no sea un texto sencillo, 
+             * sino que la respuesta esté definida mediante un documento XML:
+             
+             <respuesta>
+             <mensaje>...</mensaje>
+             <parametros>
+             <telefono>...</telefono>
+             <codigo_postal>...</codigo_postal>
+             <fecha_nacimiento>...</fecha_nacimiento>
+             </parametros>
+             </respuesta>
+             
+             La respuesta del servidor incluye un mensaje sobre el éxito o fracaso de la operación de validación 
+             de los parámetros y además incluye la lista completa de parámetros enviados al servidor
+             */
+            function procesaRespuesta() {
+                /*
+                 * Hasta ahora, siempre se utilizaba la propiedad responseText, 
+                 * que devuelve el texto simple que incluye la respuesta del servidor. 
+                 * Cuando se procesan respuestas en formato XML, se debe utilizar la propiedad responseXML
+                 */
+                if (peticion_http.readyState == READY_STATE_COMPLETE) {
+                    if (peticion_http.status == 200) {
+                        var documento_xml = peticion_http.responseXML;
+                        var root = documento_xml.getElementsByTagName("respuesta")[0];
+
+                        var mensajes = root.getElementsByTagName("mensaje")[0];
+                        var mensaje = mensajes.firstChild.nodeValue;
+
+                        var parametros = root.getElementsByTagName("parametros")[0];
+
+                        var telefono = parametros.getElementsByTagName("telefono")[0].firstChild.nodeValue;
+                        var fecha_nacimiento = parametros.getElementsByTagName("fecha_nacimiento")[0].firstChild.nodeValue;
+                        var codigo_postal = parametros.getElementsByTagName("codigo_postal")[0].firstChild.nodeValue;
+
+                        document.getElementById("respuesta").innerHTML = mensaje + "<br/>" + "Fecha nacimiento = " + fecha_nacimiento + "<br/>" + "Codigo postal = " + codigo_postal + "<br/>" + "Telefono = " + telefono;
+                    }
+                }
+            }
+
+
+
+
+        </script>
+    </head>
+    <body>
+
+
+        <form>
+            <label for="fecha_nacimiento">Fecha de nacimiento:</label>
+            <input type="text" id="fecha_nacimiento" name="fecha_nacimiento" /><br/>
+
+            <label for="codigo_postal">Codigo postal:</label>
+            <input type="text" id="codigo_postal" name="codigo_postal" /><br/>
+
+            <label for="telefono">Telefono:</label>
+            <input type="text" id="telefono" name="telefono" /><br/>
+
+            <input type="button" value="Validar datos" onclick="valida()"/>
+        </form>
+
+        <div id="respuesta"></div>
+
+
+    </body>
+</html>

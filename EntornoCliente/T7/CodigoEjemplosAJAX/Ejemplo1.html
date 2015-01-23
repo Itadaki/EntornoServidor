@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+<!--
+    Autor=Laura Lozano Calvo
+    Fecha=30-ene-2014
+    Licencia=GPL v3
+    Versión=1.0
+    Descripción= Objeto XMLHTTPRequest
+-->
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            var httpRequest;
+            //No soportado en versiones 5.5 y 6 de IE
+            if (window.XMLHttpRequest){
+                httpRequest=new XMLHttpRequest();
+            }else if(window.ActiveXObject){
+                httpRequest=new ActiveXObject("Microsoft.XMLHTTP");
+            }
+        </script>
+    </head>
+    <body>
+        <div>TODO write content</div>
+    </body>
+</html>

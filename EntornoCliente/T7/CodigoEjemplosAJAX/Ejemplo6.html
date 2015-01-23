@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<!--
+    Autor=Laura Lozano Calvo
+    Fecha=30-ene-2014
+    Licencia=GPL v3
+    Versión=1.0
+    Descripción= Ejemplo de envio y recepción de datos al servidor en formato JSON utilizando AJAX
+-->
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+        <!-- Para generar datos json y enviarlos al servidor, desacargamos la libreria de www.json.org e 
+        incluimos esta referencia, Una vez referenciada la librería, se emplea el método stringify 
+        para realizar la transformación:
+
+        var objeto_json = JSON.stringify(objeto);-->
+        <!--<script type="text/javascript" src="json.js"></script>-->
+
+
+        <script type="text/javascript">
+            
+
+            var READY_STATE_COMPLETE=4;
+            var peticion_http = null;
+            //Función para obtener la instancia del objeto XMLHttpRequest
+            function inicializa_xhr() {
+                if(window.XMLHttpRequest) {
+                    return new XMLHttpRequest(); 
+                }
+                else if(window.ActiveXObject) {
+                    return new ActiveXObject("Microsoft.XMLHTTP");
+                } 
+            }
+                
+
+            function crea_json() {
+                var fecha = document.getElementById("fecha_nacimiento").value;
+                var cp = document.getElementById("codigo_postal").value;
+                var telefono = document.getElementById("telefono").value;
+                
+                var JSONObject = new Object();
+                JSONObject.fecha_nacimiento = fecha;
+                JSONObject.codigo_postal =cp;
+                JSONObject.telefono = telefono;
+                var objeto_json = JSON.stringify(JSONObject);
+                return objeto_json;
+                
+            }
+            function valida() {
+                peticion_http = inicializa_xhr();
+                if(peticion_http) {
+                    peticion_http.onreadystatechange = procesaRespuesta;
+                    peticion_http.open("POST", "validaDatos3.php", true);
+                    var parametros_json = "json=" + crea_json();
+                    peticion_http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    peticion_http.send(parametros_json);
+                }
+            }
+
+            function procesaRespuesta() {
+                //La respuesta del servidor ahora tiene este formato
+                /*
+                        { 
+                        mensaje: "...",
+                        parametros: {telefono: "...", codigo_postal: "...", fecha_nacimiento: "..." }
+                        }
+                 */
+                if(peticion_http .readyState == READY_STATE_COMPLETE) {
+                    if(peticion_http .status == 200) {
+                        //La respuesta JSON del servidor se obtiene mediante la propiedad responseText
+                        var respuesta_json = peticion_http .responseText;
+                        alert(respuesta_json);
+                        /*
+                         * Para trabajar con el código JSON devuelto, se debe transformar esa cadena de texto en un objeto JSON.
+                         *  La forma más sencilla de realizar esa conversión es mediante la función eval(), 
+                         *  en la que deben añadirse paréntesis al principio y al final para realizar la evaluación 
+                         *  de forma correcta
+                         */
+                        
+                        var objeto_json = eval("("+respuesta_json+")");
+                        
+                        var mensaje = objeto_json.mensaje;
+                        /*
+                         *el objeto JSON ya permite acceder a sus métodos y propiedades mediante 
+                         *la notación de puntos tradicional. 
+                         *Comparado con las respuestas XML, este procedimiento permite acceder 
+                         *a la información devuelta por el servidor de forma mucho más simple
+                         */
+                        var telefono = objeto_json.parametros.telefono;
+                        var fecha_nacimiento = objeto_json.parametros.fecha_nacimiento;
+                        var codigo_postal = objeto_json.parametros.codigo_postal;
+ 
+                        document.getElementById("respuesta").innerHTML = mensaje + "<br>" + "Fecha nacimiento = " + fecha_nacimiento + "<br>" + "Codigo postal = " + codigo_postal + "<br>" + "Telefono = " + telefono;
+                    }
+                }
+            }
+
+
+
+
+        </script>
+    </head>
+    <body>
+
+
+        <form>
+            <label for="fecha_nacimiento">Fecha de nacimiento:</label>
+            <input type="text" id="fecha_nacimiento" name="fecha_nacimiento" /><br/>
+
+            <label for="codigo_postal">Codigo postal:</label>
+            <input type="text" id="codigo_postal" name="codigo_postal" /><br/>
+
+            <label for="telefono">Telefono:</label>
+            <input type="text" id="telefono" name="telefono" /><br/>
+
+            <input type="button" value="Validar datos" onclick="valida()" />
+        </form>
+
+        <div id="respuesta"></div>
+
+
+    </body>
+</html>

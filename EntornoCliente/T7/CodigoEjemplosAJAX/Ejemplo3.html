@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<!--
+    Autor=Laura Lozano Calvo
+    Fecha=30-ene-2014
+    Licencia=GPL v3
+    Versión=1.0
+    Descripción= Al pulsar un botón se realiza una petición asíncrona con AJAX y el resultado el mostrado como text de un div
+-->
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type = "text/javascript">
+             // Obtener la instancia del objeto XMLHttpRequest
+             // Navegadores que siguen los estándares
+            var objetoXHR=new XMLHttpRequest();
+            var objeto_destino;
+
+            function obtenerDatosServidor(origen, elemento)
+            {
+                objeto_destino = document.getElementById(elemento); 
+                
+                objetoXHR.onreadystatechange = function (){
+                    if (objetoXHR.readyState === 4 && 
+                    objetoXHR.status === 200) { 
+                    objeto_destino.innerHTML = objetoXHR.responseText; 
+                } 
+                };
+                objetoXHR.open("GET", origen, true); 
+                objetoXHR.send(); 
+            }
+        </script>
+
+    </head>
+    <body>
+        <form>
+            <input type = "button" value ="Buscar información" onclick = "obtenerDatosServidor('http://localhost/holamundo.txt','elemento_destino')">
+        </form>
+        <div id="elemento_destino">
+            <p>La información aparecerá aquí</p> 
+        </div> 
+
+    </body>
+</html>

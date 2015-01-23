@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<!--
+    Autor=Laura Lozano Calvo
+    Fecha=30-ene-2014
+    Licencia=GPL v3
+    Versión=1.0
+    Descripción= Ejemplo de construcción de query string para envío de parámetros con AJAX al servidor
+-->
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+
+
+            var READY_STATE_COMPLETE = 4;
+            var peticion_http = null;
+
+            //Función para obtener la instancia del objeto XMLHttpRequest
+            function inicializa_xhr() {
+                if (window.XMLHttpRequest) {
+                    return new XMLHttpRequest();
+                }
+                else if (window.ActiveXObject) {
+                    return new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+
+            //Función de escapado para carácteres especiales
+            /*function escaparXML(cadena) {
+                if (typeof cadena !== 'string') {
+                    return '';
+                }
+                ;
+                cadena = cadena.replace('&', '&amp;')
+                        .replace('<', '&lt;')
+                        .replace('>', '&gt;')
+                        .replace('"', '&quot;');
+                return cadena;
+            }*/
+
+            /*
+             * Cuando se utiliza un elemento <form> de HTML, 
+             * al pulsar sobre el botón de envío del formulario, 
+             * se crea automáticamente la cadena de texto que contiene todos los parámetros que se envían al servidor. 
+             * Sin embargo, el objeto XMLHttpRequest no dispone de esa posibilidad y 
+             * la cadena que contiene los parámetros se debe construir manualmente
+             */
+            function crea_query_string() {
+                var fecha = document.getElementById("fecha_nacimiento");
+                var cp = document.getElementById("codigo_postal");
+                var telefono = document.getElementById("telefono");
+                
+
+                /*
+                 *El uso de la función encodeURIComponent() es imprescindible para evitar problemas 
+                 *con algunos caracteres especiales.
+                 *La función encodeURIComponent() reemplaza todos los caracteres que no se pueden utilizar 
+                 *de forma directa en las URL por su representación hexadecimal. 
+                 *Las letras, números y los caracteres - _ . ! ~ * ' ( ) no se modifican, 
+                 *pero todos los demás caracteres se sustituyen por su equivalente hexadecimal.
+                 *Las sustituciones más conocidas son las de los espacios en blanco por %20, 
+                 *y la del símbolo & por %26. También se sustituyen todos los acentos y 
+                 *cualquier otro carácter que no se puede incluir directamente en una URL
+                 *La principal diferencia entre encodeURIComponent() y encodeURI() 
+                 *es que esta última no codifica los caracteres ; / ? : @ & = + $ , #
+                 *var cadena = "http://www.ejemplo.com/ruta1/index.php?parametro=valor con ñ y &";
+                 *var cadena_segura = encodeURIComponent(cadena);
+                 *cadena_segura = "http%3A%2F%2Fwww.ejemplo.com%2Fruta1%2Findex.php%3Fparametro%3Dvalor%20con%20%C3%B1%20y%20%26";
+                 *var cadena_segura = encodeURI(cadena); 
+                 *cadena_segura = "http:*www.ejemplo.com/ruta1/index.php?parametro=valor%20con%20%C3%B1%20y%20";
+                 
+                 
+                 */
+                return "fecha_nacimiento=" + encodeURIComponent(fecha.value) +
+                        "&codigo_postal=" + encodeURIComponent(cp.value) +
+                        "&telefono=" + encodeURIComponent(telefono.value) +
+                        "&nocache=" + Math.random();
+                /*
+                 *Añadir un parámetro aleatorio adicional a las peticiones GET y POST es una de las estrategias más utilizadas 
+                 *para evitar problemas con la caché de los navegadores. Como cada petición varía al menos en el valor 
+                 *de uno de los parámetros, el navegador está obligado siempre a realizar la petición
+                 *directamente al servidor y no utilizar su cache
+                 */
+            }
+
+            function valida() {
+                peticion_http = inicializa_xhr();
+                if (peticion_http) {
+                    peticion_http.onreadystatechange = procesaRespuesta;
+                    peticion_http.open("POST", "validaDatos.php", true);
+
+                    /*
+                     * Si no se establece la cabecera Content-Type correcta, el servidor 
+                     * descarta todos los datos enviados mediante el método POST. 
+                     * De esta forma, al programa que se ejecuta en el servidor no le llega ningún parámetro
+                     */
+                    peticion_http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    var query_string = crea_query_string();
+                    peticion_http.send(query_string);
+                }
+            }
+
+            function procesaRespuesta() {
+                if (peticion_http.readyState == READY_STATE_COMPLETE) {
+                    if (peticion_http.status == 200) {
+                        document.getElementById("respuesta").innerHTML = peticion_http.responseText;
+                    }
+                }
+            }
+
+
+        </script>
+    </head>
+    <body>
+
+
+        <form>
+            <label for="fecha_nacimiento">Fecha de nacimiento:</label>
+            <input type="text" id="fecha_nacimiento" name="fecha_nacimiento" /><br/>
+
+            <label for="codigo_postal">Codigo postal:</label>
+            <input type="text" id="codigo_postal" name="codigo_postal" /><br/>
+
+            <label for="telefono">Telefono:</label>
+            <input type="text" id="telefono" name="telefono" /><br/>
+
+            <input type="button" value="Validar datos" onclick="valida()"/>
+        </form>
+
+        <div id="respuesta"></div>
+
+
+    </body>
+</html>
