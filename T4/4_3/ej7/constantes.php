@@ -1,3 +1,3 @@
 <?php
 
-define("TITULO", "Formulario de tres pasos cons esiones");
+define("TITULO", "Formulario de tres pasos con sesiones");

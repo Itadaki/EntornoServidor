@@ -1,8 +1,8 @@
 <p>Por favor, rellene sus datos a continuacion para añadir una nueva tarea y haga clic en ENVIAR. Los campos marcados con un asterisco(*) son obligatorios.</p>
-
+{mensaje}
 <form method="POST">
-    Descripcion de la tarea (*) <input type="text" name="descricpion" value="" /><br>
-    Fecha (*) <input type="text" name="fecha" value="" />
-    <input type="submit" value="Enviar" />
+    Descripcion de la tarea (*) <input type="text" name="descripcion" value="{valorTarea}" /><br>
+    Fecha (*) <input type="date" name="fecha" value="1989-12-08" /><br>
+    <input type="submit" name="añadirTarea" value="Enviar" />
 </form>
-<a href="">Volver</a>
+<a href="agenda.php">Volver</a>

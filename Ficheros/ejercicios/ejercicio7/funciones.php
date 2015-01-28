@@ -64,19 +64,31 @@ function comprobarUsuario($user, $pass) {
         }
     }
     if ($grant) {
-        mostrarAgenda();
+        mostrarAgenda($user);
     } else {
-        login('error');
+        login('Usuario o contraseña no existen');
     }
 }
 
-function mostrarAgenda($mensaje = '') {
+function mostrarAgenda($usuario, $mensaje = '') {
     if ($mensaje) {
         $mensaje = '<p class="error">' . $mensaje . '</p>';
     }
-    $datos = array(
-        "mensaje" => $mensaje,
-    );
+    $filasCitas = '';
+    $agenda = fopen('./agenda', 'r');
+    while ($linea = fgets($agenda)) {
+        $patron = "/^$usuario;[\w\W]*$/";
+        if (preg_match($patron, $linea)) {
+            $citas = explode(';', $linea)[1];
+            $arr = explode(':', $citas);
+            $datos = array(
+                "nombre" => $arr[0],
+                "fecha" => $arr[1]
+            );
+            $filasCitas .= respuesta($datos, "plantillas/tarea.html");
+        }
+    }
+    $datos = array("citas" => $filasCitas);
     $salida = respuesta($datos, "plantillas/agenda.html");
     $datos = array(
         "salida" => $salida,
@@ -85,6 +97,33 @@ function mostrarAgenda($mensaje = '') {
     $plantilla = "plantillas/plantilla.html";
     $html = respuesta($datos, $plantilla);
     print($html);
+}
+
+function verAñadirCita($camposPendientes = '', $mensaje = '') {
+    if ($camposPendientes) {
+        $mensaje = '<p class="error">Es necesario una descripcion</p>';
+    }
+    $datos = array(
+        "mensaje" => $mensaje
+    );
+    $salida = respuesta($datos, "plantillas/add_tarea.html");
+    $datos = array(
+        "salida" => $salida,
+        "titulo" => TITULO
+    );
+    $plantilla = "plantillas/plantilla.html";
+    $html = respuesta($datos, $plantilla);
+    print($html);
+}
+
+function añadirTarea($usuario) {
+    if (!empty($_POST['descripcion'])) {
+        $agenda = fopen('./agenda', 'a+');
+        fwrite($agenda, $usuario . ';' . $_POST["descripcion"] . ':' . $_POST['fecha'] . PHP_EOL);
+        mostrarAgenda('diego', 'Tarea añadida');
+    } else {
+        verAñadirCita('', $mensaje = 'DESCRIPCION VACIA');
+    }
 }
 
 function respuesta($datos, $plantilla) {
@@ -96,3 +135,4 @@ function respuesta($datos, $plantilla) {
     }
     return($html);
 }
+
