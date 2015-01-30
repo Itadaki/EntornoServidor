@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!--
+Autor = Diego Rodríguez Suárez-Bustillo
+Fecha = 30-ene-2015
+Licencia = gpl30 
+Version = 1.0
+Descripcion = 
+-->
+
+<!--
+Copyright (C) 2015 Diego Rodríguez Suárez-Bustillo
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<html>
+    <head>
+        <title>Ejemplo 3a</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script>
+            var xhr;
+            function enviarPeticionAJAX() {
+                document.getElementById('boton').disabled = true;
+                xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = gestionarRespuesta;
+                xhr.open('GET', 'svalidaDatos1.php', true);
+                xhr.send(null);
+            }
+            function gestionarRespuesta(evento) {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200 || xhr.status === 304) {
+                        document.getElementById('encabezados').innerHTML = xhr.getAllResponseHeaders();
+                        document.getElementById('contenido').innerHTML = xhr.responseText;
+                        document.getElementById('boton').disabled = false;
+                    } else {
+                        document.getElementById('encabezados').innerHTML = "Ocurrio un error " + xhr.status;
+                        document.getElementById('boton').disabled = false;
+                    }
+                }
+            }
+        </script>
+
+    </head>
+    <body>
+        <input id='boton' type='button' onclick='enviarPeticionAJAX();' value="Enviar petición AJAX"/>
+        <h1>Encabezados respuesta</h1>
+        <div id='encabezados'></div>
+        <h1>Contenido respuesta</h1>
+        <div id='contenido'></div>	
+
+    </body>
+</html>
