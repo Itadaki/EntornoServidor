@@ -4,7 +4,12 @@ Autor = Diego Rodríguez Suárez-Bustillo
 Fecha = 30-ene-2015
 Licencia = gpl30 
 Version = 1.0
-Descripcion = 
+Descripcion = Modificar el ejercicio de comprobación de disponibilidad de los nombres para que
+permita mostrar una serie de valores alternativos devueltos por el servidor en el caso de
+que el nombre elegido no esté disponible.
+El script del servidor se llama compruebaDisponibilidadXML.php (Descárgatelo del aula
+virtual) y el parámetro que contiene el nombre se llama login. La respuesta del servidor
+es un documento XML con la siguiente estructura:
 -->
 
 <!--
@@ -82,16 +87,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                  </alternativas>
                  </respuesta>
                  */
-                if (peticion_http.readyState == READY_STATE_COMPLETE) {
-                    if (peticion_http.status == 200) {
+                if (peticion_http.readyState === READY_STATE_COMPLETE) {
+                    if (peticion_http.status === 200) {
                         var disponibilidad = document.getElementById('disponibilidad');
-                        disponibilidad.innerHTML='';
                         var documento_xml = peticion_http.responseXML;
+//                        console.log(peticion_http.responseXML);
                         var root = documento_xml.getElementsByTagName("respuesta")[0];
 
                         var disponible = root.getElementsByTagName('disponible')[0].firstChild.nodeValue;
                         if (disponible === 'si') {
-                            disponibilidad.innerHTML = 'si';
+                            disponibilidad.innerHTML = 'Este nombre esta disponible';
                         } else {
                             var alternativas = root.getElementsByTagName('alternativas')[0];
                             var logins = alternativas.getElementsByTagName('login');

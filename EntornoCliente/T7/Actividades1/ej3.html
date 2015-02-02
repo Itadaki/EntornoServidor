@@ -4,7 +4,18 @@ Autor = Diego Rodríguez Suárez-Bustillo
 Fecha = 30-ene-2015
 Licencia = gpl30 
 Version = 1.0
-Descripcion = 
+Descripcion = Un ejemplo de validación compleja es la que consiste en comprobar si un nombre de
+usuario escogido está libre o ya lo utiliza otro usuario. Como es una validación que
+requiere el uso de una base de datos muy grande, no se puede realizar en el navegador
+del cliente. A partir de la página web que se proporciona (ejercicio3.html):
+a) Crear un script que compruebe con AJAX y la ayuda del servidor si el nombre
+escogido por el usuario está libre o no.
+b) El script del servidor se llama compruebaDisponibilidad.php y el parámetro que
+contiene el nombre se llama login.
+c) La respuesta del servidor es "si" o "no", en función de si el nombre de usuario
+está libre y se puede utilizar o ya ha sido ocupado por otro usuario.
+d) A partir de la respuesta del servidor, mostrar un mensaje al usuario indicando el
+resultado de la comprobación.
 -->
 
 <!--
@@ -57,7 +68,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 if (peticion_http) {
                     peticion_http.onreadystatechange = procesaRespuesta;
                     peticion_http.open("POST", "../CodigoEjercicios/compruebaDisponibilidad.php", true);
-
                     peticion_http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                     var query_string = "login=" + encodeURIComponent(document.getElementById('login').value);
                     peticion_http.send(query_string);

@@ -4,7 +4,14 @@ Autor = Diego Rodríguez Suárez-Bustillo
 Fecha = 30-ene-2015
 Licencia = gpl30 
 Version = 1.0
-Descripcion = 
+Descripcion = Modifica el código de Ejemplo3a.html para realizar lo siguiente:
+a. Cambia en la línea de código en la que se invoaca el método open el url
+validaDatos1.php por otro que no exista.
+b. Modifica el código de gestionarRespueta para que indique que se ha producido
+un error en caso de que el estado (status) de la respuesta no sea 200 o 304
+(recuerde que el código 304 indica que el recurso no ha cambiado y se está
+sirviendo desde la caché del navegador en lugar de solicitarlo completamente al
+servidor).
 -->
 
 <!--
@@ -35,10 +42,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 document.getElementById('boton').disabled = true;
                 xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = gestionarRespuesta;
-                xhr.open('GET', 'svalidaDatos1.php', true);
+                xhr.open('GET', 'noexiste.php', true);
                 xhr.send(null);
             }
-            function gestionarRespuesta(evento) {
+            function gestionarRespuesta() {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200 || xhr.status === 304) {
                         document.getElementById('encabezados').innerHTML = xhr.getAllResponseHeaders();

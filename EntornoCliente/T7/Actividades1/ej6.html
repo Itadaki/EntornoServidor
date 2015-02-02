@@ -60,10 +60,81 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </style>
     </head>
     <body>
-        <div>TODO write content</div>
-        <script type="text/javascript" src=""></script>
-        <script type="text/javascript">
+        <select name="comunidades" id="comunidades" onchange="pedirCiudades()">
+            <option>--Comunidad--</option>
+            <option>Castilla y León</option>
+            <option>Castilla La Mancha</option>
+            <option>Comunidad Valenciana</option>
+        </select>
 
+        <select name="ciudades" id="ciudades" disabled><option>--Ciudad--</option></select>
+        <script type="text/javascript">
+            var READY_STATE_COMPLETE = 4;
+            var peticion_http = null;
+            //Función para obtener la instancia del objeto XMLHttpRequest
+            function inicializa_xhr() {
+                if (window.XMLHttpRequest) {
+                    return new XMLHttpRequest();
+                }
+                else if (window.ActiveXObject) {
+                    return new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+
+            function pedirCiudades() {
+                peticion_http = inicializa_xhr();
+                if (peticion_http) {
+                    peticion_http.onreadystatechange = procesaRespuesta;
+                    peticion_http.open("POST", "../CodigoEjercicios/servidorCiudades.php", true);
+
+                    peticion_http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    var query_string = "xml=" + crea_xml();
+                    peticion_http.send(query_string);
+                }
+            }
+
+            /*
+             XML a generar:
+             <comunidad>#comunidad</comunidad>
+             */
+            function crea_xml() {
+                var comunidad = document.getElementById("comunidades").selectedIndex;
+                var xml = "<?xml version='1.0' encoding='UTF-8' ?> <comunidad>" + comunidad + '</comunidad>';
+                return xml;
+            }
+
+            /*
+             Respuesta del servidor
+             <ciudades>
+             <ciudad>Ciudad1</ciudad>
+             <ciudad>Ciudad2</ciudad>
+             ...
+             <ciudad>CiudadN</ciudad>
+             </ciudades>
+             */
+            function procesaRespuesta() {
+                if (peticion_http.readyState === READY_STATE_COMPLETE) {
+                    if (peticion_http.status === 200) {
+                        var select = document.getElementById('ciudades');
+                        while (select.options.length > 1) {
+                            select.remove(1);
+                        }
+                        select.disabled = false;
+                        var documento_xml = peticion_http.responseXML;
+                        var root = documento_xml.getElementsByTagName("ciudades")[0];
+                        for (var i = 0; i < root.childNodes.length; i++) {
+                            var ciudad = root.childNodes[i].firstChild.nodeValue;
+                            var option = document.createElement("option");
+                            option.text = ciudad;
+                            select.options.add(option, 1);
+                        }
+                    }
+                }
+            }
+
+            function setValue(login) {
+                document.getElementById('login').value = login.innerHTML;
+            }
         </script>
     </body>
 </html>
