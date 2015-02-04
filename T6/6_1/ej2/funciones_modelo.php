@@ -69,6 +69,7 @@ function crearTabla() {
     $operacion = true;
     global $conexion;
     global $mensajeTabla;
+    global $sql_tabla;
 #comprobamos si existe la tabla
     $consulta = "SELECT COUNT(*) as existe_tabla FROM
 INFORMATION_SCHEMA.tables
@@ -77,17 +78,19 @@ WHERE table_schema='" . BD . "' and table_name='" . SOLOTABLA . "'";
     $valor = mysqli_fetch_array($resultado, MYSQLI_ASSOC);
     if (!$valor['existe_tabla']) {
 #si la tabla no existe la creamos y escribimos el mensaje de exito
-        $consulta = "CREATE TABLE " . TABLA . "(id INTEGER UNSIGNED NOT
-NULL AUTO_INCREMENT,nombre VARCHAR(40), sexo CHAR (6), edad TINYINT (2), sistema VARCHAR (9), aficiones VARCHAR(140),
-futbol CHAR (1), PRIMARY KEY(id))";
-        @mysqli_query($conexion, $consulta);
+//        $consulta = "CREATE TABLE " . TABLA . "(
+//isbn CHAR(15) UNIQUE,
+//id int auto_increment PRIMARY KEY NOT NULL,
+//título varchar(50) not null,
+//fechaedición date)";
+        @mysqli_query($conexion, $sql_tabla);
         $errorNo = mysqli_connect_errno();
         $errorMsg = mysqli_connect_error();
         if ($errorNo == 0) {
             $mensajeTabla = "<h2>Tabla creada correctamente.</h2>";
         } else {
             $operacion = false;
-            $mensajeTabla = "<h2>Error al crear la tabla. Se ha producido un error nº $errorNo que corresponde a: $errorMsg <br></h2>";
+            $mensajeTabla = "<h2>Error al crear la tabla. Se ha producido un error nº $errorNo que corresponde a: $errorMsg</h2>";
         }
 #si existe, avisamos de su existencia y evitamos intentar crearla
     } else {
@@ -99,12 +102,17 @@ futbol CHAR (1), PRIMARY KEY(id))";
 function consultarCampos() {
     global $mensajeCampos;
     global $conexion;
+    global $sql_select;
+    $resultado = true;
     $consulta = "SHOW FIELDS from " . TABLA;
     $resultado = @mysqli_query($conexion, $consulta);
     $errorNo = mysqli_connect_errno();
     $errorMsg = mysqli_connect_error();
-    if ($errorNo != 0) {
-        $mensajeCampos = "<h2>Se ha producido un error nº $errorNo que corresponde a: $errorMsg <br><h2>";
+    if ($errorNo == 0) {
+        $mensajeCampos = "<h2>Datos visualizados correctamente</h2>";
+    } else {
+        $mensajeCampos = "<h2>Se ha producido un error nº $errorNo que corresponde a: $errorMsg </h2>";
+        $resultado = false;
     }
     return ($resultado);
 }
@@ -113,8 +121,24 @@ function cerrarConexion() {
     global $conexion, $mensajeCerrarConexion;
     $operacion = true;
     if (@mysqli_close($conexion)) {
-        $mensajeCerrarConexion = "<h2> Conexión cerrada con exito</h2><br>";
+        $mensajeCerrarConexion = "<h2> Conexión cerrada con exito</h2>";
     } else {
         $mensajeCerrarConexion = "<h2> No se ha podido cerrar la conexión</h2>";
     }
+}
+
+function insertar(){
+    global $conexion;
+    global $sql_insertar;
+    $resultado = true;
+    $resultado = @mysqli_query($conexion, $sql_insertar);
+    $errorNo = mysqli_connect_errno();
+    $errorMsg = mysqli_connect_error();
+    if ($errorNo == 0) {
+        $mensajeCampos = "<h2>Datos almacenados correctamente</h2>";
+    } else {
+        $mensajeCampos = "<h2>Se ha producido un error nº $errorNo que corresponde a: $errorMsg </h2>";
+        $resultado = false;
+    }
+    return ($resultado);
 }

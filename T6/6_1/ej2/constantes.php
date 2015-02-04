@@ -27,9 +27,9 @@
 
 define("TITULO", "Creación de una base de datos");
 define("SERVIDOR", "localhost");
-define("BD", "mispruebas");
-define("TABLA", "mispruebas.test");
-define("SOLOTABLA", "test");
+define("BD", "biblioteca");
+define("TABLA", "biblioteca.libros");
+define("SOLOTABLA", "libros");
 define("USUARIO", "root");
 define("PASSWORD", "");
 define("ERROR_OK", 0);

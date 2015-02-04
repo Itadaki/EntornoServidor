@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<!--
+Autor = Diego Rodríguez Suárez-Bustillo
+Fecha = 04-feb-2015
+Licencia = gpl30 
+Version = 1.0
+Descripcion = 
+-->
+
+<!--
+Copyright (C) 2015 Diego Rodríguez Suárez-Bustillo
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="" rel="stylesheet" />
+        <style type="text/css">
+            div.anime{
+                width: 225px;
+                background: #006666;
+                display: inline-block;
+                margin: 10px;
+                padding: 5px;
+                border-radius: 20px;
+            }
+            div.anime img{
+                display: block;
+                border-radius: 20px;
+            }
+            div.anime .name, div.anime .score{
+                display: block;
+                text-align: center;
+                font-weight: bold;
+            }
+            .score{
+                margin: 0 auto;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: goldenrod;
+                line-height: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <input type="button" value="Mostrar" onclick="comprobar2()"/><br>
+        <div class="anime"><img src="http://cdn.myanimelist.net/images/anime/4/19644.jpg"><span class="name">Cowboy Bebop</span><span class="score">7</span></div>
+        <script type="text/javascript">
+            var READY_STATE_COMPLETE = 4;
+            var peticion_http = null;
+            //Función para obtener la instancia del objeto XMLHttpRequest
+            function inicializa_xhr() {
+                if (window.XMLHttpRequest) {
+                    return new XMLHttpRequest();
+                }
+                else if (window.ActiveXObject) {
+                    return new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+
+            function comprobar() {
+                peticion_http = inicializa_xhr();
+                if (peticion_http) {
+                    peticion_http.onreadystatechange = procesaRespuesta;
+                    peticion_http.open("GET", "./malappinfo.xml", true);
+
+                    peticion_http.send();
+                }
+            }
+
+            function comprobar2() {
+                peticion_http = inicializa_xhr();
+                if (peticion_http) {
+                    peticion_http.onreadystatechange = procesaRespuesta;
+                    peticion_http.open("GET", "./get.php", true);
+
+                    peticion_http.send();
+                }
+            }
+
+            function procesaRespuesta() {
+                if (peticion_http.readyState === READY_STATE_COMPLETE) {
+                    if (peticion_http.readyState === 4) {
+                        if (peticion_http.status === 200) {
+                            var documento_xml = peticion_http.responseXML;
+                            var root = documento_xml.getElementsByTagName('myanimelist')[0];
+                            var myinfo = root.getElementsByTagName('myinfo')[0];
+                            getUserInfo(myinfo);
+                            var animes = root.getElementsByTagName('anime');
+                            getAnimeInfo(animes);
+                            console.log(root);
+                        }
+                    }
+                }
+            }
+            function getAnimeInfo(animes) {
+                var estados = ['', 'Pendiente', 'Completado', 'Dropeado']
+                for (var i = 0; i < animes.length; i++) {
+                    var series_status = animes[i].getElementsByTagName('series_status')[0].firstChild.nodeValue;
+                    if (series_status == '2') {
+                            console.log(animes[i]);
+                        var name = animes[i].getElementsByTagName('series_title')[0].firstChild.nodeValue;
+                        var img = animes[i].getElementsByTagName('series_image')[0].firstChild.nodeValue;
+                        var score = animes[i].getElementsByTagName('my_score')[0].firstChild.nodeValue;
+                        var s = '<div class="anime"><img src="' + img + '" /><span class="name">' + name + '</span><span class="score">' + score + '</span></div>';
+                        document.getElementsByTagName('body')[0].insertAdjacentHTML('beforeend', s);
+                    }
+                }
+            }
+            function getUserInfo(myinfo) {
+                var name = myinfo.getElementsByTagName('user_name')[0].firstChild.nodeValue;
+                console.log(name);
+            }
+
+
+        </script>
+    </body>
+</html>

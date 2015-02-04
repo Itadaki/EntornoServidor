@@ -26,18 +26,22 @@
  */
 
 function visualizarCampos() {
-    global $salidaCampos;
-    if ($resultado = consultarCampos()) {
-        global $salidaCampos;
-        $num = mysqli_num_rows($resultado);
-        $salidaCampos = "<b>La tabla tiene $num campos</b><br>";
-        while ($campos = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
-            foreach ($campos as $indice => $valor) {
-                if ($indice == 'Field' || $indice == 'Type')
-                    $salidaCampos.="$indice: $valor<br>";
-            }
-            $salidaCampos.="<br>";
-        }
+    global $sql_select;
+    global $salidaDatos;
+    global $conexion;
+    $resultado = @mysqli_query($conexion, $sql_select);
+    $errorNo = mysqli_connect_errno();
+    $errorMsg = mysqli_connect_error();
+    if ($errorNo == 0) {
+        $salidaDatos .= "<h2>Consulta realizada correctamente</h2>";
+    } else {
+        $salidaDatos .= "<h2>Se ha producido un error nº $errorNo que corresponde a: $errorMsg </h2>";
+    }
+    $salidaDatos .= '<h3>Registro de '.TABLA.'</h3>';
+    $num = mysqli_num_rows($resultado);
+        $salidaDatos .= "<b>La tabla tiene $num entradas</b><br>";
+    while ($campos = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+        $salidaDatos .= 'ID: '.$campos['id'].' - Título: '. $campos['titulo'].'<br>';
     }
 }
 
