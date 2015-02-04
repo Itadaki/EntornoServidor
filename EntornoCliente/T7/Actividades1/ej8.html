@@ -37,7 +37,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 border-bottom: 1px solid #CCC;
                 background: #FAFAFA;
                 font-family: Arial, Helvetica, sans-serif;
+                transition: background-color 0s;
             }
+            .run-animation {
+                -webkit-animation: resaltar 3s infinite 3s;
+                animation:         resaltar 3s infinite 3s;
+            }
+            @-webkit-keyframes resaltar{
+                0% {background:yellow;}
+                50%{background:white;}
+                100% {background:white;}
+            }
+            @keyframes resaltar{
+                from {background:yellow;}
+                to {background:white;}
+            }
+            .yellow{background-color:yellow}
             #ticker strong { margin-right: 1em; }
             #acciones {
                 position: absolute;
@@ -47,6 +62,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </style>
         <script type="text/javascript">
             var id;
+            var viejaId;
             var READY_STATE_COMPLETE = 4;
             var peticion_http = null;
             var contenido = new Array();
@@ -62,7 +78,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             }
 
             function pedirTexto() {
-                peticion_http = inicializa_xhr();
+//                peticion_http = inicializa_xhr();
                 if (peticion_http) {
                     peticion_http.onreadystatechange = procesaRespuesta;
                     peticion_http.open("POST", "../CodigoEjercicios/generaContenidos.php", true);
@@ -75,35 +91,55 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 if (peticion_http.readyState === READY_STATE_COMPLETE) {
                     if (peticion_http.status === 200) {
                         var ticker = document.getElementById('ticker');
-                        posActual = contenido.push(ticker.innerHTML)-1;
                         var date = new Date()
                         var h = date.getHours();
                         var m = date.getMinutes();
-                        var hora = '<b>['+h+':'+m+']</b> ';
-                        ticker.innerHTML=hora+peticion_http.responseText;
+                        var hora = '<b>[' + h + ':' + m + ']</b> ';
+                        ticker.innerHTML = hora + peticion_http.responseText;
+                        posActual = contenido.push(ticker.innerHTML) - 1;
                     }
                 }
             }
-            
-            function empezar(){
-                id = setInterval(function(){ pedirTexto(); }, 1000);
+
+            function empezar() {
+                peticion_http = inicializa_xhr();
+                id = setInterval(function () {
+                    pedirTexto();
+                }, 3000);
+
             }
-            function detener(){
-                clearInterval(id);
+            function detener() {
+                if (id !== viejaId) {
+                    clearInterval(id);
+                    viejaId = id;
+                } else {
+                    empezar();
+                }
             }
-            function anterior(){
+            function anterior() {
                 detener();
                 var ticker = document.getElementById('ticker');
-                ticker.innerHTML = contenido[--posActual];
+                if (posActual > 0) {
+                    ticker.innerHTML = contenido[--posActual];
+                } else {
+                    ticker.innerHTML = contenido[contenido.length - 1];
+                    posActual = contenido.length - 1;
+                }
             }
-            function siguiente(){
-                
+            function siguiente() {
+                var ticker = document.getElementById('ticker');
+                if (posActual < contenido.length - 1) {
+                    ticker.innerHTML = contenido[++posActual];
+                } else {
+                    ticker.innerHTML = contenido[0];
+                    posActual = 0;
+                }
             }
-            window.onload=empezar;
+            window.onload = empezar;
         </script>
     </head>
     <body>
-        <div id="ticker"></div>
+        <div id="ticker" class="run-animation"></div>
 
         <div id="acciones">
             <input type="button" id="detener" value="Detener" onclick="detener()">
