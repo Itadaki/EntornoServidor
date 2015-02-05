@@ -4,7 +4,23 @@ Autor = Diego Rodríguez Suárez-Bustillo
 Fecha = 02-feb-2015
 Licencia = gpl30 
 Version = 1.0
-Descripcion = 
+Descripcion = A partir de la página web proporcionada (ejercicio8.html) que incluye una zona llamada
+ticker en la que se deben mostrar noticias generadas por el servidor. Añadir el código
+JavaScript necesario para:
+· De forma periódica cada cierto tiempo (por ejemplo cada segundo) se realiza una
+petición al servidor mediante AJAX y se muestra el contenido de la respuesta en la
+zona reservada para las noticias.
+· Además del contenido enviado por el servidor generaContenidos.php (disponible en
+el aula virtual), se debe mostrar la hora en la que se ha recibido la respuesta.
+· Cuando se pulse el botón "Detener", la aplicación detiene las peticiones periódicas al
+servidor. Si se vuelve a pulsar sobre ese botón, se reanudan las peticiones periódicas.
+· Añadir la lógica de los botones "Anterior" y "Siguiente", que detienen las peticiones
+al servidor y permiten mostrar los contenidos anteriores o posteriores al que se
+muestra en ese momento.
+· Cuando se recibe una respuesta del servidor, se resalta visualmente la zona llamada
+ticker.
+· Modificar la aplicación para que se reutilice continuamente el mismo objeto
+XMLHttpRequest para hacer las diferentes peticiones.
 -->
 
 <!--
@@ -35,23 +51,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 height: 20px;
                 padding: .3em;
                 border-bottom: 1px solid #CCC;
-                background: #FAFAFA;
                 font-family: Arial, Helvetica, sans-serif;
-                transition: background-color 0s;
+                transition: background-color 1s;
             }
-            .run-animation {
-                -webkit-animation: resaltar 3s infinite 3s;
-                animation:         resaltar 3s infinite 3s;
-            }
-            @-webkit-keyframes resaltar{
-                0% {background:yellow;}
-                50%{background:white;}
-                100% {background:white;}
-            }
-            @keyframes resaltar{
-                from {background:yellow;}
-                to {background:white;}
-            }
+            .gray{background-color: #FAFAFA;}
             .yellow{background-color:yellow}
             #ticker strong { margin-right: 1em; }
             #acciones {
@@ -64,6 +67,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             var id;
             var viejaId;
             var READY_STATE_COMPLETE = 4;
+            var STATUS_OK = 200;
             var peticion_http = null;
             var contenido = new Array();
             var posActual = 0;
@@ -89,24 +93,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
             function procesaRespuesta() {
                 if (peticion_http.readyState === READY_STATE_COMPLETE) {
-                    if (peticion_http.status === 200) {
+                    if (peticion_http.status === STATUS_OK) {
                         var ticker = document.getElementById('ticker');
-                        var date = new Date()
-                        var h = date.getHours();
-                        var m = date.getMinutes();
-                        var hora = '<b>[' + h + ':' + m + ']</b> ';
+                        ticker.style.transitionDuration = "0s";
+                        ticker.className = 'yellow';
+                        var hora = getHora();
                         ticker.innerHTML = hora + peticion_http.responseText;
                         posActual = contenido.push(ticker.innerHTML) - 1;
+                        setTimeout(function () {
+                            ticker.style.transitionDuration = "1s";
+                            ticker.className = 'gray'
+                        }, 500);
                     }
                 }
             }
-
+            function getHora() {
+                var date = new Date();
+                var h = date.getHours();
+                h = ((h<10)?'0'+h:h);
+                var m = date.getMinutes();
+                m = ((m<10)?'0'+m:m);
+                return '<b>[' + h + ':' + m + ']</b> ';
+            }
             function empezar() {
                 peticion_http = inicializa_xhr();
                 id = setInterval(function () {
                     pedirTexto();
                 }, 3000);
-
             }
             function detener() {
                 if (id !== viejaId) {
@@ -127,6 +140,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 }
             }
             function siguiente() {
+                detener();
                 var ticker = document.getElementById('ticker');
                 if (posActual < contenido.length - 1) {
                     ticker.innerHTML = contenido[++posActual];
@@ -139,12 +153,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </script>
     </head>
     <body>
-        <div id="ticker" class="run-animation"></div>
+        <div id="ticker"></div>
 
         <div id="acciones">
             <input type="button" id="detener" value="Detener" onclick="detener()">
-            <input type="button" id="anterior" value="&laquo; Anterior" >
-            <input type="button" id="siguiente" value="Siguiente &raquo;" >
+            <input type="button" id="anterior" value="&laquo; Anterior" onclick="anterior()">
+            <input type="button" id="siguiente" value="Siguiente &raquo;" onclick="siguiente()">
         </div>
 
         <div id="contenidos">

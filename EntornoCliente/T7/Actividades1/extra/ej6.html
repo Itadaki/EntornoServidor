@@ -51,7 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <html>
     <head>
-        <title>TODO supply a title</title>
+        <title>Ejercicio 6</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="" rel="stylesheet" />
@@ -85,22 +85,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 peticion_http = inicializa_xhr();
                 if (peticion_http) {
                     peticion_http.onreadystatechange = procesaRespuesta;
-                    peticion_http.open("POST", "../CodigoEjercicios/servidorCiudades.php", true);
-
-                    peticion_http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                    var query_string = "xml=" + crea_xml();
-                    peticion_http.send(query_string);
+                    peticion_http.open("POST", "servidorCiudades.php", true);
+                    
+                    peticion_http.setRequestHeader("Content-Type", "text/xml");
+                    peticion_http.send(crea_xml());
                 }
             }
 
             /*
              XML a generar:
              <comunidad>#comunidad</comunidad>
-             */
+             */            
             function crea_xml() {
-                var comunidad = document.getElementById("comunidades").selectedIndex;
-                var xml = "<?xml version='1.0' encoding='UTF-8' ?> <comunidad>" + comunidad + '</comunidad>';
-                return xml;
+                var comunidad = document.getElementById("comunidades");
+                //Crea un nuevo documento DOM createDocument(nsURI, name, doctype)
+                var doc = document.implementation.createDocument(null, "comunidad", null);
+                //Crea el elemento con su valor
+                var valor = doc.createTextNode(comunidad.selectedIndex);
+                doc.documentElement.appendChild(valor);
+                return doc;
             }
 
             /*
@@ -120,6 +123,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             select.remove(1);
                         }
                         select.disabled = false;
+                        console.log(peticion_http.responseXML);
                         var documento_xml = peticion_http.responseXML;
                         var root = documento_xml.getElementsByTagName("ciudades")[0];
                         for (var i = 0; i < root.childNodes.length; i++) {

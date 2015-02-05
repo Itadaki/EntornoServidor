@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<!--
+    Autor=Laura Lozano Calvo
+    Fecha=30-ene-2014
+    Licencia=GPL v3
+    Versión=1.0
+    Descripción= Ejemplo de envio y recepción de datos al servidor en formato XML utilizando AJAX
+-->
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+
+
+            var READY_STATE_COMPLETE = 4;
+            var STATUS_RIGTH = 200;
+            var peticion_http = null;
+            //Función para obtener la instancia del objeto XMLHttpRequest
+            function inicializa_xhr() {
+                if (window.XMLHttpRequest) {
+                    return new XMLHttpRequest();
+                }
+                else if (window.ActiveXObject) {
+                    return new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+
+            /*
+             * la función crea_xml() que se encarga de construir el documento XML 
+             * que contiene los parámetros enviados al servidor                         
+             */
+            function crea_xml() {
+                var fecha = '';
+                var cp = '';
+                var telefono = '';
+                //Crea un nuevo documento DOM createDocument(nsURI, name, doctype)
+                var doc = document.implementation.createDocument(null, "parametros", null);
+                //Crea el elemento con su valor
+                var elemento = doc.createElement("fecha_nacimiento");
+                var valor = doc.createTextNode(fecha.value);
+                elemento.appendChild(valor);
+                doc.documentElement.appendChild(elemento);
+                //Crea el elemento con su valor
+                elemento = doc.createElement("codigo_postal");
+                valor = doc.createTextNode(cp.value);
+                elemento.appendChild(valor);
+                doc.documentElement.appendChild(elemento);
+                //Crea el elemento con su valor
+                elemento = doc.createElement("telefono");
+                valor = doc.createTextNode(telefono.value);
+                elemento.appendChild(valor);
+                doc.documentElement.appendChild(elemento);
+                console.log(doc);
+//                return doc;
+            }
+
+            //Función que realiza una petición AJAX
+            function peticionAJAX() {
+
+                peticion_http = inicializa_xhr();
+                if (peticion_http) {
+                    peticion_http.onreadystatechange = procesaRespuesta;
+                    peticion_http.open("POST", "validaDatos2_1.php", true);
+                    //Establecemos la cabcera al tipo text/xml
+                    peticion_http.setRequestHeader("Content-Type", "text/xml");
+                    //Enviamos un documento xml directamente por POST
+                    peticion_http.send(crea_xml());
+                }
+            }
+
+            /*
+             * se modifica la respuesta del servidor para que no sea un texto sencillo, 
+             * sino que la respuesta esté definida mediante un documento XML:
+             
+             <respuesta>
+             <mensaje>...</mensaje>
+             <parametros>
+             <telefono>...</telefono>
+             <codigo_postal>...</codigo_postal>
+             <fecha_nacimiento>...</fecha_nacimiento>
+             </parametros>
+             </respuesta>
+             
+             La respuesta del servidor incluye un mensaje sobre el éxito o fracaso de la operación de validación 
+             de los parámetros y además incluye la lista completa de parámetros enviados al servidor
+             */
+            function procesaRespuesta() {
+                /*
+                 * Hasta ahora, siempre se utilizaba la propiedad responseText, 
+                 * que devuelve el texto simple que incluye la respuesta del servidor. 
+                 * Cuando se procesan respuestas en formato XML, se debe utilizar la propiedad responseXML
+                 */
+                if (peticion_http.readyState == READY_STATE_COMPLETE) {
+                    if (peticion_http.status == STATUS_RIGTH) {
+                        var documento_xml = peticion_http.responseXML;
+                        /*Con DOM accedemos a cualquier nodo del documento XML que nos devuelve el servidor
+                         var root = documento_xml.getElementsByTagName("respuesta")[0];
+                         var mensajes = root.getElementsByTagName("mensaje")[0];
+                         var mensaje = mensajes.firstChild.nodeValue;
+                         var parametros = root.getElementsByTagName("parametros")[0];
+                         */
+                        var telefono = documento_xml.getElementsByTagName("telefono")[0].firstChild.nodeValue;
+                        var fecha_nacimiento = documento_xml.getElementsByTagName("fecha_nacimiento")[0].firstChild.nodeValue;
+                        var codigo_postal = documento_xml.getElementsByTagName("codigo_postal")[0].firstChild.nodeValue;
+                        //Con DOM accedemos y manipulamos el documento HTML       
+                        document.getElementById("respuesta").innerHTML = mensaje + "<br/>" + "Fecha nacimiento = " + fecha_nacimiento + "<br/>" + "Codigo postal = " + codigo_postal + "<br/>" + "Telefono = " + telefono;
+                    }
+                }
+            }
+
+
+
+
+        </script>
+    </head>
+    <body>
+
+
+
+        <label for="fecha_nacimiento">Fecha de nacimiento:</label>
+        <input type="text" id="fecha_nacimiento" name="fecha_nacimiento" /><br/>
+
+        <label for="codigo_postal">Codigo postal:</label>
+        <input type="text" id="codigo_postal" name="codigo_postal" /><br/>
+
+        <label for="telefono">Telefono:</label>
+        <input type="text" id="telefono" name="telefono" /><br/>
+
+        <input type="button" value="Validar datos" onclick="peticionAJAX()"/>
+
+
+        <div id="respuesta"></div>
+
+
+    </body>
+</html>

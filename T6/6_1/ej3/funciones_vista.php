@@ -25,7 +25,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function visualizarCampos() {
+function visualizarCampos($tabla, $query) {
     global $sql_select;
     global $salidaDatos;
     global $mensajeDatos;
@@ -38,7 +38,7 @@ function visualizarCampos() {
     } else {
         $mensajeDatos .= "<h2>Se ha producido un error nº $errorNo que corresponde a: $errorMsg </h2>";
     }
-    $salidaDatos .= '<h3>Registro de '.TABLA.'</h3>';
+    $salidaDatos .= '<h3>Registro de '.$tabla.'</h3>';
     $num = mysqli_num_rows($resultado);
         $salidaDatos .= "<b>La tabla tiene $num entradas</b><br>";
     while ($campos = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {

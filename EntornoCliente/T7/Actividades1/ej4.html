@@ -73,18 +73,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 /*
                  Si el usuario esta libre:
                  <respuesta>
-                 <disponible>si</disponible>
+                   <disponible>si</disponible>
                  </respuesta>
                  
                  Si no esta libre:
                  <respuesta>
-                 <disponible>no</disponible>
-                 <alternativas>
-                 <login>...</login>
-                 <login>...</login>
-                 ...
-                 <login>...</login>
-                 </alternativas>
+                   <disponible>no</disponible>
+                   <alternativas>
+                     <login>...</login>
+                     <login>...</login>
+                     ...
+                     <login>...</login>
+                   </alternativas>
                  </respuesta>
                  */
                 if (peticion_http.readyState === READY_STATE_COMPLETE) {

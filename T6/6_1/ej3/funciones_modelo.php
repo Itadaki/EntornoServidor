@@ -41,55 +41,55 @@ function conexion() {
 function crearBD() {
     $operacion = true;
     global $conexion, $mensajeBD;
-    $consulta = "SELECT COUNT(*) as existe_bd FROM
-INFORMATION_SCHEMA.schemata
-WHERE schema_name='" . BD . "'";
+    $consulta = "SELECT COUNT(*) as existe_bd FROM" .
+            "INFORMATION_SCHEMA.schemata" .
+            "WHERE schema_name='" . BD . "'";
     $resultado = mysqli_query($conexion, $consulta);
     $valor = mysqli_fetch_array($resultado, MYSQLI_ASSOC);
     if (!$valor['existe_bd']) {
-#si la base de datos no existe la creamos y escribimos el mensaje de exito
+        //si la base de datos no existe la creamos y escribimos el mensaje de exito
         $consulta = "CREATE DATABASE IF NOT EXISTS " . BD;
         mysqli_query($conexion, $consulta);
         $errorNo = mysqli_errno($conexion);
         $errorMsg = mysqli_error($conexion);
         if ($errorNo == 0) {
-            $mensajeBD = "<h2>Base de datos creada correctamente.</h2>";
+            $mensajeBD .= "<h2>Base de datos creada correctamente.</h2>";
         } else {
             $operacion = false;
-            $mensajeBD = "<h2>Error al crear la base de datos.Se ha producido un error nº $errorNo que corresponde a: $errorMsg </h2>";
+            $mensajeBD .= "<h2>Error al crear la base de datos.Se ha producido un error nº $errorNo que corresponde a: $errorMsg </h2>";
         }
-#si existe, avisamos de su existencia y evitamos intentar crearla
     } else {
-        $mensajeBD = "<h2> La base de datos ya existe</h2>";
+        //si existe, avisamos de su existencia y evitamos intentar crearla
+        $mensajeBD .= "<h2> La base de datos ya existe</h2>";
     }
     return($operacion);
 }
 
-function crearTabla() {
+function crearTabla($tabla, $query) {
     $operacion = true;
     global $conexion;
     global $mensajeTabla;
-    global $sql_tabla;
-#comprobamos si existe la tabla
-    $consulta = "SELECT COUNT(*) as existe_tabla FROM
-INFORMATION_SCHEMA.tables
-WHERE table_schema='" . BD . "' and table_name='" . SOLOTABLA . "'";
+    //comprobamos si existe la tabla
+    $consulta = "SELECT COUNT(*) as existe_tabla FROM" .
+            "INFORMATION_SCHEMA.tables" .
+            "WHERE table_schema='" . BD . "' and table_name='" . $tabla . "'";
     $resultado = mysqli_query($conexion, $consulta);
     $valor = mysqli_fetch_array($resultado, MYSQLI_ASSOC);
     if (!$valor['existe_tabla']) {
-#si la tabla no existe la creamos y escribimos el mensaje de exito
-        @mysqli_query($conexion, $sql_tabla);
+        //si la tabla no existe la creamos y escribimos el mensaje de exito
+        @mysqli_query($conexion, $query);
         $errorNo = mysqli_errno($conexion);
         $errorMsg = mysqli_error($conexion);
         if ($errorNo == 0) {
-            $mensajeTabla = "<h2>Tabla creada correctamente.</h2>";
+            $mensajeTabla .= "<h2>Tabla $tabla creada correctamente.</h2>";
         } else {
             $operacion = false;
-            $mensajeTabla = "<h2>Error al crear la tabla. Se ha producido un error nº $errorNo que corresponde a: $errorMsg</h2>";
+            $mensajeTabla .= "<h2>Error al crear la tabla $tabla. Se ha producido un error nº $errorNo que corresponde a: $errorMsg</h2>";
         }
-#si existe, avisamos de su existencia y evitamos intentar crearla
+
     } else {
-        $mensajeTabla = "<h2> La tabla ya existe</h2>";
+        //si existe, avisamos de su existencia y evitamos intentar crearla
+        $mensajeTabla .= "<h2> La tabla $tabla ya existe</h2>";
     }
     return($operacion);
 }
@@ -98,18 +98,17 @@ function cerrarConexion() {
     global $conexion, $mensajeCerrarConexion;
     $operacion = true;
     if (@mysqli_close($conexion)) {
-        $mensajeCerrarConexion = "<h2> Conexión cerrada con exito</h2>";
+        $mensajeCerrarConexion .= "<h2> Conexión cerrada con exito</h2>";
     } else {
-        $mensajeCerrarConexion = "<h2> No se ha podido cerrar la conexión</h2>";
+        $mensajeCerrarConexion .= "<h2> No se ha podido cerrar la conexión</h2>";
     }
 }
 
-function insertar() {
+function insertar($query) {
     global $conexion;
     global $mensajeInsertar;
-    global $sql_insertar;
     //query devuelve false si la insercion falla
-    $resultado = @mysqli_query($conexion, $sql_insertar);
+    $resultado = @mysqli_query($conexion, $query);
 //    $errorNo = mysqli_connect_errno();
 //    $errorMsg = mysqli_connect_error();
     $errorNo = mysqli_errno($conexion);
