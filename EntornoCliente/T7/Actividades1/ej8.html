@@ -63,100 +63,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 right: 3px;
             }
         </style>
-        <script type="text/javascript">
-            var id;
-            var viejaId;
-            var READY_STATE_COMPLETE = 4;
-            var STATUS_OK = 200;
-            var peticion_http = null;
-            var contenido = new Array();
-            var posActual = 0;
-            //Función para obtener la instancia del objeto XMLHttpRequest
-            function inicializa_xhr() {
-                if (window.XMLHttpRequest) {
-                    return new XMLHttpRequest();
-                }
-                else if (window.ActiveXObject) {
-                    return new ActiveXObject("Microsoft.XMLHTTP");
-                }
-            }
-
-            function pedirTexto() {
-//                peticion_http = inicializa_xhr();
-                if (peticion_http) {
-                    peticion_http.onreadystatechange = procesaRespuesta;
-                    peticion_http.open("POST", "../CodigoEjercicios/generaContenidos.php", true);
-                    peticion_http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                    peticion_http.send();
-                }
-            }
-
-            function procesaRespuesta() {
-                if (peticion_http.readyState === READY_STATE_COMPLETE) {
-                    if (peticion_http.status === STATUS_OK) {
-                        var ticker = document.getElementById('ticker');
-                        ticker.style.transitionDuration = "0s";
-                        ticker.className = 'yellow';
-                        var hora = getHora();
-                        ticker.innerHTML = hora + peticion_http.responseText;
-                        posActual = contenido.push(ticker.innerHTML) - 1;
-                        setTimeout(function () {
-                            ticker.style.transitionDuration = "1s";
-                            ticker.className = 'gray'
-                        }, 500);
-                    }
-                }
-            }
-            function getHora() {
-                var date = new Date();
-                var h = date.getHours();
-                h = ((h<10)?'0'+h:h);
-                var m = date.getMinutes();
-                m = ((m<10)?'0'+m:m);
-                return '<b>[' + h + ':' + m + ']</b> ';
-            }
-            function empezar() {
-                peticion_http = inicializa_xhr();
-                id = setInterval(function () {
-                    pedirTexto();
-                }, 3000);
-            }
-            function detener() {
-                if (id !== viejaId) {
-                    clearInterval(id);
-                    viejaId = id;
-                } else {
-                    empezar();
-                }
-            }
-            function anterior() {
-                detener();
-                var ticker = document.getElementById('ticker');
-                if (posActual > 0) {
-                    ticker.innerHTML = contenido[--posActual];
-                } else {
-                    ticker.innerHTML = contenido[contenido.length - 1];
-                    posActual = contenido.length - 1;
-                }
-            }
-            function siguiente() {
-                detener();
-                var ticker = document.getElementById('ticker');
-                if (posActual < contenido.length - 1) {
-                    ticker.innerHTML = contenido[++posActual];
-                } else {
-                    ticker.innerHTML = contenido[0];
-                    posActual = 0;
-                }
-            }
-            window.onload = empezar;
-        </script>
     </head>
     <body>
         <div id="ticker"></div>
 
         <div id="acciones">
-            <input type="button" id="detener" value="Detener" onclick="detener()">
+            <input type="button" id="detener" value="Detener" onclick="parar()">
             <input type="button" id="anterior" value="&laquo; Anterior" onclick="anterior()">
             <input type="button" id="siguiente" value="Siguiente &raquo;" onclick="siguiente()">
         </div>
@@ -187,5 +99,105 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 lorem id quam molestie ultrices. Integer ac ligula sit amet lectus condimentum euismod. Sed malesuada 
                 orci eu neque.</p>
         </div>
+        <script type="text/javascript">
+            var READY_STATE_COMPLETE = 4;
+            var STATUS_OK = 200;
+            var REFRESH_TIME = 3000;
+            var HIGHLIGHT_TIME = 500;
+            var id;
+            var peticion_http = null;
+            var noticias = new Array();
+            var posActual = 0;
+            var ticker;
+            var detener;
+            //Función para obtener la instancia del objeto XMLHttpRequest
+            function inicializa_xhr() {
+                if (window.XMLHttpRequest) {
+                    return new XMLHttpRequest();
+                }
+                else if (window.ActiveXObject) {
+                    return new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+            function pedirTexto() {
+//                peticion_http = inicializa_xhr();
+                if (peticion_http) {
+                    peticion_http.onreadystatechange = procesaRespuesta;
+                    peticion_http.open("POST", "../CodigoEjercicios/generaContenidos.php", true);
+                    peticion_http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    peticion_http.send();
+                }
+            }
+            function procesaRespuesta() {
+                if (peticion_http.readyState === READY_STATE_COMPLETE) {
+                    if (peticion_http.status === STATUS_OK) {
+                        var hora = getHora();
+                        ticker.innerHTML = hora + peticion_http.responseText;
+                        posActual = noticias.push(ticker.innerHTML) - 1;
+                        highlight();
+                    }
+                }
+            }
+            function getHora() {
+                var date = new Date();
+                return '<b>[' + format(date.getHours()) + ':' +
+                        format(date.getMinutes()) + ':' +
+                        format(date.getSeconds()) + ']</b> ';
+            }
+            function format(n) {
+                return ((n < 10) ? '0' + n : n);
+            }
+            function highlight() {
+                ticker.style.transitionDuration = "0s";
+                ticker.className = 'yellow';
+                setTimeout(function () {
+                    ticker.style.transitionDuration = "1s";
+                    ticker.className = 'gray';
+                }, HIGHLIGHT_TIME);
+            }
+            function empezar() {
+                peticion_http = inicializa_xhr();
+                pedirTexto();
+                id = setInterval(function () {
+                    pedirTexto();
+                }, REFRESH_TIME);
+                detener.value = 'Detener';
+                detener.onclick = parar;
+            }
+            function parar() {
+                clearInterval(id);
+                detener.value = 'Seguir';
+                detener.onclick = empezar;
+            }
+            function anterior() {
+                parar();
+                if (posActual > 0) {
+                    ticker.innerHTML = noticias[--posActual];
+                } else {
+                    ticker.innerHTML = noticias[noticias.length - 1];
+                    posActual = noticias.length - 1;
+                }
+                highlight();
+            }
+            function siguiente() {
+                parar();
+                if (posActual < noticias.length - 1) {
+                    ticker.innerHTML = noticias[++posActual];
+                } else {
+                    ticker.innerHTML = noticias[0];
+                    posActual = 0;
+                }
+                highlight();
+            }
+            function inicializarVariables(){
+                detener = document.getElementById('detener');
+                ticker = document.getElementById('ticker');
+            }
+            window.onload = function () {
+                peticion_http = inicializa_xhr();
+                inicializarVariables();
+                empezar();
+            };
+        </script>
     </body>
 </html>

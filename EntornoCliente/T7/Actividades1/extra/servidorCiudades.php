@@ -33,4 +33,3 @@ foreach ($ciudades as $j) {
 }
 $xml->appendChild($root);
 echo $xml->saveXML();
-?>

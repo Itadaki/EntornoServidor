@@ -45,12 +45,11 @@ $sql_insertar1 = "INSERT INTO " . TABLA1 . " VALUES" .
         "('12121212z','Luis', 985)," .
         "('12312312a','Sandra', 1050);";
 $sql_insertar2 = "INSERT INTO " . TABLA2 . " VALUES" .
-        "(0,'12345678z','955970000')," .
-        "(0,'12345678z','654332003')," .
-        "(0,'12312312a','622012012')," .
-        "(0,'12312312a','644111222');";
-$sql_select1 = "SELECT * FROM " . TABLA1;
-$sql_select2 = "SELECT * FROM " . TABLA2;
+        "(1,'12345678z','955970000')," .
+        "(2,'12345678z','654332003')," .
+        "(3,'12312312a','622012012')," .
+        "(4,'12312312a','644111222');";
+$sql_select = "select nombre, telefono from empresas.trabajadores, empresas.telefonos where trabajadores.dni = telefonos.dnitrabajador";
 $mensajeBD = "";
 $mensajeTabla = "";
 $mensajeInsertar = "";
@@ -61,14 +60,13 @@ $salidaDatos = "";
 $conexion = '';
 if ($conexion = conexion()) {
     if (crearBD()) {
-        if (crearTabla(TABLA1, $sql_tabla1)) {
+        if (crearTabla(SOLOTABLA1, $sql_tabla1)) {
             insertar($sql_insertar1);
-            visualizarCampos(TABLA1, $sql_select1);
         }
-        if (crearTabla(TABLA2, $sql_tabla2)) {
+        if (crearTabla(SOLOTABLA2, $sql_tabla2)) {
             insertar($sql_insertar2);
-            visualizarCampos(TABLA2, $sql_select2);
         }
+        visualizarCampos($sql_select);
     }
     cerrarConexion();
 }

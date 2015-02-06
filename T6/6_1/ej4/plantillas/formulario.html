@@ -1,0 +1,15 @@
+<form action="" method="POST">
+    <label {validacionNombre}>Nombre*</label> <input type="text" name="nombre" value="{valorNombre}" /><br>
+    Edad <input type="text" name="edad" value="{valorEdad}" /><br>
+    Sistema favorito: <select name="sistema">
+        <option {sistema windows}>Windows</option>
+        <option {sistema mac}>Mac</option>
+        <option {sistema linux}>Linux</option>
+    </select><br>
+    Te gusta el futbol?<br>
+    <input type="checkbox" name="futbol" value="" {futbol}/><br>
+    <input type="radio" name="sexo" value="hombre" {sexo hombre}/>Hombre 
+    <input type="radio" name="sexo" value="mujer" {sexo mujer}/>Mujer<br>
+    Aficiones: <textarea name="aficiones" rows="4" cols="20">{valorAficiones}</textarea><br>
+    <input type="submit" value="Enviar" name="enviar"/>
+</form>
