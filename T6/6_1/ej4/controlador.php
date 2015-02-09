@@ -30,7 +30,7 @@ require_once("funciones_vista.php");
 require_once("funciones_formulario.php");
 
 if (isset($_POST['enviar'])) {
-    procesForm();
+    veriForm();
 } else {
     displayForm();
 }

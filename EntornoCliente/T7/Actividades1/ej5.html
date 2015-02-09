@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<!--
+Autor = Diego Rodríguez Suárez-Bustillo
+Fecha = 09-feb-2015
+Licencia = gpl30 
+Version = 1.0
+Descripcion = 
+-->
+
+<!--
+Copyright (C) 2015 Diego Rodríguez Suárez-Bustillo
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<html>
+    <head>
+        <title>Ejercicio 5</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>Comprobar disponibilidad del login</h1>
+        <form action="" method="post">
+            <label for="login">Nombre de usuario:</label>
+            <input type="text" name="login" id="login" />
+            <a id="comprobar" href="#" onclick="comprobar()">Comprobar disponibilidad...</a>
+        </form>
+
+        <div id="disponibilidad"></div>
+        <script type="text/javascript">
+            var READY_STATE_COMPLETE = 4;
+            var peticion_http = null;
+            //Función para obtener la instancia del objeto XMLHttpRequest
+            function inicializa_xhr() {
+                if (window.XMLHttpRequest) {
+                    return new XMLHttpRequest();
+                }
+                else if (window.ActiveXObject) {
+                    return new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+
+            function comprobar() {
+                peticion_http = inicializa_xhr();
+                if (peticion_http) {
+                    peticion_http.onreadystatechange = procesaRespuesta;
+                    peticion_http.open("POST", "../CodigoEjercicios/compruebaDisponibilidadJSON.php", true);
+
+                    peticion_http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    var query_string = "login=" + encodeURIComponent(document.getElementById('login').value);
+                    peticion_http.send(query_string);
+                }
+            }
+
+            function procesaRespuesta() {
+                /*
+                 El nombre de usuario está libre:
+                 { disponible: "si" }
+                 El nombre de usuario está ocupado:
+                 { disponible: "no", alternativas: ["...", "...", ..., "..."] }
+                 6.
+                 */
+                if (peticion_http.readyState === READY_STATE_COMPLETE) {
+                    if (peticion_http.status === 200) {
+                        var disponibilidad = document.getElementById('disponibilidad');
+                        var documento_json = eval("(" + peticion_http.responseText + ")");
+                        var disponible = documento_json.disponible;
+
+                        var ul = document.createElement('ul');
+                        if (disponible === 'si') {
+                            disponibilidad.innerHTML = 'Este nombre esta disponible';
+                        } else {
+                            for (var i = 0; i < documento_json.alternativas.length; i++) {
+                                var li = document.createElement('li');
+                                li.innerHTML = '<a href="#" onclick="setValue(this)">' + documento_json.alternativas[i] + '</a>';
+                                ul.appendChild(li);
+                            }
+                            disponibilidad.appendChild(ul);
+                        }
+                    }
+                }
+            }
+
+            function setValue(login) {
+                document.getElementById('login').value = login.innerHTML;
+            }
+
+
+
+
+        </script>
+    </body>
+</html>

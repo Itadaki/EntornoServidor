@@ -2,9 +2,9 @@
     <label {validacionNombre}>Nombre*</label> <input type="text" name="nombre" value="{valorNombre}" /><br>
     Edad <input type="text" name="edad" value="{valorEdad}" /><br>
     Sistema favorito: <select name="sistema">
-        <option {sistema windows}>Windows</option>
-        <option {sistema mac}>Mac</option>
-        <option {sistema linux}>Linux</option>
+        <option value="windows" {sistema windows}>Windows</option>
+        <option value="mac" {sistema mac}>Mac</option>
+        <option value="linux" {sistema linux}>Linux</option>
     </select><br>
     Te gusta el futbol?<br>
     <input type="checkbox" name="futbol" value="" {futbol}/><br>

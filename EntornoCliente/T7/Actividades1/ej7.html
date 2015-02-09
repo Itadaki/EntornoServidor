@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<!--
+Autor = Diego Rodríguez Suárez-Bustillo
+Fecha = 09-feb-2015
+Licencia = gpl30 
+Version = 1.0
+Descripcion = 
+-->
+
+<!--
+Copyright (C) 2015 Diego Rodríguez Suárez-Bustillo
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="" rel="stylesheet" />
+        <style type="text/css">
+
+        </style>
+    </head>
+    <body>
+        <select id="alumnos" name="alumnos" onchange="comprobar()">
+            <option value='' selected>--Elija un alumno--</option>
+            <option>Pepe García García</option>
+            <option>Juan Gómez Gómez</option>
+        </select>
+        <select id="materias" name="materias" onchange="comprobar()">
+            <option value='' selected>--Elija una materia--</option>
+            <option>Lenguaje</option>
+            <option>Matemáticas</option>
+        </select>
+        <input type="text" id="calificacion" name="calificacion" value="" readonly="readonly" />
+        <script type="text/javascript">
+            var READY_STATE_COMPLETE = 4;
+            var peticion_http = null;
+            //Función para obtener la instancia del objeto XMLHttpRequest
+            function inicializa_xhr() {
+                if (window.XMLHttpRequest) {
+                    return new XMLHttpRequest();
+                }
+                else if (window.ActiveXObject) {
+                    return new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+            function comprobar() {
+                var alumnos = document.getElementById('alumnos');
+                var materias = document.getElementById('materias');
+                if (alumnos.value !== '' && materias.value !== '') {
+                    enviarPeticion();
+                } else {
+                    document.getElementById('calificacion').value='';
+                }
+            }
+            function enviarPeticion() {
+                peticion_http = inicializa_xhr();
+                if (peticion_http) {
+                    peticion_http.onreadystatechange = procesaRespuesta;
+                    peticion_http.open("POST", "../CodigoEjercicios/servidorCalificacion.php", true);
+
+                    peticion_http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    var query_string = crear_json();
+                    peticion_http.send(query_string);
+                    document.getElementById("alumnos").disabled = true;
+                    document.getElementById("materias").disabled = true;
+                }
+            }
+
+            function crear_json() {
+                var alumno = document.getElementById("alumnos").value;
+                var materia = document.getElementById("materias").value;
+
+                var JSONObject = new Object();
+                JSONObject.alumno = alumno;
+                JSONObject.materia = materia;
+                var objeto_json = JSON.stringify(JSONObject);
+                return objeto_json;
+            }
+
+            function procesaRespuesta() {
+                if (peticion_http.readyState === READY_STATE_COMPLETE) {
+                    if (peticion_http.status === 200) {
+                        var json = eval('(' + peticion_http.responseText + ')');
+                        var calificacion = json.calificacion;
+                        document.getElementById('calificacion').value = calificacion;
+                        document.getElementById("alumnos").disabled = false;
+                        document.getElementById("materias").disabled = false;
+                    }
+                }
+            }
+
+
+        </script>
+    </body>
+</html>

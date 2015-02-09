@@ -38,63 +38,26 @@ function conexion() {
     return $conexion;
 }
 
-function crearBD() {
-    $operacion = true;
-    global $conexion, $mensajeBD;
-    $consulta = "CREATE DATABASE " . BD;
-    mysqli_query($conexion, $consulta);
-    $errorNo = mysqli_errno($conexion);
-    $errorMsg = mysqli_error($conexion);
-    if ($errorNo == 0) {
-        $mensajeBD .= "<h2>Base de datos creada correctamente.</h2>";
-    } else if($errorNo == 1007){
-        $mensajeBD .= "<h2>La base de datos ya existe.</h2>";
-    } else {
-        $operacion = false;
-        $mensajeBD .= "<h2>Error al crear la base de datos. Se ha producido un error nº $errorNo que corresponde a: $errorMsg </h2>";
-    }
-    return($operacion);
-}
-
-function crearTabla($tabla, $query) {
-    $operacion = true;
-    global $conexion;
-    global $mensajeTabla;
-    @mysqli_query($conexion, $query);
-    $errorNo = mysqli_errno($conexion);
-    $errorMsg = mysqli_error($conexion);
-    if ($errorNo == 0) {
-        $mensajeTabla .= "<h2>Tabla $tabla creada correctamente.</h2>";
-    } else if($errorNo == 1050){
-        $mensajeTabla .= "<h2>La tabla $tabla ya existe.</h2>";
-    } else {
-        $operacion = false;
-        $mensajeTabla .= "<h2>Error al crear la tabla $tabla. Se ha producido un error nº $errorNo que corresponde a: $errorMsg</h2>";
-    }
-    return($operacion);
-}
-
-function insertar($query) {
-    global $conexion;
-    global $mensajeInsertar;
+function insertar($conexion,$query) {
     $resultado = @mysqli_query($conexion, $query);
     $errorNo = mysqli_errno($conexion);
     $errorMsg = mysqli_error($conexion);
     if ($resultado) {
-        $mensajeInsertar .= "<h2>Datos almacenados correctamente: [$errorNo - $errorMsg]</h2>";
+        $mensajeInsertar = "<h2>Datos almacenados correctamente: [$errorNo - $errorMsg]</h2>";
     } else if($errorNo == 1062){
-        $mensajeInsertar .= "<h2>Entrada duplicada.</h2>";
+        $mensajeInsertar = "<h2>Entrada duplicada.</h2>";
     } else {
-        $mensajeInsertar .= "<h2>Se ha producido un error nº $errorNo que corresponde a: $errorMsg </h2>";
+        $mensajeInsertar = "<h2>Se ha producido un error nº $errorNo que corresponde a: $errorMsg </h2>";
     }
+    return $mensajeInsertar;
 }
 
-function cerrarConexion() {
-    global $conexion, $mensajeCerrarConexion;
+function cerrarConexion($conexion) {
     $operacion = true;
     if (@mysqli_close($conexion)) {
-        $mensajeCerrarConexion .= "<h2> Conexión cerrada con exito</h2>";
+        $mensajeCerrarConexion = "<h2> Conexión cerrada con exito</h2>";
     } else {
-        $mensajeCerrarConexion .= "<h2> No se ha podido cerrar la conexión</h2>";
+        $mensajeCerrarConexion = "<h2> No se ha podido cerrar la conexión</h2>";
     }
+    return $mensajeCerrarConexion;
 }
