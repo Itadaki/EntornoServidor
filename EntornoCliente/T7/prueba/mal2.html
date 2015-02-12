@@ -64,6 +64,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <script type="text/javascript">
             var READY_STATE_COMPLETE = 4;
             var peticion_http = null;
+            var completed = '', watching = '', onHold = '', dropped = '', planToWatch = '';
             //Función para obtener la instancia del objeto XMLHttpRequest
             function inicializa_xhr() {
                 if (window.XMLHttpRequest) {
@@ -78,17 +79,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 peticion_http = inicializa_xhr();
                 if (peticion_http) {
                     peticion_http.onreadystatechange = procesaRespuesta;
-                    peticion_http.open("GET", "./malappinfo.xml", true);
-
-                    peticion_http.send();
-                }
-            }
-
-            function comprobar2() {
-                peticion_http = inicializa_xhr();
-                if (peticion_http) {
-                    peticion_http.onreadystatechange = procesaRespuesta;
-                    peticion_http.open("GET", "./get.php", true);
+                    peticion_http.open("GET", "./malappinfo.json", true);
 
                     peticion_http.send();
                 }
@@ -98,31 +89,44 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 if (peticion_http.readyState === READY_STATE_COMPLETE) {
                     if (peticion_http.readyState === 4) {
                         if (peticion_http.status === 200) {
-                            var documento_xml = peticion_http.responseXML;
-                            var root = documento_xml.getElementsByTagName('myanimelist')[0];
-                            var myinfo = root.getElementsByTagName('myinfo')[0];
-                            getUserInfo(myinfo);
-                            var animes = root.getElementsByTagName('anime');
+                            var documento_json = JSON.parse(peticion_http.responseText);
+                            console.log(documento_json);
+                            var animes = documento_json.myanimelist.anime;
+                            console.log(animes);
                             getAnimeInfo(animes);
-                            console.log(root);
                         }
                     }
                 }
             }
-            function getAnimeInfo(animes) {
-                var estados = ['','Watching', 'Completed', 'On hold', 'Dropped', '' ,'Plan to watch']
-                var status = ['', 'Airing', 'Finished Airing', 'Not Yet Aired']
+            function gestionar(animes) {
+                var my_status = animes[i].my_status;
                 for (var i = 0; i < animes.length; i++) {
-                    var my_status = animes[i].getElementsByTagName('my_status')[0].firstChild.nodeValue;
-                    if (my_status == '2') {
-                            console.log(animes[i]);
-                        var name = animes[i].getElementsByTagName('series_title')[0].firstChild.nodeValue;
-                        var img = animes[i].getElementsByTagName('series_image')[0].firstChild.nodeValue;
-                        var score = animes[i].getElementsByTagName('my_score')[0].firstChild.nodeValue;
-                        var s = '<div class="anime"><img src="' + img + '" /><span class="name">' + name + '</span><span class="score">' + score + '</span></div>';
-                        document.getElementsByTagName('body')[0].insertAdjacentHTML('beforeend', s);
+                    if (my_status == '1') {
+                        getAnimeInfo(watching, animes[i]);
+                    } else if (my_status == '2'){
+                        getAnimeInfo(completed, animes[i]);
+                    }else if (my_status == '3'){
+                        getAnimeInfo(onHold, animes[i]);
+                    }else if (my_status == '4'){
+                        getAnimeInfo(dropped, animes[i]);
+                    }else if (my_status == '5'){
+                        getAnimeInfo(watching, animes[i]);
+                    }else if (my_status == '7'){
+                        getAnimeInfo(watching, animes[i]);
                     }
                 }
+            }
+
+            function getAnimeInfo(cadena, anime) {
+                var estados = ['', 'Watching', 'Completed', 'On hold', 'Dropped', '', 'Plan to watch'];
+                var status = ['', 'Airing', 'Finished Airing', 'Not Yet Aired'];
+                var series_status = animes[i].series_status;
+                    var my_status = animes[i].my_status;
+                var name = animes[i].series_title;
+                        var img = animes[i].series_image;
+                        var score = animes[i].my_score;
+                        var s = '<div class="anime"><img src="' + img + '" /><span class="name">' + name + '</span><span class="score">' + score + '</span><div>Serie status: ' + status[series_status] + '</div><div>My status: ' + estados[my_status] + '</div></div>';
+                        document.getElementsByTagName('body')[0].insertAdjacentHTML('beforeend', s);
             }
             function getUserInfo(myinfo) {
                 var name = myinfo.getElementsByTagName('user_name')[0].firstChild.nodeValue;

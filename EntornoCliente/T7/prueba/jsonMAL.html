@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!--
+Autor = Diego Rodríguez Suárez-Bustillo
+Fecha = 12-feb-2015
+Licencia = gpl30 
+Version = 1.0
+Descripcion = 
+-->
+
+<!--
+Copyright (C) 2015 Diego Rodríguez Suárez-Bustillo
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="" rel="stylesheet" />
+        <style type="text/css">
+
+        </style>
+    </head>
+    <body>
+        <div>TODO write content</div>
+        <script type="text/javascript" src=""></script>
+        <script type="text/javascript">
+            function crear_json() {
+                
+                var JSONObject = new Object();
+                JSONObject.series_animedb_id = 1;
+                JSONObject.series_title = "Cowboy Bebop";
+                JSONObject.series_synonyms = "; Cowboy Bebop";
+                JSONObject.series_type = 1;
+                JSONObject.series_episodes = 26;
+                JSONObject.series_status = 2;
+                JSONObject.series_start = "1998-04-03";
+                JSONObject.series_end = "1999-04-24";
+                JSONObject.series_image = "http://cdn.myanimelist.net/images/anime/4/19644.jpg";
+                JSONObject.my_id = 0;
+                JSONObject.my_whatched_episodes = 26;
+                JSONObject.my_start_date = "0000-00-00";
+                JSONObject.my_finish_date = "0000-00-00";
+                JSONObject.my_score = 7;
+                JSONObject.my_status = 2;
+                JSONObject.my_rewatching = 0;
+                JSONObject.my_rewatching_ep = 0;
+                JSONObject.my_last_updated = 1399317139;
+                JSONObject.my_tags = "";
+                console.log(JSONObject);
+                var objeto_json = JSON.stringify(JSONObject);
+                return objeto_json;
+            }
+        </script>
+    </body>
+</html>

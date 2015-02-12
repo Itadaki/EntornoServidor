@@ -1,0 +1,24 @@
+<form action = "" method = "post">
+    <label for="nombre"{validacionNombre}>Nombre*:</label>
+    <input type="text" name="nombre" id="nombre" value="{nombre}" size=TAMNOMBRE maxlength=TAMNOMBRE>
+    <label for="edad">Edad:</label>
+    <input type="text" name="edad" id="edad" value="{edad}"size="TAMEDAD" maxlength=TAMEDAD >
+    <label for="sistema">Tu sistema favorito</label>
+    <select name="sistema" id="sistema" size="1" >
+        <option selected value="Linux"{sistema Linux}>Linux</option>
+        <option value="Unix"{sistema Unix}>Unix</option>
+        <option value="Windows"{sistema Windows}>Windows</option>
+        <option value="Macintosh"{sistema Macintosh}>Macintosh</option>
+    </select><br><br>
+    <label for="futbol">¿Te gusta el Futbol?</label>
+    <input type="checkbox" name="futbol" id="futbol" value="S"{futbol}><br >
+    ¿Cuál es tu sexo?
+    <label for="hombre">Hombre</label>
+    <input type="radio" name="sexo" id="hombre" value="hombre" checked {sexo hombre}>
+           <label for="Mujer">Mujer</label>
+    <input type="radio" name="sexo" id="mujer" value="mujer"{sexo mujer}><br>
+    <label for="aficiones">Aficiones:</label>
+    <textarea rows="5" name="aficiones" id="aficiones" cols="28" >{aficiones}</textarea>
+    <hr>
+    <input type="submit" value="Enviar datos" name="enviar">
+</form>

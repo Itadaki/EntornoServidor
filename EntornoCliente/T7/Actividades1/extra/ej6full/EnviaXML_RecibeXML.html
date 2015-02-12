@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<!--
+Autor = Diego Rodríguez Suárez-Bustillo
+Fecha = 12-feb-2015
+Licencia = gpl30 
+Version = 1.0
+Descripcion = EJERCICIO 6 REVISION
+
+NUEVAS NORMAS
+Hay que hacer que pueda ser con estas posibilidades
+Envio -> Respuesta
+ XML       XML <--------
+ JSON      JSON
+ XML       JSON
+ JSON      XML
+-->
+
+<!--
+Copyright (C) 2015 Diego Rodríguez Suárez-Bustillo
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<html>
+    <head>
+        <title>Ejercicio 6</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>Envia XML - Recibe XML</h1>
+        <select name="comunidades" id="comunidades" onchange="pedirCiudades()">
+            <option>--Comunidad--</option>
+            <option>Castilla y León</option>
+            <option>Castilla La Mancha</option>
+            <option>Comunidad Valenciana</option>
+        </select>
+
+        <select name="ciudades" id="ciudades" disabled><option>--Ciudad--</option></select>
+        <script type="text/javascript">
+            var READY_STATE_COMPLETE = 4;
+            var peticion_http = null;
+            //Función para obtener la instancia del objeto XMLHttpRequest
+            function inicializa_xhr() {
+                if (window.XMLHttpRequest) {
+                    return new XMLHttpRequest();
+                }
+                else if (window.ActiveXObject) {
+                    return new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+
+            function pedirCiudades() {
+                peticion_http = inicializa_xhr();
+                if (peticion_http) {
+                    peticion_http.onreadystatechange = procesaRespuesta;
+                    peticion_http.open("POST", "RecibeXML_EnviaXML.php", true);
+                    
+                    peticion_http.setRequestHeader("Content-Type", "text/xml");
+                    peticion_http.send(crea_xml());
+                }
+            }
+
+            /*
+             XML a generar:
+             <comunidad>#comunidad</comunidad>
+             */            
+            function crea_xml() {
+                var comunidad = document.getElementById("comunidades");
+                //Crea un nuevo documento DOM createDocument(nsURI, name, doctype)
+                var doc = document.implementation.createDocument(null, "comunidad", null);
+                //Crea el elemento con su valor
+                var valor = doc.createTextNode(comunidad.selectedIndex);
+                doc.documentElement.appendChild(valor);
+                return doc;
+            }
+
+            /*
+             Respuesta del servidor
+             <ciudades>
+               <ciudad>Ciudad1</ciudad>
+               <ciudad>Ciudad2</ciudad>
+               ...
+               <ciudad>CiudadN</ciudad>
+             </ciudades>
+             */
+            function procesaRespuesta() {
+                if (peticion_http.readyState === READY_STATE_COMPLETE) {
+                    if (peticion_http.status === 200) {
+                        var select = document.getElementById('ciudades');
+                        while (select.options.length > 1) {
+                            select.remove(1);
+                        }
+                        select.disabled = false;
+                        var documento_xml = peticion_http.responseXML;
+                        var root = documento_xml.getElementsByTagName("ciudades")[0];
+                        for (var i = 0; i < root.childNodes.length; i++) {
+                            var ciudad = root.childNodes[i].firstChild.nodeValue;
+                            var option = document.createElement("option");
+                            option.text = ciudad;
+                            select.options.add(option, 1);
+                        }
+                    }
+                }
+            }
+        </script>
+    </body>
+</html>

@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <!--
 Autor = Diego Rodríguez Suárez-Bustillo
-Fecha = 09-feb-2015
+Fecha = 12-feb-2015
 Licencia = gpl30 
 Version = 1.0
-Descripcion = 
+Descripcion = EJERCICIO 6 REVISION
+
+NUEVAS NORMAS
+Hay que hacer que pueda ser con estas posibilidades
+Envio -> Respuesta
+ XML       XML 
+ JSON      JSON
+ XML       JSON
+ JSON      XML <--------
 -->
 
 <!--
@@ -26,26 +34,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <html>
     <head>
-        <title>TODO supply a title</title>
+        <title>Ejercicio 6</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="" rel="stylesheet" />
-        <style type="text/css">
-
-        </style>
     </head>
     <body>
-        <select id="alumnos" name="alumnos" onchange="comprobar()">
-            <option value='' selected>--Elija un alumno--</option>
-            <option>Pepe García García</option>
-            <option>Juan Gómez Gómez</option>
+        <h1>Envia JSON - Recibe XML</h1>
+        <select name="comunidades" id="comunidades" onchange="pedirCiudades()">
+            <option>--Comunidad--</option>
+            <option>Castilla y León</option>
+            <option>Castilla La Mancha</option>
+            <option>Comunidad Valenciana</option>
         </select>
-        <select id="materias" name="materias" onchange="comprobar()">
-            <option value='' selected>--Elija una materia--</option>
-            <option>Lenguaje</option>
-            <option>Matemáticas</option>
-        </select>
-        <input type="text" id="calificacion" name="calificacion" value="" readonly="readonly" />
+
+        <select name="ciudades" id="ciudades" disabled><option>--Ciudad--</option></select>
         <script type="text/javascript">
             var READY_STATE_COMPLETE = 4;
             var peticion_http = null;
@@ -58,46 +60,53 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     return new ActiveXObject("Microsoft.XMLHTTP");
                 }
             }
-            function comprobar() {
-                if (document.getElementById('alumnos').value !== '' && document.getElementById('materias').value !== '') {
-                    enviarPeticion();
-                } else {
-                    document.getElementById('calificacion').value = '';
-                }
-            }
-            function enviarPeticion() {
+
+            function pedirCiudades() {
                 peticion_http = inicializa_xhr();
                 if (peticion_http) {
                     peticion_http.onreadystatechange = procesaRespuesta;
-                    peticion_http.open("POST", "../CodigoEjercicios/servidorCalificacion.php", true);
-
-                    peticion_http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                    peticion_http.send(crear_json);
-                    document.getElementById("alumnos").disabled = true;
-                    document.getElementById("materias").disabled = true;
+                    peticion_http.open("POST", "RecibeJSON_EnviaXML.php", true);
+                    
+                    peticion_http.setRequestHeader("Content-Type", "application/json");
+                    peticion_http.send(crear_json());
                 }
             }
 
+            /*
+             JSON a generar:
+             {comunidad:#comunidad}
+             */            
             function crear_json() {
+                var comunidad = document.getElementById("comunidades").selectedIndex;
                 var JSONObject = new Object();
-                JSONObject.alumno = document.getElementById("alumnos").value;
-                JSONObject.materia = document.getElementById("materias").value;
+                JSONObject.comunidad = comunidad;
                 var objeto_json = JSON.stringify(JSONObject);
                 return objeto_json;
             }
 
+            /*
+             Respuesta del servidor
+             { ciudades : [..., ..., ...] }
+             */
             function procesaRespuesta() {
                 if (peticion_http.readyState === READY_STATE_COMPLETE) {
                     if (peticion_http.status === 200) {
-                        var json = eval('(' + peticion_http.responseText + ')');
-                        document.getElementById('calificacion').value = json.calificacion;
-                        document.getElementById("alumnos").disabled = false;
-                        document.getElementById("materias").disabled = false;
+                        var select = document.getElementById('ciudades');
+                        while (select.options.length > 1) {
+                            select.remove(1);
+                        }
+                        select.disabled = false;
+                        var documento_xml = peticion_http.responseXML;
+                        var root = documento_xml.getElementsByTagName("ciudades")[0];
+                        for (var i = 0; i < root.childNodes.length; i++) {
+                            var ciudad = root.childNodes[i].firstChild.nodeValue;
+                            var option = document.createElement("option");
+                            option.text = ciudad;
+                            select.options.add(option, 1);
+                        }
                     }
                 }
             }
-
-
         </script>
     </body>
 </html>
