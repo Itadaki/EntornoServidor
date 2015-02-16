@@ -38,7 +38,7 @@ function generar() {
     $funcion = $funcion;
     $sql = $funcion . ' ';
     if ($funcion == 'insert') {
-        $sql.='INTO ' . $from . ' (' . $select . ') values (' . $values . ')';
+        $sql.='INTO ' . $from . '(' . $select . ') values (' . $values . ')';
     } elseif ($funcion == 'update') {
         $sql.= $from . ' SET ' . $select;
         if (!empty($colWhere)) {
@@ -50,7 +50,5 @@ function generar() {
             $sql.=' WHERE ' . $where;
         }
     }
-    /* esta funcion podría generar la siguiente sentencia: $sql_insertar="INSERT INTO " .TABLA. "(nombre,sexo,edad,sistema,aficiones,futbol) VALUES(?,?,?,?,?,?)";
-     */
     return $sql;
 }

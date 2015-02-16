@@ -59,8 +59,8 @@ function visualizarDatos() {
     print ($html);
 }
 
-function displayForm($camposerroneos, $campospendientes) {
-    if ($campospendientes and $camposerroneos) {
+function displayForm($camposerroneos, $campospendientes, $duplicado) {
+    if ($campospendientes and $camposerroneos and $duplicado) {
         $error = '<p class="error">Hubo algunos problemas con el formulario que usted presentó.
 Por favor, complete los campos en negrita de abajo y haga clic en Enviar
 para volver a enviar el formulario.</p>
@@ -77,10 +77,13 @@ Por favor, introduzca valores adecuados en los campos .</p>';
         $error = '<p>Por favor, rellene sus datos a continuación y haga clic en Enviar.
 Los campos marcados con un asterisco (*) son obligatorios.</p>';
     }
+    if ($duplicado){
+        $error.='<p class="error2">DNI duplicado.</p>';
+    }
     $datos = array(
         "error" => $error,
         "validacionNombre" => validateField("nombre", $campospendientes, $camposerroneos),
-        "validacionDni" => validateField("dni", $campospendientes, $camposerroneos),
+        "validacionDni" => validateField("dni", $campospendientes, $camposerroneos) . (($duplicado)?'class="error2"':''),
         "nombre" => setValue("nombre"),
         "dni" => setValue("dni"),
         "salario" => setValue("salario"),

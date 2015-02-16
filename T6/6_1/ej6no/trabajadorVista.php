@@ -1,11 +1,12 @@
 <?php
 
-function validateField($campo, $camposNoRellenados, $camposerroneos) {
+function validateField($campo, $camposNoRellenados, $camposerroneos, $duplicado = '') {
     if (in_array($campo, $camposNoRellenados)) {
-        return ' class="error"';
-    } elseif (in_array($campo, $camposerroneos)) {
         return ' class="error1"';
-    }
+    } elseif (in_array($campo, $camposerroneos)) {
+        return ' class="error2"';
+    } elseif ($campo == 'dni' and $duplicado)
+        return ' class="error3"';
 }
 
 function setValue($nombreCampo) {
@@ -14,36 +15,13 @@ function setValue($nombreCampo) {
     }
 }
 
-function setChecked($nombreCampo, $valorCampo) {
-    if (isset($_POST[$nombreCampo]) and $_POST[$nombreCampo] == $valorCampo) {
-        return ' checked="checked"';
-    }
-}
-
-function setSelected($nombreCampo, $valorCampo) {
-    if (isset($_POST[$nombreCampo]) and $_POST[$nombreCampo] == $valorCampo) {
-        return ' selected="selected"';
-    }
-}
-
 function visualizarDatos() {
     global $mensaje;
-    global $mensajeInsertar;
     global $mensajeCerrarConexion;
     global $mensajeAbrirConexion;
-    global $nombre;
     global $enlace;
-    $nombre = $_POST['nombre'];
-    $dni = $_POST['dni'];
-    $salario = $_POST['salario'];
-    $telf = $_POST['telf'];
     $datos = array(
-        "nombre" => $nombre,
-        "dni" => $dni,
-        "salario" => $salario,
-        "telf" => $telf,
         "mensaje" => $mensaje,
-        "mensajeInsertar" => $mensajeInsertar,
         "mensajeAbrirConexion" => $mensajeAbrirConexion,
         "mensajeCerrarConexion" => $mensajeCerrarConexion,
         "enlace" => $enlace
@@ -59,32 +37,41 @@ function visualizarDatos() {
     print ($html);
 }
 
-function displayForm($camposerroneos, $campospendientes) {
-    if ($campospendientes and $camposerroneos) {
-        $error = '<p class="error">Hubo algunos problemas con el formulario que usted presentó.
-Por favor, complete los campos en negrita de abajo y haga clic en Enviar
-para volver a enviar el formulario.</p>
-<p class="error1">Hubo algunos problemas con el formulario que usted presentó.
-Por favor, introduzca valores adecuados en los campos.</p>';
-    } elseif ($campospendientes) {
-        $error = '<p class="error">Hubo algunos problemas con el formulario que usted presentó.
+function displayForm($camposerroneos, $campospendientes, $duplicado) {
+    $error1 = "";
+        $error2 = "";
+        $error3 = "";
+        $mensaje = "";
+    if ($campospendientes or $camposerroneos or $duplicado) {
+        if ($campospendientes) {
+            $error1 = '<p class="error1">Hubo algunos problemas con el formulario que usted presentó.
 Por favor, complete los campos en negrita de abajo y haga clic en Enviar
 para volver a enviar el formulario.</p>';
-    } elseif ($camposerroneos) {
-        $error = '<p class="error1">Hubo algunos problemas con el formulario que usted presentó.
-Por favor, introduzca valores adecuados en los campos .</p>';
+        }
+        if ($camposerroneos) {
+            $error2 = '<p class="error2">Hubo algunos problemas con el formulario que usted presentó.
+Por favor, introduzca valores adecuados en los campos.</p>';
+        }
+        if ($duplicado) {
+            $error3 = '<p class="error3">Hubo algunos problemas con el formulario que usted presentó.
+El DNI ya existe.</p>';
+        }
     } else {
-        $error = '<p>Por favor, rellene sus datos a continuación y haga clic en Enviar.
+        $mensaje = '<p>Por favor, rellene sus datos a continuación y haga clic en Enviar.
 Los campos marcados con un asterisco (*) son obligatorios.</p>';
     }
     $datos = array(
-        "error" => $error,
+        "error1" => $error1,
+        "error2" => $error2,
+        "error3" => $error3,
+        "mensaje" => $mensaje,
         "validacionNombre" => validateField("nombre", $campospendientes, $camposerroneos),
-        "validacionDni" => validateField("dni", $campospendientes, $camposerroneos),
         "nombre" => setValue("nombre"),
+        "validacionDni" => validateField("dni", $campospendientes, $camposerroneos, $duplicado),
         "dni" => setValue("dni"),
-        "salario" => setValue("salario"),
-        "telf" => setValue("telf")
+        "salario" => setvalue("salario"),
+        "telefono1" => setValue("telefono1"),
+        "telefono2" => setValue("telefono2")
     );
     $plantilla = "plantillas/formulario.html";
     $formulario = respuesta($datos, $plantilla);

@@ -21,5 +21,5 @@ $enlace = "";
 if (isset($_POST["enviar"])) {
     procesForm();
 } else {
-    displayForm(array(), array());
+    displayForm(array(), array(), 0);
 }

@@ -1,5 +1,26 @@
 <?php
 
+function load($valores_campos, $tabla) {
+    addTable($tabla);
+    setFuncion("select");
+    foreach ($valores_campos as $campo => $valor) {
+        addSelect($campo);
+        addWhere("$campo = ?");
+        addTipo($valor);
+    }
+    $sql_select = generar();
+    return ejecutar($sql_select, $valores_campos, $tabla);
+}
+
+function existe($valor, $campo) {
+    $duplicado = '';
+    $valores_campos["$campo"] = $valor;
+    $resultado = load($valores_campos, TABLA1);
+    if ($resultado)
+        $duplicado = 1;
+    return $duplicado;
+}
+
 function procesForm() {
     global $enlace, $conexion;
     $camposObligatorios = array("nombre", "dni");
@@ -16,8 +37,16 @@ function procesForm() {
     if (isset($_POST["dni"]) && !empty($_POST["dni"]) && !preg_match("/^[0-9]{8}[a-zA-Z]$/", $_POST["dni"])) {
         $camposerroneos[] = "dni";
     }
-    if ($campospendientes or $camposerroneos) {
-        displayForm($camposerroneos, $campospendientes);
+
+    $duplicado = 0;
+    if (isset($_POST["dni"]) && !empty($_POST["dni"])) {
+        $valor = $_POST["dni"];
+        $campo = 'dni';
+        $duplicado = existe($valor, $campo);
+    }
+
+    if ($campospendientes or $camposerroneos or $duplicado) {
+        displayForm($camposerroneos, $campospendientes, $duplicado);
     } else {
 //        $conexion = conexion();
         $valores_campos['nombre'] = $_POST['nombre'];
@@ -34,7 +63,7 @@ function procesForm() {
         if ($_POST['telf'] == '') {
             $valores_campos2['telefono'] = null;
         } else {
-            $valores_campos2['telefono'] = (int)$_POST['telf'];
+            $valores_campos2['telefono'] = (int) $_POST['telf'];
         }
         guardarUsuario($valores_campos2, TABLA2);
         cerrarConexion();
