@@ -1,5 +1,5 @@
+<meta charset="UTF-8">
 <?php
-
 /*
  * Autor = Diego Rodríguez Suárez-Bustillo
  * Fecha = 13-ene-2015
@@ -110,32 +110,32 @@ foreach ($array as $value) {
     echo $value . '<br>';
 }
 
-/*12. Copia el fichero en otro llamado copia.txt. 
+/* 12. Copia el fichero en otro llamado copia.txt. 
  * Visualiza un mensaje si ha habido problemas con la copia 
- * y otro si la copia se ha realizado sin problemas.*/
+ * y otro si la copia se ha realizado sin problemas. */
 echo "<h1>12. Copia el fichero en otro llamado copia.txt</h1>";
-if (copy("fichero.txt", "copia.txt")){
+if (copy("fichero.txt", "copia.txt")) {
     $mensaje = "Copia realizada correctamente";
 } else {
     $mensaje = "Error en la copia del archivo";
 }
 echo $mensaje;
 
-/*13. Renombra la copia por el nombre otraCopia.txt 
- * con mensajes similares al punto anterior.*/
+/* 13. Renombra la copia por el nombre otraCopia.txt 
+ * con mensajes similares al punto anterior. */
 echo "<h1>13. Renombra la copia por el nombre otraCopia.txt</h1>";
-if (rename("copia.txt", "otraCopia.txt")){
+if (rename("copia.txt", "otraCopia.txt")) {
     $mensaje = "Renombrado realizado correctamente";
 } else {
     $mensaje = "Error en el renombrado del archivo";
 }
 echo $mensaje;
 
-/*14. Elimina otraCopia.txt.*/
+/* 14. Elimina otraCopia.txt. */
 unlink("otraCopia.txt");
 
-/*15. Visualiza la fecha y hora de la última modificación de fichero.txt 
+/* 15. Visualiza la fecha y hora de la última modificación de fichero.txt 
  * (utiliza las funciones date() y filemtime()) 
- * y el tamaño del fichero.*/
+ * y el tamaño del fichero. */
 echo "<h1>15. Visualiza la fecha y hora de la última modificación de fichero.txt</h1>";
-echo "Ultima modificacion ". date('H:i:s A \d\e\l d/m/Y ', filemtime("fichero.txt"));
+echo "Ultima modificacion " . date('H:i:s A \d\e\l d/m/Y ', filemtime("fichero.txt"));
