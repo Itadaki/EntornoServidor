@@ -25,12 +25,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$random = microtime() . rand(10 * 45, 100 * 98);
-//echo $random;
-
-echo time() . '<br>';
-echo microtime() . '<br>';
 $micro = microtime();
 $arr = explode(' ', $micro);
-$ref = $arr[1] . explode('.', $arr[0])[1];
-echo $micro . '<br>' . $ref . rand(10, 99);
+foreach (str_split ($arr[1]) as $value) {
+    echo chr(rand(65, 81)+$value).'='.$value.'<br>';
+}
+$ref = rand(0, 9). $arr[1] . explode('.', $arr[0])[1]. chr(rand(65, 90));
+echo $micro . '<br>' . $ref;
+echo "<div style='background:url(http://www.barcode-generator.org/zint/api.php?bc_data=$ref) no-repeat center; width:300; height:120px'></div>";

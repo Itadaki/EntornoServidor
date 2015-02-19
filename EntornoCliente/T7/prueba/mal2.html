@@ -84,13 +84,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     peticion_http.send();
                 }
             }
-
+var v;
             function procesaRespuesta() {
                 if (peticion_http.readyState === READY_STATE_COMPLETE) {
                     if (peticion_http.readyState === 4) {
                         if (peticion_http.status === 200) {
+                            console.log(peticion_http.responseText);
                             var documento_json = JSON.parse(peticion_http.responseText);
-                            console.log(documento_json);
+                            v=documento_json;
                             var animes = documento_json.myanimelist.anime;
                             console.log(typeof(animes));
                             getAnimeInfo(animes);

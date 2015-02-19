@@ -40,3 +40,9 @@ SERVIDOR:
 DISEÑO:
 [ ] Prototipo
 [ ] Guia de estilos 
+
+
+
+
+
+Codigo de barras: http://www.barcode-generator.org/zint/api.php?bc_data=xxxxnumeroxxxx
