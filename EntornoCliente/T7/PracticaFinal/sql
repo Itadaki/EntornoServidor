@@ -1,0 +1,132 @@
+|PROVINCIAS|
+| ID* | Nombre |
+
+create table `provincias`(
+`id`      int(2) AUTO_INCREMENT,
+`nombre`  varchar(30),
+constraint pk_provincias primary key (id) 
+);
+insert into provincias (nombre) values ('Andalucía'); --1
+insert into provincias (nombre) values ('Aragón'); --2
+insert into provincias (nombre) values ('Asturias'); --3
+insert into provincias (nombre) values ('Cantabria'); --4
+insert into provincias (nombre) values ('Castilla-La Mancha'); --5
+insert into provincias (nombre) values ('Castilla y León'); --6
+insert into provincias (nombre) values ('Cataluña'); --7
+insert into provincias (nombre) values ('Comunidad Valenciana'); --8
+insert into provincias (nombre) values ('Extremadura'); --9
+insert into provincias (nombre) values ('Galicia'); --10
+insert into provincias (nombre) values ('La Rioja'); --11
+insert into provincias (nombre) values ('Madrid'); --12
+insert into provincias (nombre) values ('Navarra'); --13
+insert into provincias (nombre) values ('País Vasco'); --14
+insert into provincias (nombre) values ('Murcia'); --15
+
+ciudades
+| ID* | Provincia(provincias.id)* | Nombre |
+
+create table `ciudades`(
+`id`          int(5) AUTO_INCREMENT,
+`provincia`   int(2),
+`nombre`      varchar(30),
+constraint pk_provincias primary key (id, provincia),
+constraint fk_id_provincias foreign key (provincia) references provincias(id) on delete cascade
+);
+
+
+--Andalucía
+insert into ciudades (provincia, nombre) values (1,'Alcalá de Guadaíra');
+insert into ciudades (provincia, nombre) values (1,'Sevilla');
+insert into ciudades (provincia, nombre) values (1,'Cádiz');
+
+--Aragón
+insert into ciudades (provincia, nombre) values (2,'Huesca');
+insert into ciudades (provincia, nombre) values (2,'Teruel');
+insert into ciudades (provincia, nombre) values (2,'Zaragoza');
+
+--Asturias
+insert into ciudades (provincia, nombre) values (3,'Gijón');
+insert into ciudades (provincia, nombre) values (3,'Oviedo');
+insert into ciudades (provincia, nombre) values (3,'Aviles');
+
+--Cantabria
+insert into ciudades (provincia, nombre) values (4,'Laredo');
+insert into ciudades (provincia, nombre) values (4,'Santander');
+insert into ciudades (provincia, nombre) values (4,'Torrelavega');
+
+--Castilla-La Mancha
+insert into ciudades (provincia, nombre) values (5,'Ciudad Real');
+insert into ciudades (provincia, nombre) values (5,'Cuenca');
+insert into ciudades (provincia, nombre) values (5,'Albacete');
+
+--Castilla y León
+insert into ciudades (provincia, nombre) values (6,'Burgos');
+insert into ciudades (provincia, nombre) values (6,'León');
+insert into ciudades (provincia, nombre) values (6,'Valladolid');
+
+--Cataluña
+insert into ciudades (provincia, nombre) values (7,'Barcelona');
+insert into ciudades (provincia, nombre) values (7,'Girona');
+insert into ciudades (provincia, nombre) values (7,'Lleida');
+
+--Comunidad Valenciana
+insert into ciudades (provincia, nombre) values (8,'Benidorm');
+insert into ciudades (provincia, nombre) values (8,'Torrevieja');
+insert into ciudades (provincia, nombre) values (8,'Valencia');
+
+--Extremadura
+insert into ciudades (provincia, nombre) values (9,'Badajoz');
+insert into ciudades (provincia, nombre) values (9,'Cáceres');
+insert into ciudades (provincia, nombre) values (9,'Plasencia');
+
+--Galicia
+insert into ciudades (provincia, nombre) values (10,'Lugo');
+insert into ciudades (provincia, nombre) values (10,'Ourense');
+insert into ciudades (provincia, nombre) values (10,'Santiago de Compostela');
+
+--La Rioja
+insert into ciudades (provincia, nombre) values (11,'Arnedo');
+insert into ciudades (provincia, nombre) values (11,'Haro');
+insert into ciudades (provincia, nombre) values (11,'Logroño');
+
+--Madrid
+insert into ciudades (provincia, nombre) values (12,'Madrid');
+insert into ciudades (provincia, nombre) values (12,'Soto del Real');
+insert into ciudades (provincia, nombre) values (12,'Fuenlabrada');
+
+--Navarra
+insert into ciudades (provincia, nombre) values (13,'Pamplona');
+insert into ciudades (provincia, nombre) values (13,'Tudela');
+insert into ciudades (provincia, nombre) values (13,'Villafranca');
+
+--País Vasco
+insert into ciudades (provincia, nombre) values (14,'Bilbao');
+insert into ciudades (provincia, nombre) values (14,'Donostia');
+insert into ciudades (provincia, nombre) values (14,'Vitoria-Gasteiz');
+
+--Murcia
+insert into ciudades (provincia, nombre) values (15,'Cartagena');
+insert into ciudades (provincia, nombre) values (15,'Lorca');
+insert into ciudades (provincia, nombre) values (15,'Murcia');
+
+
+compras
+| ID* | Nombre | AP1 | AP2 | DNI | Email | Telf | origen(ciudades.id) | destino(ciudades.id) | 
+
+create table `referencias`(
+`id`          int(10),
+`fecha`      timestamp DEFAULT NOW(),
+`nombre`     varchar(30) not null,
+`ap1`         varchar(30) not null,
+`ap2`         varchar(30),
+`dni`         varchar(9) not null,
+`email`       varchar(50) not null,
+`telf`        int(9) not null,
+`origen`      int(5) not null,
+`destino`     int(5) not null,
+constraint pk_referencias primary key (id),
+constraint fk_origen_referencias foreign key (origen) references ciudades(id),
+constraint fk_destino_referencias foreign key (destino) references ciudades(id)
+);
+
+insert into referencias values (0,null,'Diego','Rodríguez', 'Suárez-Bustillo', '53649793Q', 'diegorbustillo@gmail.com', 918476638, 35, 1);

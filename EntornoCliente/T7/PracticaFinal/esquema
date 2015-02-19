@@ -1,0 +1,42 @@
+
+BASE DE DATOS:
+
+provincias
+| ID* | Nombre |
+
+ciudades
+| ID* | Provincia(provincias.id)* | Nombre |
+
+compras
+| ID* | Nombre | AP1 | AP2 | DNI | Email | Telf | origen(ciudades.id) | destino(ciudades.id) | 
+
+
+
+VALIDACIONES en CLIENTE y SERVIDOR:
+[ ] Nombre + APs -> solo TEXTO
+[ ] DNI -> formato correcto
+[ ] Email -> formato correcto
+[ ] Telefono -> formato correcto
+[ ] Origen y destino -> tienen valores
+[ ] Todos los campos son OBLIGATORIOS
+
+[ ] Boton enviar -> Habilitado solo cuando los campos esten rellenos | Borrado de campos = deshabilitar
+
+
+AJAX:
+[ ] Generacion de ciudades origen en lado servidor con consulta BD
+[ ] Generacion de ciudades destino en funcion del origen (quitar el origen)
+[ ] Envio de origen al servidor con JSON en POST
+[ ] Recepcion de lista destinos con XML
+[ ] Separar en lista por comunidades mediante <optgroup>
+
+
+SERVIDOR:
+[ ] Separar componentes
+[ ] Validaciones pertinentes (^)
+[ ] Volver al formulario si hay algun campo incorrecto
+
+
+DISEÑO:
+[ ] Prototipo
+[ ] Guia de estilos 

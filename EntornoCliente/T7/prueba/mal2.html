@@ -92,7 +92,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             var documento_json = JSON.parse(peticion_http.responseText);
                             console.log(documento_json);
                             var animes = documento_json.myanimelist.anime;
-                            console.log(animes);
+                            console.log(typeof(animes));
                             getAnimeInfo(animes);
                         }
                     }

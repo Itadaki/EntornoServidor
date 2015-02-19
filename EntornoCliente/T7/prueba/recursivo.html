@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<!--
+Autor = Diego Rodríguez Suárez-Bustillo
+Fecha = 19-feb-2015
+Licencia = gpl30 
+Version = 1.0
+Descripcion = 
+-->
+
+<!--
+Copyright (C) 2015 Diego Rodríguez Suárez-Bustillo
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="" rel="stylesheet" />
+        <style type="text/css">
+            table{border: 2px solid; margin:2px; padding:2px;}
+            tr{border: 1px solid}
+            td:first-child{background: #DDDDB7};
+        </style>
+    </head>
+    <body>
+        <table id="t1"></table>
+        <script type="text/javascript" src=""></script>
+        <script type="text/javascript">
+            var json = JSON.parse('{"cadena": "soy una cadena", "array":["1","2","3"], "booleano":true, "objeto":{"cadena":"hola", "cadena2":"hola", "cadena3":"hola", "cadena4":"hola"}}');
+            var root = document.getElementById('t1');
+            function recorrer(obj) {
+                var s = '';
+                for (var key in obj) {
+                    console.log(key + "=" + obj[key]);
+                    if (typeof (obj[key]) === "object") {
+                        console.log(obj[key] + ' ' + Array.isArray(obj[key]));
+                        s += '<tr><td>'+key+'</td><td><table>';
+                        s += recorrer(obj[key]);
+                        s += '</td></table>';
+                    } else {
+                        s += '<tr><td>' + key + '</td>' + '<td>' + obj[key] + '</td></tr>';
+                    }
+                }
+                return s;
+            }
+            function f(){
+                root.innerHTML += recorrer(json);
+            }
+        </script>
+    </body>
+</html>
