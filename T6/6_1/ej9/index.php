@@ -30,5 +30,5 @@ if ($fila) {
     }
     visualizarPagina($imagenes);
     $valores_campos['visitas'] = $valorcontador;
-    aumentarContador();
+    aumentarContador($valores_campos);
 }

@@ -8,21 +8,18 @@ function ejecutar($sql, $valores_campos, $tabla) {
         $consulta = mysqli_stmt_init($conexion);
         mysqli_stmt_prepare($consulta, $sql);
 //la función mysqli_stmt_bind_param() necesita referencias cuando se utiliza con call_user_func_array()
-        if ($tipos) {
-            $ejecucion = array(&$consulta, &$tipos);
-            foreach ($valores_campos as $key => $valor) {
-                $ejecucion[] = &$valores_campos[$key];
-            }
-            @call_user_func_array("mysqli_stmt_bind_param", $ejecucion);
+        $ejecucion = array(&$consulta, &$tipos);
+        foreach ($valores_campos as $key => $valor) {
+            $ejecucion[] = &$valores_campos[$key];
         }
+        call_user_func_array("mysqli_stmt_bind_param", $ejecucion);
         return ejecutarConsulta($consulta, $tabla);
-        cerrarConexion();
     }
 }
 
 function conexion() {
     global $mensajeAbrirConexion;
-    $conexion = @mysqli_connect(SERVIDOR, USUARIO, PASSWORD);
+    $conexion = mysqli_connect(SERVIDOR, USUARIO, PASSWORD);
     $numerror = mysqli_connect_errno();
     $descrerror = mysqli_connect_error();
     if (!$numerror == 0) {
@@ -43,14 +40,11 @@ function ejecutarConsulta($consulta, $tabla) {
     global $conexion;
     global $funcion;
     global $mensaje;
-    if ($funcion == 'insert') {
+    if ($funcion == 'insert')
         $operacion = 'insertar';
-    } elseif ($funcion == 'select') {
+    elseif ($funcion == 'select')
         $operacion = 'seleccionar';
-    } elseif ($funcion == 'update') {
-        $operacion = 'modificar';
-    }
-    if (!@mysqli_stmt_execute($consulta)) {
+    if (!mysqli_stmt_execute($consulta)) {
         $mensaje.= "<h2>Imposible $operacion los datos en $tabla. Error al $operacion los datos.</h2>";
         $numerror = mysqli_connect_errno();
         $descrerror = mysqli_connect_error();
@@ -59,21 +53,20 @@ function ejecutarConsulta($consulta, $tabla) {
         } else {
             $mensaje.= "<b>Se ha producido un error nº $numerror que corresponde a: $descrerror </b><br>";
         }
-        return false;
     } else {
-        if ($funcion == 'select') {
-            $numVisitas = array();
-            mysqli_stmt_bind_result($consulta, $visitas);
+        if ($funcion == 'insert') {
+            $mensaje.= "<h3>Datos almacenados en tabla $tabla satisfactoriamente.</h3>\n";
+        } elseif ($funcion == 'select') {
+            $resultados = array();
+            mysqli_stmt_bind_result($consulta, $dni);
             while (mysqli_stmt_fetch($consulta)) {
-                $numVisitas['visitas'] = $visitas;
+                $resultados[] = $dni;
             }
             cerrarConsulta($consulta);
-            return $numVisitas;
-        } elseif ($funcion == 'update') {
-            return true;
+            return $resultados;
         }
     }
-//    cerrarConsulta($consulta);
+    cerrarConsulta($consulta);
 }
 
 function cerrarConsulta($consulta) {
@@ -84,5 +77,5 @@ function cerrarConsulta($consulta) {
     $ejecutar = array();
     $colValue = array();
     $tipos = "";
-    @mysqli_stmt_close($consulta);
+    mysqli_stmt_close($consulta);
 }

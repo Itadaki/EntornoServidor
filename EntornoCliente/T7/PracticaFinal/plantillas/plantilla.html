@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
 Autor = Diego Rodríguez Suárez-Bustillo
-Fecha = 12-feb-2015
+Fecha = 19-feb-2015
 Licencia = gpl30 
 Version = 1.0
 Descripcion = 
@@ -26,12 +26,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <html>
     <head>
-        <title>{titulo}</title>
+        <title>Compra de Billetes</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="" rel="stylesheet" />
+        <style type="text/css">
+            .error {background: #d33; color: white; padding: 0.2em;}
+            .error1 {background: #d36; color: white; padding: 0.2em;}
+            .error2 {background: #d3f; color: white; padding: 0.2em;}
+        </style>
     </head>
     <body>
-        <h1>{titulo}</h1>
-        {formulario}
+        <div id="wrapper">
+            <header><h1>Compra de billetes</h1></header>
+            <main>
+                {formulario}
+            </main>
+            <footer></footer>
+        </div>
+        <script type="text/javascript" src=""></script>
     </body>
 </html>
