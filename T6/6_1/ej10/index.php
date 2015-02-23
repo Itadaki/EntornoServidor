@@ -3,8 +3,8 @@
 require_once("constantes.php");
 require_once("usuario.php");
 require_once("UsuarioVista.php");
-require_once("MySQL.php");
-require_once("SQL.php");
+require_once("mysql.php");
+require_once("sql.php");
 $funcion = "";
 $colWhere = array();
 $colSelect = array();
@@ -13,20 +13,12 @@ $ejecutar = array();
 $colValue = array();
 $tipos = "";
 $conexion = "";
-$mensajeInsertar = "";
+$mensaje = "";
 $mensajeCerrarConexion = "";
 $mensajeAbrirConexion = "";
-$mensaje = '';
-$enlace = "";
-$consulta=null;
-$valores_campos=array();
-$cerrarConsulta='si';
-$id = 0;
-$ref = 0;
-echo "<meta charset='utf-8'>";
-
-if (isset($_POST["enviar"])) {
+$valores_campos = array();
+if (isset($_POST["consultar"])) {
     procesForm();
 } else {
-    displayForm(array(), array(), 0);
+    displayForm(array(), array());
 }

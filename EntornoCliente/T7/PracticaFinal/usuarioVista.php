@@ -33,17 +33,13 @@ function visualizarDatos() {
     global $mensajeAbrirConexion;
     global $nombre;
     global $enlace;
+    global $ref;
     $nombre = $_POST['nombre'];
     $dni = $_POST['dni'];
-    $salario = $_POST['salario'];
-    $telefono1 = $_POST['telefono1'];
-    $telefono2 = $_POST['telefono2'];
     $datos = array(
         "nombre" => $nombre,
         "dni" => $dni,
-        "salario" => $salario,
-        "telefono1" => $telefono1,
-        "telefono2" => $telefono2,
+        "ref" => $ref,
         "mensaje" => $mensaje,
         "mensajeInsertar" => $mensajeInsertar,
         "mensajeAbrirConexion" => $mensajeAbrirConexion,
@@ -62,7 +58,7 @@ function visualizarDatos() {
 }
 
 function displayForm($camposErroneos, $camposPendientes, $duplicado) {
-    $error='';
+    $error = '';
     if ($camposPendientes and $camposErroneos and $duplicado) {
         $error = '<p class="error1">Hubo algunos problemas con el formulario que usted presentó.
 Por favor, introduzca valores adecuados en los campos.</p>';
@@ -77,7 +73,7 @@ Por favor, introduzca valores adecuados en los campos .</p>';
         $error .= '<p>Por favor, rellene sus datos a continuación y haga clic en Enviar.
 Los campos marcados con un asterisco (*) son obligatorios.</p>';
     }
-    if ($duplicado){
+    if ($duplicado) {
         $error.='<p class="error2">DNI duplicado.</p>';
     }
     $datos = array(
@@ -90,6 +86,7 @@ Los campos marcados con un asterisco (*) son obligatorios.</p>';
         "validacionEmail" => validateField("email", $camposPendientes, $camposErroneos),
         "validacionOrigen" => validateField("origen", $camposPendientes, $camposErroneos),
         "validacionDestino" => validateField("destino", $camposPendientes, $camposErroneos),
+        "optionsOrigen" => generarOrigen(),
         "nombre" => setValue("nombre"),
         "ap1" => setValue("ap1"),
         "ap2" => setValue("ap2"),
@@ -122,4 +119,23 @@ function respuesta($resultados, $plantilla) {
             $html = str_replace($cadena, $valor1, $html);
         }
     return $html;
+}
+
+function generarOrigen() {
+    $conexion = conexion();
+    $consulta = mysqli_stmt_init($conexion);
+    mysqli_stmt_prepare($consulta, "select id,nombre FROM billetes.ciudades");
+    mysqli_stmt_execute($consulta);
+    mysqli_stmt_bind_result($consulta, $id, $nombre);
+    $origenes = '<option value="">----Seleccione origen----</option>';
+    while (mysqli_stmt_fetch($consulta)) {
+        $datos = array(
+            "id" => $id,
+            "nombre" => $nombre
+        );
+        $plantilla = "plantillas/origen.html";
+        $origenes .= respuesta($datos, $plantilla);
+    }
+    cerrarConsulta($consulta);
+    return $origenes;
 }
