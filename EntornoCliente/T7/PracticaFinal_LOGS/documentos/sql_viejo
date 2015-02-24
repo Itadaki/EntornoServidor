@@ -1,0 +1,143 @@
+#|PROVINCIAS|
+#| ID* | Nombre |
+
+create table `provincias`(
+`id`      int(2) AUTO_INCREMENT,
+`nombre`  varchar(30),
+constraint pk_provincias primary key (id) 
+);
+insert into provincias (nombre) values ('Andalucía'); #1
+insert into provincias (nombre) values ('Aragón'); #2
+insert into provincias (nombre) values ('Asturias'); #3
+insert into provincias (nombre) values ('Cantabria'); #4
+insert into provincias (nombre) values ('Castilla-La Mancha'); #5
+insert into provincias (nombre) values ('Castilla y León'); #6
+insert into provincias (nombre) values ('Cataluña'); #7
+insert into provincias (nombre) values ('Comunidad Valenciana'); #8
+insert into provincias (nombre) values ('Extremadura'); #9
+insert into provincias (nombre) values ('Galicia'); #10
+insert into provincias (nombre) values ('La Rioja'); #11
+insert into provincias (nombre) values ('Madrid'); #12
+insert into provincias (nombre) values ('Navarra'); #13
+insert into provincias (nombre) values ('País Vasco'); #14
+insert into provincias (nombre) values ('Murcia'); #15
+
+#ciudades
+#| ID* | Provincia(provincias.id)* | Nombre |
+
+create table `ciudades`(
+`id`          int(5) AUTO_INCREMENT,
+`provincia`   int(2),
+`nombre`      varchar(30),
+constraint pk_provincias primary key (id, provincia),
+constraint fk_id_provincias foreign key (provincia) references provincias(id) on delete cascade
+);
+
+
+#Andalucía
+insert into ciudades (provincia, nombre) values (1,'Alcalá de Guadaíra');
+insert into ciudades (provincia, nombre) values (1,'Sevilla');
+insert into ciudades (provincia, nombre) values (1,'Cádiz');
+
+#Aragón
+insert into ciudades (provincia, nombre) values (2,'Huesca');
+insert into ciudades (provincia, nombre) values (2,'Teruel');
+insert into ciudades (provincia, nombre) values (2,'Zaragoza');
+
+#Asturias
+insert into ciudades (provincia, nombre) values (3,'Gijón');
+insert into ciudades (provincia, nombre) values (3,'Oviedo');
+insert into ciudades (provincia, nombre) values (3,'Aviles');
+
+#Cantabria
+insert into ciudades (provincia, nombre) values (4,'Laredo');
+insert into ciudades (provincia, nombre) values (4,'Santander');
+insert into ciudades (provincia, nombre) values (4,'Torrelavega');
+
+#Castilla-La Mancha
+insert into ciudades (provincia, nombre) values (5,'Ciudad Real');
+insert into ciudades (provincia, nombre) values (5,'Cuenca');
+insert into ciudades (provincia, nombre) values (5,'Albacete');
+
+#Castilla y León
+insert into ciudades (provincia, nombre) values (6,'Burgos');
+insert into ciudades (provincia, nombre) values (6,'León');
+insert into ciudades (provincia, nombre) values (6,'Valladolid');
+
+#Cataluña
+insert into ciudades (provincia, nombre) values (7,'Barcelona');
+insert into ciudades (provincia, nombre) values (7,'Girona');
+insert into ciudades (provincia, nombre) values (7,'Lleida');
+
+#Comunidad Valenciana
+insert into ciudades (provincia, nombre) values (8,'Benidorm');
+insert into ciudades (provincia, nombre) values (8,'Torrevieja');
+insert into ciudades (provincia, nombre) values (8,'Valencia');
+
+#Extremadura
+insert into ciudades (provincia, nombre) values (9,'Badajoz');
+insert into ciudades (provincia, nombre) values (9,'Cáceres');
+insert into ciudades (provincia, nombre) values (9,'Plasencia');
+
+#Galicia
+insert into ciudades (provincia, nombre) values (10,'Lugo');
+insert into ciudades (provincia, nombre) values (10,'Ourense');
+insert into ciudades (provincia, nombre) values (10,'Santiago de Compostela');
+
+#La Rioja
+insert into ciudades (provincia, nombre) values (11,'Arnedo');
+insert into ciudades (provincia, nombre) values (11,'Haro');
+insert into ciudades (provincia, nombre) values (11,'Logroño');
+
+#Madrid
+insert into ciudades (provincia, nombre) values (12,'Madrid');
+insert into ciudades (provincia, nombre) values (12,'Soto del Real');
+insert into ciudades (provincia, nombre) values (12,'Fuenlabrada');
+
+#Navarra
+insert into ciudades (provincia, nombre) values (13,'Pamplona');
+insert into ciudades (provincia, nombre) values (13,'Tudela');
+insert into ciudades (provincia, nombre) values (13,'Villafranca');
+
+#País Vasco
+insert into ciudades (provincia, nombre) values (14,'Bilbao');
+insert into ciudades (provincia, nombre) values (14,'Donostia');
+insert into ciudades (provincia, nombre) values (14,'Vitoria-Gasteiz');
+
+#Murcia
+insert into ciudades (provincia, nombre) values (15,'Cartagena');
+insert into ciudades (provincia, nombre) values (15,'Lorca');
+insert into ciudades (provincia, nombre) values (15,'Murcia');
+
+
+#compras
+#| ID* | Nombre | AP1 | AP2 | DNI | Email | Telf | origen(ciudades.id) | destino(ciudades.id) | 
+
+create table `referencias`(
+`id`          int(10),
+`fecha`      timestamp DEFAULT NOW(),
+`dni`         varchar(9) not null,
+`nombre`     varchar(30) not null,
+`ap1`         varchar(30) not null,
+`ap2`         varchar(30),
+`email`       varchar(50) not null,
+`telf`        int(9) not null,
+`origen`      int(5) not null,
+`destino`     int(5) not null,
+constraint pk_referencias primary key (id),
+constraint fk_origen_referencias foreign key (origen) references ciudades(id),
+constraint fk_destino_referencias foreign key (destino) references ciudades(id)
+);
+
+insert into referencias values (0,'2008-01-01 00:00:01','Diego','Rodríguez', 'Suárez-Bustillo', '53649793Q', 'diegorbustillo@gmail.com', 918476638, 35, 1);
+
+INSERT INTO `referencias` (`id`,`dni`,`nombre`,`ap1`,`ap2`,`email`,`telf`,`origen`,`destino`) VALUES ("06727961951466054576","54799742W","Jarrod","Trujillo","Melendez","mi.Duis.risus@tempusmauris.org","923559823",3,6),("88740284717379016950","90176213V","Hedy","Terry","Frost","ridiculus@dictumProin.co.uk","910046021",5,4),("01828789827443351029","19226852I","Beatrice","Lester","Clay","at.arcu@massa.ca","673095161",1,18),("71381235974120718511","82252992V","Sade","Harrington","George","pede@aliquam.ca","966976203",14,4),("30538566939435254138","26052473K","Connor","Lott","Morrow","eu@et.org","921422235",23,9),("88494027692051717998","82920565L","Teagan","Mcfadden","West","at.sem.molestie@nec.net","940189288",18,19),("84863154431121696761","58251075G","Ori","Barron","Reese","neque.In@veliteu.ca","698309494",23,19),("70903164405956313118","79598241E","Ebony","Hood","Ratliff","sem.mollis@commodoipsum.edu","952317567",21,23),("43961398143697536722","94166235O","Michael","Pitts","Mercado","arcu.iaculis.enim@montesnascetur.co.uk","679946421",16,23),("94180994205283440036","59415983E","Zena","Vargas","Hayes","eleifend.vitae@necmetus.co.uk","973155662",1,16);
+INSERT INTO `referencias` (`id`,`dni`,`nombre`,`ap1`,`ap2`,`email`,`telf`,`origen`,`destino`) VALUES ("00695879240762045527","89919646N","Jasper","Ochoa","Mclaughlin","faucibus.lectus.a@massaInteger.edu","917724800",20,16),("12446280099689109463","45805633Q","Gary","Mathis","Melendez","ut.odio@ornare.org","642016836",6,4),("30894509712867690694","47100122M","Karen","Sargent","Christensen","erat.nonummy@nonummyac.org","929834304",13,6),("21040511140583082785","06182789S","Ferris","Hicks","Flowers","lacus@mollis.edu","974129503",17,16),("86464385528883118710","29650407I","Shea","Nguyen","Porter","imperdiet@nequeSedeget.com","932534381",11,15),("95612197033710686357","11416630W","Kirsten","Dominguez","Ashley","mi.ac@nibh.edu","923428319",23,10),("45943100436377951533","67662781E","Bianca","Gibson","Bolton","nibh.enim@ultrices.edu","638315573",3,13),("27136231129755199387","76626569G","Gillian","Velazquez","Stafford","Phasellus.at@pedeCrasvulputate.ca","677521638",3,12),("28020988418008475726","12727397R","Noelle","Rios","Buckley","libero@Utnecurna.org","611539275",20,18),("15750878471896668911","92147647M","Candace","Snyder","Petersen","Aliquam@Etiam.net","922365437",16,24);
+INSERT INTO `referencias` (`id`,`dni`,`nombre`,`ap1`,`ap2`,`email`,`telf`,`origen`,`destino`) VALUES ("89932863198724123994","28210627F","Willow","Bowman","Williams","et@nuncid.net","620972055",10,13),("76943069310258091596","04111947O","Duncan","Hammond","Ashley","eleifend.nec@mollis.co.uk","622925461",23,25),("04019229695509355190","45396849P","Claire","Martin","Shaffer","vitae.sodales.nisi@Sedeueros.com","983891755",3,24),("29329814932259311549","48629689S","Shana","Freeman","Melton","lobortis.quam@disparturientmontes.co.uk","985648133",24,13),("26723873009791947939","94429030V","Kelly","Collins","Chang","eget.mollis@mollisdui.ca","647490551",9,6),("78358979330717552516","99390880X","Giacomo","Harrison","Conway","nunc.ullamcorper@cursusinhendrerit.ca","905569573",20,4),("12445126942511560622","67931712R","Robert","Carrillo","Curry","id.erat@nisi.ca","990884402",25,23),("05213931615167406582","77626058G","Lance","Charles","Woodward","nulla.magna.malesuada@Pellentesque.org","979392959",8,18),("56127338925124602392","27697980H","Ulla","Freeman","Kirby","mollis.non@nasceturridiculusmus.org","658191258",7,8),("97822331344305158931","31989590E","Ora","Bell","Burks","est@tristiquepharetraQuisque.edu","683096464",5,3);
+INSERT INTO `referencias` (`id`,`dni`,`nombre`,`ap1`,`ap2`,`email`,`telf`,`origen`,`destino`) VALUES ("83588898671647390479","08575558Z","Wade","Brock","Dodson","augue.porttitor.interdum@porttitor.org","664533471",8,8),("90482810292239630182","27065501D","Genevieve","Mercer","Woodard","sagittis.Duis.gravida@nisisem.com","607140257",25,14),("77643995195313073851","27543662S","Larissa","Simmons","Hooper","nibh.vulputate@nonlobortisquis.ca","606875609",1,10),("46346898264792859898","92069170K","Florence","Spears","Baxter","amet@urnaNunc.co.uk","689514972",15,11),("11502008984414535441","31703662H","Rama","Herman","Stephenson","sodales.nisi.magna@molestie.co.uk","967235787",7,16),("71645854618587185186","15576204B","Stephanie","Cameron","Reeves","ornare.facilisis.eget@loremeu.ca","654111885",1,7),("34082069756944937466","18271291S","Aline","Kidd","Mcmahon","diam@quisturpis.org","623730887",5,23),("13069704630054002250","67901231S","Claudia","Deleon","Graves","vehicula.Pellentesque@Aliquamnec.ca","687429964",4,25),("37456460321348994054","83058601T","Talon","Cabrera","Shaffer","pede.Nunc@eu.co.uk","990461475",12,11),("74668119575136631393","73128824Y","Dana","Graham","Baldwin","mauris.Morbi@Nunc.org","997826171",25,7);
+INSERT INTO `referencias` (`id`,`dni`,`nombre`,`ap1`,`ap2`,`email`,`telf`,`origen`,`destino`) VALUES ("39446578390053855930","06777015O","Olympia","Stewart","Finch","Maecenas@atpretiumaliquet.net","983592363",22,23),("41663722343363516625","70076007F","Venus","Cobb","Lowe","lectus.Cum.sociis@Pellentesque.org","939735599",22,22),("92296600299630448238","94246873M","Kylee","Bauer","Curtis","Praesent.luctus.Curabitur@etnetuset.org","668170436",13,24),("49179300385754464496","53907805M","Leslie","Luna","Waller","faucibus.id@facilisis.net","998453592",10,18),("79413513038028386120","59558255G","Tana","Wright","Huffman","a.purus@senectus.org","961861343",10,21),("34196312063009491010","33229911Q","Phyllis","Lindsay","Hubbard","augue.eu@mauris.ca","901645513",5,8),("72927717717094743179","94799902C","Griffin","Wilson","Moses","arcu@antebibendum.edu","612474896",17,3),("87499738017746672258","02364426L","Cadman","Alvarez","Terrell","laoreet.libero.et@faucibusidlibero.com","958085962",20,13),("01593560970157249290","51934714Q","Jolene","Floyd","Miles","quam.dignissim@Utsagittislobortis.net","673123279",22,9),("52193851311265866969","89034533O","Brielle","Wynn","Horton","Integer@etnetus.ca","628745764",7,19);
+INSERT INTO `referencias` (`id`,`dni`,`nombre`,`ap1`,`ap2`,`email`,`telf`,`origen`,`destino`) VALUES ("19696051232167103577","78559259L","Harlan","Daniel","Sanchez","ridiculus.mus.Proin@amet.co.uk","607006406",12,3),("33269988261615738255","03072028W","Camden","Livingston","Armstrong","penatibus.et.magnis@miAliquam.edu","912465695",10,7),("92174091096374808347","27391493Z","Miranda","Boyer","Bender","nisi.Aenean.eget@ullamcorperDuis.net","651324116",7,16),("95642479222951667064","19910939I","Raven","Wood","Sexton","facilisi.Sed@justofaucibuslectus.co.uk","629187489",19,1),("48781803157897430421","36244977O","Marshall","Huber","Yang","Nullam.lobortis.quam@etmagnisdis.ca","655797481",24,19),("41100883423156418171","35582261J","Dawn","Oliver","Blackwell","in.lobortis.tellus@risus.edu","950684656",5,23),("64413696718518688517","75676979E","Lesley","Butler","Rojas","id@eros.org","628697063",4,17),("48837165322641228107","71295914V","Uma","Conrad","Foreman","Maecenas.libero.est@enimNuncut.net","630750710",13,5),("69447510575131430570","45057538X","Jerry","Guzman","Terrell","Nullam.scelerisque@enimcondimentum.ca","920658939",9,3),("12944920048866314365","85685842T","Edan","Mcpherson","Casey","Curabitur.vel@Suspendisse.net","970098631",24,1);
+INSERT INTO `referencias` (`id`,`dni`,`nombre`,`ap1`,`ap2`,`email`,`telf`,`origen`,`destino`) VALUES ("29740370951563839277","76241604Z","Desiree","Wyatt","Blankenship","Sed@diamSed.net","623551115",15,2),("14432020453490267179","16075528B","Lee","Horne","Marquez","aliquet.odio@ornareIn.edu","945028811",6,16),("02956767016590756199","23213130S","Denise","Stanton","Kelley","euismod@primis.co.uk","609052445",2,22),("80941085786028567111","58445062S","Buckminster","Burns","Blankenship","vitae.purus.gravida@nuncsedlibero.org","603753643",24,7),("42327308456716446138","65370730Z","Lila","Madden","Henderson","Duis@nequepellentesque.edu","900000052",9,7),("87387100882865924287","34385023G","Hu","Vasquez","Mckee","ultrices.posuere@pharetrasedhendrerit.ca","678256135",8,20),("70048569183510547198","39451871A","Luke","Terry","Potts","quam.Curabitur.vel@tempor.net","921217761",2,21),("35735214497598934466","83653957N","Ferris","Frederick","Dejesus","nisl.arcu@egestasFuscealiquet.net","995426875",17,11),("59612828261183629869","85171536M","Hayden","Gardner","Beck","augue.malesuada@sem.org","958687242",15,24),("89934732594954552200","92863207Q","Laurel","Middleton","Britt","vitae@arcuNunc.com","623514739",8,15);
+INSERT INTO `referencias` (`id`,`dni`,`nombre`,`ap1`,`ap2`,`email`,`telf`,`origen`,`destino`) VALUES ("60936431079160056067","09493927M","William","Reeves","Reese","sem.eget.massa@etmagnisdis.ca","644933808",3,12),("52479215804530174577","88297073W","Eaton","Salas","Herman","leo.Cras.vehicula@nullaDonecnon.edu","611647104",16,21),("65405750040811531360","82171854X","Belle","Hardin","Higgins","Proin.nisl@egetmagnaSuspendisse.edu","991358317",4,12),("18900123882609179294","70090173U","Keely","Freeman","Hammond","rutrum@famesacturpis.net","686049116",3,14),("24621312305923040029","06569209F","Nolan","Curtis","Wolfe","nec.mauris@Cum.ca","950168587",18,22),("67535571301040965982","80086322T","Adam","Mckee","Crawford","Morbi@iaculisquispede.edu","993281865",21,24),("00619829725749669140","35912410C","Chase","Serrano","Cooke","velit.eu.sem@laoreetposuereenim.com","926522243",8,24),("93594668810848365714","34824057D","Nita","Santiago","Wilson","a@mollis.edu","631646232",23,15),("36447919889110308056","88434767Y","Vincent","Simmons","Holloway","Cum@lacus.edu","928678885",3,16),("56682067510429376925","32047924G","Brandon","Duran","Chapman","vehicula.Pellentesque@eget.org","999036498",16,10);
+INSERT INTO `referencias` (`id`,`dni`,`nombre`,`ap1`,`ap2`,`email`,`telf`,`origen`,`destino`) VALUES ("13131397799973488256","53652628Z","Colleen","Coffey","Reyes","volutpat.ornare@enimcondimentumeget.ca","934549023",21,5),("70942547863155199005","52607555Q","Uta","Calderon","Marks","gravida.Praesent@ullamcorpernislarcu.edu","993012433",12,8),("63529649093298658975","06386370H","Basia","Key","Phillips","metus@nisi.edu","949983293",7,2),("30494181699116442956","51080533O","Tanya","Rivas","Glass","Donec@dolorquamelementum.co.uk","692729296",5,13),("14282546048430074507","98698251L","Blaine","Serrano","Wiggins","dolor@Inscelerisque.edu","936825005",10,8),("74971850869625020765","05580704W","Jack","Hampton","Ballard","nisl.elementum@malesuadavel.ca","957861971",10,12),("87545627647353741404","76050880V","Abdul","Stafford","Hooper","tellus@Cum.co.uk","989187955",17,7),("20517953943628090151","91865541A","Eaton","Richardson","Brennan","est.congue@Integerin.org","683071676",6,4),("24213967150522298402","20391735U","Leo","Briggs","Roman","Integer.mollis@malesuadafames.co.uk","654435373",22,2),("31433271520162456723","72124931Y","Molly","Ward","Powers","nec@per.org","932690854",19,10);
+INSERT INTO `referencias` (`id`,`dni`,`nombre`,`ap1`,`ap2`,`email`,`telf`,`origen`,`destino`) VALUES ("39688503306349380757","53509220K","Seth","Justice","Mooney","Sed.auctor@velsapien.org","698505554",20,16),("78499733847461830885","91552343J","Idona","Cummings","Atkins","lobortis.Class.aptent@etliberoProin.ca","962931566",15,14),("43950517841290447389","88054789F","Britanney","Hopkins","Velazquez","ipsum.Curabitur@turpis.com","951441909",23,21),("42236994618610497264","00483813C","Hasad","Delaney","Le","lorem.tristique@ut.ca","610093990",16,4),("12118078180395432460","64748386G","Anika","Vinson","Deleon","ligula@Proin.edu","922408659",12,7),("43379117323198250711","09621051M","Renee","Francis","Sandoval","Nullam@nunc.com","645665048",8,25),("41573356948067131399","30864750U","Carter","Trevino","Martinez","sollicitudin.orci@euenim.org","647634241",2,8),("54907687700933620022","19762646P","Cameron","Hardy","Koch","viverra.Maecenas@ligulaNullamfeugiat.net","920848115",1,3),("47006814367264160255","21647597Z","Dorian","Garcia","Avery","eu.nibh@elementum.com","979565066",18,16),("15553245568343272378","49378744E","Beck","Terrell","Peters","Integer@magnisdisparturient.co.uk","962246792",2,11);

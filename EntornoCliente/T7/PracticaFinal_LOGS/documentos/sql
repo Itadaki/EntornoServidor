@@ -19,9 +19,7 @@ insert into ciudades (nombre) values ('Sevilla');
 create table `viajes`(
 `origen`       int(5),
 `destino`      int(5),
-constraint pk_viajes primary key (origen, destino),
-constraint fk_origen_ciudades foreign key (origen) references ciudades(id) on delete cascade,
-constraint fk_destino_ciudades foreign key (destino) references ciudades(id) on delete cascade
+constraint pk_viajes primary key (origen, destino)
 );
 insert into viajes values (1,2);
 insert into viajes values (1,3);
@@ -41,28 +39,26 @@ insert into viajes values (4,3);
 #| ID* | DNI | Nombre | AP1 | AP2 | DNI | Email | Telf |
 create table `personas`(
 `id`          int(10) AUTO_INCREMENT,
-`dni`         varchar(9) not null constraint unique_dni_personas unique,
+`dni`         varchar(9) not null,
 `nombre`     varchar(30) not null,
 `ap1`         varchar(30) not null,
 `ap2`         varchar(30),
 `email`       varchar(50) not null,
 `telf`        int(9) not null,
-constraint pk_personas primary key (id),
-constraint unique_all_personas unique (dni, nombre, ap1, ap2, email, telf)
+constraint pk_personas primary key (id)
 );
 
-#############
-#referencias#
-#############
+#########
+#compras#
+#########
 #| ID* | Persona(personas.id) | origen(ciudades.id) | destino(ciudades.id) | 
 create table `referencias`(
-`referencia`  varchar(20),
+`referencia`  int(10),
 `persona`     int(5),
 `origen`      int(5) not null,
 `destino`     int(5) not null,
-`date`        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 constraint pk_referencias primary key (referencia),
-constraint fk_persona_referencias foreign key (persona) references personas(id) on delete cascade,
+constraint fk_persona_referencias foreign key (persona) references personas(id),
 constraint fk_origen_referencias foreign key (origen) references ciudades(id),
 constraint fk_destino_referencias foreign key (destino) references ciudades(id)
 );

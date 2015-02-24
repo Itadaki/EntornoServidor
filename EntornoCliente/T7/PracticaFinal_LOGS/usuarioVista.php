@@ -34,7 +34,7 @@ function visualizarDatos() {
     global $nombre;
     global $enlace;
     global $ref;
-    $nombre = $_POST['nombre'] . ' ' .$_POST['ap1']. ' ' .$_POST['ap2'];
+    $nombre = $_POST['nombre'];
     $dni = $_POST['dni'];
     $datos = array(
         "nombre" => $nombre,
@@ -57,9 +57,9 @@ function visualizarDatos() {
     print ($html);
 }
 
-function displayForm($camposErroneos, $camposPendientes) {
+function displayForm($camposErroneos, $camposPendientes, $duplicado) {
     $error = '';
-    if ($camposPendientes and $camposErroneos) {
+    if ($camposPendientes and $camposErroneos and $duplicado) {
         $error = '<p class="error1">Hubo algunos problemas con el formulario que usted presentó.
 Por favor, introduzca valores adecuados en los campos.</p>';
     } elseif ($camposPendientes) {
@@ -72,6 +72,9 @@ Por favor, introduzca valores adecuados en los campos .</p>';
     } else {
         $error .= '<p>Por favor, rellene sus datos a continuación y haga clic en Enviar.
 Los campos marcados con un asterisco (*) son obligatorios.</p>';
+    }
+    if ($duplicado) {
+        $error.='<p class="error2">DNI duplicado.</p>';
     }
     $datos = array(
         "error" => $error,

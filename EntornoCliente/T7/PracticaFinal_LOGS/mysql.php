@@ -27,7 +27,7 @@ function ejecutar($sql, $valores_campos, $tabla) {
         ///
         call_user_func_array("mysqli_stmt_bind_param", $ejecucion);
         $resultados = ejecutarConsulta($consulta, $tabla);
-        return $resultados;
+//        return $resultados;
     }
 }
 

@@ -20,10 +20,10 @@ function procesForm() {
     if (isset($_POST["nombre"]) && !empty($_POST["nombre"]) && !preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚ][a-zA-ZáéíóúÁÉÍÓÚ ]+$/", $_POST["nombre"])) {
         $camposErroneos[] = "nombre";
     }
-    if (isset($_POST["ap1"]) && !empty($_POST["ap1"]) && !preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚ][-a-zA-ZáéíóúÁÉÍÓÚ ]+$/", $_POST["ap1"])) {
+    if (isset($_POST["ap1"]) && !empty($_POST["ap1"]) && !preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚ][a-zA-ZáéíóúÁÉÍÓÚ ]+$/", $_POST["ap1"])) {
         $camposErroneos[] = "ap1";
     }
-    if (isset($_POST["ap2"]) && !empty($_POST["ap2"]) && !preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚ][-a-zA-ZáéíóúÁÉÍÓÚ ]+$/", $_POST["ap2"])) {
+    if (isset($_POST["ap2"]) && !empty($_POST["ap2"]) && !preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚ][a-zA-ZáéíóúÁÉÍÓÚ ]+$/", $_POST["ap2"])) {
         $camposErroneos[] = "ap2";
     }
     if (isset($_POST["dni"]) && !empty($_POST["dni"]) && !preg_match("/^[0-9]{7,8}[a-zA-Z]$/", $_POST["dni"])) {
@@ -51,7 +51,7 @@ function procesForm() {
     //ACCIONES A TOMAR
     //Algo mal
     if ($camposPendientes or $camposErroneos) {
-        displayForm($camposErroneos, $camposPendientes);
+        displayForm($camposErroneos, $camposPendientes, $duplicado);
     }
     //Todo bien
     else {
@@ -71,9 +71,9 @@ function procesForm() {
         }
     echo "<h1>ID{$persona['id']}</h1>";
     echo "<h1>ORIGEN{$persona['origen']}</h1>";
-        $ref = generarReferencia();
+    $ref = generarReferencia();
         $valores_campos_referencia['referencia'] = $ref;
-        $valores_campos_referencia['persona'] = $persona['id'];
+//        $valores_campos_referencia['persona'] = $persona['id'];
         $valores_campos_referencia['persona'] = $id;
         $valores_campos_referencia['origen'] = $_POST['origen'];
         $valores_campos_referencia['destino'] = $_POST['destino'];
@@ -87,7 +87,7 @@ function procesForm() {
 function existePersona($valores_campos, $tabla) {
     $trace = debug_backtrace();
     $caller = $trace[1];
-//    echo "Called by {$caller['function']} <br>";
+    echo "Called by {$caller['function']} <br>";
     if (isset($caller['class']))
         echo " in {$caller['class']}";
 
