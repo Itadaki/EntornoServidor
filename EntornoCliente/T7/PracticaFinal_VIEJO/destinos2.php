@@ -52,7 +52,7 @@ function cerrarConexion() {
 
 function generarDestino($id_origen) {
     global $conexion;
-    $query = "select id,nombre FROM billetes.ciudades where id in (select destino FROM billetes.viajes where origen='$id_origen') order by id desc";
+    $query = "select id,nombre FROM billetes.ciudades where id in (select destino FROM billetes.viajes where origen='$id_origen')";
     $resultado = mysqli_query($conexion, $query);
     $errorNo = mysqli_errno($conexion);
     $errorMsg = mysqli_error($conexion);

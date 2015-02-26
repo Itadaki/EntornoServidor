@@ -34,7 +34,7 @@ function visualizarDatos() {
     global $nombre;
     global $enlace;
     global $ref;
-    $nombre = $_POST['nombre'] . ' ' . $_POST['ap1'] . ' ' . $_POST['ap2'];
+    $nombre = $_POST['nombre'] . ' ' .$_POST['ap1']. ' ' .$_POST['ap2'];
     $dni = $_POST['dni'];
     $datos = array(
         "nombre" => $nombre,
@@ -119,33 +119,20 @@ function respuesta($resultados, $plantilla) {
 }
 
 function generarOrigen() {
-    $query = "select id,nombre FROM billetes.ciudades";
-    $resultado = select($query);
+    $conexion = conexion();
+    $consulta = mysqli_stmt_init($conexion);
+    mysqli_stmt_prepare($consulta, "select id,nombre FROM billetes.ciudades");
+    mysqli_stmt_execute($consulta);
+    mysqli_stmt_bind_result($consulta, $id, $nombre);
     $origenes = '<option value="">----Seleccione origen----</option>';
-    while ($campos = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+    while (mysqli_stmt_fetch($consulta)) {
         $datos = array(
-            "id" => $campos['id'],
-            "nombre" => $campos['nombre']
+            "id" => $id,
+            "nombre" => $nombre
         );
         $plantilla = "plantillas/origen.html";
         $origenes .= respuesta($datos, $plantilla);
     }
+    cerrarConsulta($consulta);
     return $origenes;
-}
-
-function ver(){
-    $query = "select referencia,dni,origen,destino FROM billetes.referencias";
-    $resultado = select($query);
-    $tabla = '<table class="salida"><tr><th>referencia</th><th>dni</th><th>origen</th><th>destino</th></tr>';
-    while ($campos = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
-        $tabla .= "<tr><td>{$campos['referencia']}</td><td>{$campos['dni']}</td><td>{$campos['origen']}</td><td>{$campos['destino']}</td></tr>";
-    }
-    $tabla.='</table>';
-    $datos = array(
-        "titulo" => TITULO,
-        "formulario" => $tabla
-    );
-    $plantilla = "plantillas/plantilla.html";
-    $html = respuesta($datos, $plantilla);
-    print ($html);
 }

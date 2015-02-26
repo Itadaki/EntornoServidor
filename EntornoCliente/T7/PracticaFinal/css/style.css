@@ -1,0 +1,62 @@
+/*
+Autor = Diego Rodríguez Suárez-Bustillo
+Fecha = 26-feb-2015
+Licencia = gpl30
+Version = 1.0
+Descripcion = 
+*/
+
+/*
+Copyright (C) 2015 Diego Rodríguez Suárez-Bustillo
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+*{margin:0;padding:0;}
+#wrapper{width: 900px;margin: 0 auto;border: solid}
+
+header{
+    background-color: #660066;
+    color: white;
+    text-align: center;
+    line-height: 100px;
+    height: 100px;
+}
+a {text-decoration: none;}
+main{
+    padding: 50px 0 50px 0;
+}
+main h2{
+    text-align: center;
+}
+main #formulario{
+    margin: 0 auto;
+    width: 400px;
+}
+table.salida td{
+    text-align: center;
+    padding: 5px;
+}
+table{
+   border: solid 1px;
+   margin-top: 10px;
+   padding: 5px;
+}
+footer{
+    background-color: #704770;
+    color: white;
+    text-align: center;
+    line-height: 50px;
+    height: 50px;
+}

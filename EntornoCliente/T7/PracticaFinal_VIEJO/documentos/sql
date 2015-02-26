@@ -40,13 +40,15 @@ insert into viajes values (4,3);
 ##########
 #| ID* | DNI | Nombre | AP1 | AP2 | DNI | Email | Telf |
 create table `personas`(
-`dni`         varchar(9),
-`nombre`      varchar(30) not null,
+`id`          int(10) AUTO_INCREMENT,
+`dni`         varchar(9) not null constraint unique_dni_personas unique,
+`nombre`     varchar(30) not null,
 `ap1`         varchar(30) not null,
 `ap2`         varchar(30),
 `email`       varchar(50) not null,
 `telf`        int(9) not null,
-constraint pk_personas primary key (dni)
+constraint pk_personas primary key (id),
+constraint unique_all_personas unique (dni, nombre, ap1, ap2, email, telf)
 );
 
 #############
@@ -55,12 +57,12 @@ constraint pk_personas primary key (dni)
 #| ID* | Persona(personas.id) | origen(ciudades.id) | destino(ciudades.id) | 
 create table `referencias`(
 `referencia`  varchar(20),
-`dni`         varchar(9),
+`persona`     int(5),
 `origen`      int(5) not null,
 `destino`     int(5) not null,
 `date`        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 constraint pk_referencias primary key (referencia),
-constraint fk_persona_referencias foreign key (dni) references personas(dni) on delete cascade,
+constraint fk_persona_referencias foreign key (persona) references personas(id) on delete cascade,
 constraint fk_origen_referencias foreign key (origen) references ciudades(id),
 constraint fk_destino_referencias foreign key (destino) references ciudades(id)
 );
