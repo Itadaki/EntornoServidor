@@ -14,6 +14,12 @@ function setValue($nombreCampo) {
     }
 }
 
+function setChecked($nombreCampo) {
+    if (isset($_POST[$nombreCampo])) {
+        return ' checked="checked"';
+    }
+}
+
 function displayForm($camposerroneos, $campospendientes) {
     $mensaje = "";
     $error = "";
@@ -30,8 +36,10 @@ function displayForm($camposerroneos, $campospendientes) {
     $datos = array(
         "error" => $error,
         "mensaje" => $mensaje,
-        "validacionNombre" => validateField("nombre", $campospendientes, $camposerroneos),
-        "nombre" => setValue("nombre")
+        "validacionCodigo" => validateField("codigo", $campospendientes, $camposerroneos),
+        "codigo" => setValue("codigo"),
+        "mostrarprecio" => setChecked('mostrarprecio'),
+        "mostrarcantidad" => setChecked('mostrarcantidad')
     );
     $plantilla = "plantillas/formulario.html";
     $formulario = respuesta($datos, $plantilla);
@@ -48,16 +56,14 @@ function visualizarDatos($producto) {
     $enlace = "<a href='index.php'>Volver al formulario de búsqueda de datos</a>";
     if ($producto) {
         $mensaje = 'PRODUCTO ENCONTRADO';
-        $codigo = $producto['codigo'];
-        $precio = number_format($producto['precio'], 2);
-        $nombre = $producto['nombre'];
-        $datos = array(
-            "codigo" => $codigo,
-            "precio" => $precio,
-            "nombre" => $nombre
-        );
-        $plantilla = "plantillas/fila.html";
-        $fila = respuesta($datos, $plantilla);
+        $fila = '<b><tr>';
+        foreach ($producto as $key => $valor) {
+            $fila.="<td>$key</td>";
+        }
+        $fila.='</tr></b>';
+        foreach ($producto as $key => $valor) {
+            $fila.="<td>$valor</td>";
+        }
         $datos = array(
             "mensaje" => $mensaje,
             "fila" => $fila,
@@ -67,7 +73,7 @@ function visualizarDatos($producto) {
         $mensaje = 'PRODUCTO NO ENCONTRADO';
         $datos = array(
             "mensaje" => $mensaje,
-            "fila" => '',
+            "fila" => "",
             "enlace" => $enlace
         );
     }
@@ -82,8 +88,8 @@ function visualizarDatos($producto) {
     print ($html);
 }
 
-function obtenerProducto($valores_campos, $tabla) {
-    global $mensaje;
+function obtenerProducto($tabla) {
+    global $mensaje, $valores_campos;
     $resultado = load($valores_campos, TABLA);
     if (!$resultado && $mensaje) {
         visualizarError();
