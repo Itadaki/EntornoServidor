@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<!--
+$Autor=Cristian Castaño
+Fecha=27-feb-2015
+Licencia=gpl30
+Version=1.0
+Descripcion= Examen entraga 7 AJAX
+-->
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Entrega 7</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+
+            //Laura: Cristian no funciona nada... Atiende a la solución en clase
+            var campotitu = new array(2);
+            campotitu[0] = document.getElementById("titulacion").value("1");
+            campotitu[1] = document.getElementById("titulacion").value("2");
+            campotitu[2] = document.getElementById("titulacion").value("3");
+            campoesp = document.getElementById("especialidades");
+            var xhr = null;
+
+            /*
+             Funcion que encargada de comunicar con el servidor y transmitirle la informacion 
+             */
+            function validar() {
+
+                xhr = new XMLHttpRequest();
+                if (xhr) {
+                    xhr.onreadystatechange = gestionarRespuesta;
+                    xhr.open('POST', 'servidor7.php', true);
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    xhr.send("titulacion=" + crea_json());
+                }
+            }
+            /*
+             Funcion que encargada de gestionar la respuesta obtenida por el servidor 
+             */
+            function gestionarRespuesta() {
+
+                document.getElementById("especialidades").innerHTML = "";
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var xml = xhr.responseXML;
+                    var especialidad = xml.getElementsByTagName("especialidad");
+                    for (var i = 0; i < especialidad.length; i++) {
+                        document.getElementById("especialidades").innerHTML += "<option>" + especialidad[i].firstChild.nodeValue + "</option>";
+                    }
+
+                }
+
+            }
+            /*
+             Funcion que encargada de crear el json que vamos a enviar al servidor para obtener su respuesta
+             */
+            function crea_json() {
+                var JSONObject = new Object();
+                JSONObject.titulaciones = campotitu.selectedIndex;
+                var objeto_json = JSON.stringify(JSONObject);
+                return objeto_json;
+
+            }
+        </script>
+    </head>
+    <body>
+    <center>
+
+        <form name="form_cv" method="post" action="">
+            <hr>
+            <table>
+                <tr>
+                    <td>
+                        Nombre*:   <input type="text" id="nombre"><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Apellidos*:   <input type="text" id="apellidos"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Fecha de Nacimiento*:   <input type="text" id="fecha"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Teléfono Móvil*:   <input type="text" id="telefono"><br>
+
+                    </td>
+                </tr>
+                <tr><td>
+                        <table>
+                            <tr>
+                                <td>Titulaciones<br>
+                                    <select id="titulacion" multiple>
+                                        <option value='1'>Técnico FP</option>
+                                        <option value='2'>Técnico Superior FP</option>
+                                        <option value='3'>Grado</option>
+                                    </select>
+                                </td><td>
+                                    <input type="button" id="b1" name="boton" value="get" onclick="validar()">
+                                </td><td>Especialidades<br>
+                                    <select size=4 id="especialidades" style="width:200px"></select>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+            </table>
+
+        </form>
+        <hr>
+    </center>
+
+</body>
+</html>

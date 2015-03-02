@@ -1,7 +1,10 @@
 <h2>Introduce tus datos</h2>
 {error}
 <form method="POST" action="" onchange="habilitarEnvio()" onsubmit="return validar()">
-    <table>
+    <table id="tabla_formulario">
+        <tr>
+            <td colspan="2" id="error"></td>
+        </tr>
         <tr>
             <td><label for="nombre" {validacionNombre}>Nombre</label></td>
             <td><input type="text" name="nombre" id="nombre" value="{nombre}" placeholder="p. ej. Diego"/></td>

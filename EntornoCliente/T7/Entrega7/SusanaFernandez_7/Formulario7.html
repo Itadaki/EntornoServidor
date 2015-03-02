@@ -1,0 +1,142 @@
+<!--
+Autor= Susana
+Fecha= 27-feb-2015
+Licencia= gpl30
+Version= 1.0
+Descripcion= Script para poder seleccionar simultáneamente varias titulaciones y cuando se pulse el botón realizar
+             una petición asíncrona al servidor enviándole las titulaciones en formato JSON.
+-->
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Entrega 7</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+
+
+            //Laura: el código no hace nada. Atiende a la corrección Susana.
+            //funcion que crea el objeto XMLHttpRequest
+            function inicializa_xhr() {
+                if (window.XMLHttpRequest) {
+                    return new XMLHttpRequest();
+                }
+                else if (window.ActiveXObject) {
+                    return new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+
+            function enviar() {
+                peticion_http = inicializa_xhr();
+
+                if (peticion_http) {
+                    //comprobamos que la pagina esta cargada
+                    peticion_http.onreadystatechange = gestionarRespuesta;
+                    //abrimos el archivo PHP
+                    peticion_http.open("POST", "servidor7.php", true);
+                    //indicamos los parametros a pasar
+                    var parametros_json = "titulos=" + crea_json();
+                    //enviamos los parametros
+                    peticion_http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    peticion_http.send(parametros_json);
+                }
+            }
+            //funcion que crea el JSON
+            function crea_json() {
+                //almacenamos el valor seleccionado
+                var titulacion = document.getElementById('titulacion').value;
+                //creamos el objeto JSON
+                var JSONObject = new Object();
+                //damos valor al objeto creado
+                JSONObject.titulacion = titulacion;
+                //devolvemos el objeto JSON
+                var objeto_JSON = JSON.stringify(JSONObject);
+                return objeto_JSON;
+
+            }
+
+
+
+
+
+
+            function gestionarRespuesta() {
+
+                if (peticion_http.readyState == 4 && peticion_http.status == 200) {
+                    //sacamos la respuesta xml
+                    var document_xml = peticion_http.responseXML;
+                    //almacenamos la respuesta raiz
+                    var root = document_xml.getElementsByTagName("respuesta")[0];
+                    var titulacion = root.getElementsByTagName("titulacion");
+                    var especialidades = document_xml.getElementsByTagName("especialidad");
+
+                    var divselect = document.getElementById("especialidades");
+                    divselect.innerHTML = "";
+                    // como podemos parar varios valores al div especialidades, los escribimos con un for
+                    for (var i = 0; i < especialidades.length; i++) {
+                        // Creamos una variable con una nueva opcion que se añadirá al div especialidades
+                        opcion = new Option(especialidades[i].firstChild.nodeValue, i);
+                        divselect.appendChild(opcion);
+                    }
+                }
+            }
+
+        </script>
+    </head>
+    <body>
+    <center>
+
+        <form name="form_cv" method="post" action="">
+            <hr>
+            <table>
+                <tr>
+                    <td>
+                        Nombre*:   <input type="text" id="nombre"><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Apellidos*:   <input type="text" id="apellidos"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Fecha de Nacimiento*:   <input type="text" id="fecha"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Teléfono Móvil*:   <input type="text" id="telefono"><br>
+
+                    </td>
+                </tr>
+                <tr><td>
+                        <table>
+                            <tr>
+                                <td>Titulaciones<br>
+                                    <select id="titulacion" multiple>
+                                        <option value='1'>Técnico FP</option>
+                                        <option value='2'>Técnico Superior FP</option>
+                                        <option value='3'>Grado</option>
+                                    </select>
+                                </td><td>
+                                    <input type="button" id="b1" name="boton" value="get" onclick="enviar()">
+                                </td><td>Especialidades<br>
+                                    <select size=4 id="especialidades" style="width:200px"></select>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+            </table>
+
+        </form>
+        <hr>
+    </center>
+</body>
+</html>
+

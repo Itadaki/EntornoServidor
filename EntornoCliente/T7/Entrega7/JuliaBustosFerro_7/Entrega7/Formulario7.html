@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<!--
+Autor=Julia Bustos Ferro 
+Fecha=27-feb-2015
+Licencia=GPL v3
+Version=1.0
+Laura: falta descripción...-->
+
+<!--Laura: Descripción: el usuario podrá seleccionar simultáneamente varias de las titulaciones disponibles y cuando pulse el botón se enviará 
+una petición asíncrona al servidor enviando las titulaciones en JSON por POST--> 
+
+<!--el servidor responde en XML-->
+
+<!--Para todo ello usamos el DOM-->
+<html>
+    <head>
+        <title>Julia Bustos Ferro</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            //Función para obtener la instancia del objeto XMLHttpRequest (siempre igual)
+            function inicializa_xhr() {
+                if (window.XMLHttpRequest) {
+                    return new XMLHttpRequest();
+                }
+                else if (window.ActiveXObject) {
+                    return new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+            /*validar, poner bien la url*/
+            function valida() {
+                peticion_http = inicializa_xhr();
+                if (peticion_http) {
+                    /* Cargar página */
+                    peticion_http.onreadystatechange = procesaRespuesta;
+                    /*validar, NO OLVIDAR poner bien la url*/
+                    peticion_http.open("POST", "servidor7.php", true);
+                    /*titulacion*/
+                    var parametros_json = "titulacion=" + crea_json();
+                    peticion_http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    // Se envian los datos obtenidos
+                    peticion_http.send(parametros_json);
+                }
+            }
+            
+            //Laura: hay que documentar las funciones correctamente
+            function crea_json() {
+                // Vamos a crear un objeto JSON 
+                var titulaciones = document.getElementById("titulacion").value;
+                var JSONObject = new Object();
+                JSONObject.titulaciones = new Array(titulaciones);
+                //array de titulaciones
+                //si no hago esto solo podré hacer el ejercicio de uno en uno ???
+                var titulacion = document.getElementById('titulacion');
+                var j = 0;
+                for (var i = 0; i < titulacion.options.length; i++) {
+                    if (titulacion.options[i].selected) {
+                        JSONObject.titulaciones[j] = titulacion.options[i].value;
+                        j++;
+                    }
+                }
+                var objeto_json = JSON.stringify(JSONObject);
+                // La función devuelve el objeto 
+                return objeto_json;
+            }
+
+            function procesaRespuesta() {
+                //Se procesa la respuesta en xml
+                if (peticion_http.readyState === 4) {
+                    if (peticion_http.status === 200) {
+
+                        /** Laura: no entregues código comentado 
+                         *  var documento_xml = peticion_http.responseXML;
+                         ASI CONSEGUIMOS QUE SE PUEDAN COGER SOLO DE UN UNO .....
+                         var especialidades = documento_xml.getElementsByTagName("especialidad");
+                         var select = document.getElementById("especialidades");
+                         
+                         for (var i = 0; i < especialidades.length; i++) {
+                         var opcion = new Option(especialidades[i].firstChild.nodeValue, i);
+                         select.appendChild(opcion);
+                         
+                         if (opcion.value===1){
+                         if (select.length > 5) {                             
+                         deshabilitamos el botón
+                         document.getElementById("b1").disabled = true;
+                         var root = documento_xml.getElementsByTagName('respuesta')[0];
+                         var titulaciones = root.getElementsByTagName('titulacion');
+                         QUE NO PUEDA CREAR HIJOS? 
+                         var opcionesexistentes = document.getElementById('especialidades').options;//guardamos las opciones que existan en el select con id especialidades
+                         
+                         */
+                        var doc = peticion_http.responseXML;
+                        var espec= document.getElementById('especialidades');
+                        var raiz = doc.getElementsByTagName('respuesta')[0];
+                        //COGEMOS TITULACIÓN
+                        var titulacion = raiz.getElementsByTagName('titulacion');
+                        // COGEMOS LAS OPCIONES que existen
+                        //Laura: nombres de variables adecuados
+                        var hay = document.getElementById('especialidades').options;
+                        var crear = false;
+                        for (var i = 0; i < titulacion.length; i++) {
+                            //guardamos para cada titulacion los tag especialidades que contenga
+                            var especialidad = titulacion[i].getElementsByTagName('especialidad');
+                            //recorro especialidades
+                            for (var j = 0; j < especialidad.length; j++) {
+                                //recorro las que existen
+                                //Laura: la gestión de repetidos más eficiente al hacer el JSON
+                                for (var x = 0; x < hay.length; x++) {
+                                    //si ya existe nada
+                                    if (especialidad[j].firstChild.nodeValue === hay[x].value) {
+                                         crear = true;
+                                    }
+                                }
+                                //si no existe la opción la vamos a crear 
+                                if (crear === false) {
+                                    var opciones = new Option(especialidad[j].firstChild.nodeValue, especialidad[j].firstChild.nodeValue);
+                                    espec.appendChild(opciones);
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        </script>
+    </head>
+    <body>
+    <center>
+
+        <form name="form_cv" method="post" action="">
+            <hr>
+            <table>
+                <tr>
+                    <td>
+                        Nombre*:   <input type="text" id="nombre"><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Apellidos*:   <input type="text" id="apellidos"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Fecha de Nacimiento*:   <input type="text" id="fecha"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Teléfono Móvil*:   <input type="text" id="telefono"><br>
+
+                    </td>
+                </tr>
+                <tr><td>
+                        <table>
+                            <tr>
+                                <td>Titulaciones<br>
+                                    <select id="titulacion" multiple>
+                                        <option value='1'>Técnico FP</option>
+                                        <option value='2'>Técnico Superior FP</option>
+                                        <option value='3'>Grado</option>
+                                    </select>
+                                </td><td>
+                                    <input type="button" id="b1" name="boton" value="get" onclick="valida();">
+                                </td><td>Especialidades<br>
+                                    <select size=4 id="especialidades" style="width:200px"></select>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+            </table>
+
+        </form>
+        <hr>
+    </center>
+</body>
+</html>

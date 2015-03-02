@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<!--Laura: falta comentario de plantilla de inicio -->
+<html>
+    <head>
+        <title>Entrega 7</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+
+        </script>
+    </head>
+    <body>
+    <center>
+
+        <form name="form_cv" method="post" action="">
+            <hr>
+            <table>
+                <tr>
+                    <td>
+                        Nombre*:   <input type="text" id="nombre"><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Apellidos*:   <input type="text" id="apellidos"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Fecha de Nacimiento*:   <input type="text" id="fecha"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Teléfono Móvil*:   <input type="text" id="telefono"><br>
+
+                    </td>
+                </tr>
+                <tr><td>
+                        <table>
+                            <tr>
+                                <td>Titulaciones<br>
+                                    <select id="titulacion" multiple>
+                                        <option value='1'>Técnico FP</option>
+                                        <option value='2'>Técnico Superior FP</option>
+                                        <option value='3'>Grado</option>
+                                    </select>
+                                </td><td>
+                                    <input type="button" id="b1" name="boton" value="get" onclick="peticion()">
+                                </td><td>Especialidades<br>
+                                    <select size=4 id="especialidades" style="width:200px"></select>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+            </table>
+
+        </form>
+        <hr>
+    </center>
+    <script>
+        var peticion_http;
+        var tit = document.getElementById('titulacion'); // creo la variable por si se necesita usarla en varias funciones
+        /**
+         * @description  Obtener la instancia del objeto XMLHttpRequest
+         * @returns {XMLHttpRequest|ActiveXObject}
+         */
+        
+        //Laura: comenta más el código de las funciones
+        function inicializa_xhr() {
+            if (window.XMLHttpRequest) {
+                return new XMLHttpRequest();
+            }
+            else if (window.ActiveXObject) {
+                return new ActiveXObject("Microsoft.XMLHTTP");
+            }
+        }
+ 
+        /**
+         * @description Funcion que crea el objeto json que enviamos al servidor y controla que no se repita una misma opcion poniendo su value a 0
+         * y no permitiendo que se vuelva a crear para mandarse.
+         * @returns {String}
+         */
+        function crea_json() {
+            var JSONObject = new Object();
+            JSONObject.titulaciones = new Array();
+            for (var i = 0; i < tit.selectedOptions.length; i++) {
+                if (tit.selectedOptions[i].value !== '0') {
+                    JSONObject.titulaciones[i] = tit.selectedOptions[i].value;
+                    tit.selectedOptions[i].value = 0;
+                }
+            }
+                var objeto_json = JSON.stringify(JSONObject);
+                console.log(objeto_json);
+                return objeto_json;
+        }
+
+        /**
+         * @description Funcion que manda la peticion, envia el objeto json y cuando esta lista procesa la respuesta;
+         * 
+         */
+        function peticion() {
+            peticion_http = inicializa_xhr();
+            if (peticion_http) {
+                peticion_http.onreadystatechange = procesarRespuesta;
+                peticion_http.open("POST", 'servidor7.php', true);
+                var parametros_json = crea_json();
+                peticion_http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                peticion_http.send("titulacion=" + parametros_json);
+            }
+        }
+        /**
+         * 
+         * @description Procesa la respuesta en xml y la introduce en la lista vacia
+         */
+        function procesarRespuesta() {
+            var objeto_destino = document.getElementById('especialidades');
+
+            if (peticion_http.readyState === 4 && peticion_http.status === 200) {
+                var XML = peticion_http.responseXML;
+                console.log('respuesta');
+                var especialidades = XML.getElementsByTagName('especialidad');
+                for (var i = 0; i < especialidades.length; i++) {
+                    var tamañoEsp = objeto_destino.options.length;
+                    objeto_destino.options[tamañoEsp] = new Option(especialidades[i].firstChild.nodeValue, especialidades[i].firstChild.nodeValue);
+                }
+                console.log(especialidades);
+
+            }
+        }
+
+    </script>
+</body>
+</html>

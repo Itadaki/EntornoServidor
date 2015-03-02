@@ -60,18 +60,17 @@ function visualizarDatos() {
 function displayForm($camposErroneos, $camposPendientes) {
     $error = '';
     if ($camposPendientes and $camposErroneos) {
-        $error = '<p class="error1">Hubo algunos problemas con el formulario que usted presentó.
+        $error = '<p class="error_back2">Hubo algunos problemas con el formulario que usted presentó.
 Por favor, introduzca valores adecuados en los campos.</p>';
     } elseif ($camposPendientes) {
-        $error = '<p class="error">Hubo algunos problemas con el formulario que usted presentó.
+        $error = '<p class="error_back">Hubo algunos problemas con el formulario que usted presentó.
 Por favor, complete los campos en negrita de abajo y haga clic en Enviar
 para volver a enviar el formulario.</p>';
     } elseif ($camposErroneos) {
-        $error = '<p class="error1">Hubo algunos problemas con el formulario que usted presentó.
+        $error = '<p class="error_back2">Hubo algunos problemas con el formulario que usted presentó.
 Por favor, introduzca valores adecuados en los campos .</p>';
     } else {
-        $error .= '<p>Por favor, rellene sus datos a continuación y haga clic en Enviar.
-Los campos marcados con un asterisco (*) son obligatorios.</p>';
+        $error .= '<p>Por favor, rellene sus datos a continuación y haga clic en Enviar.</p>';
     }
     $datos = array(
         "error" => $error,
@@ -133,7 +132,7 @@ function generarOrigen() {
     return $origenes;
 }
 
-function ver(){
+function verReferencias(){
     $query = "select referencia,dni,origen,destino FROM billetes.referencias";
     $resultado = select($query);
     $tabla = '<table class="salida"><tr><th>referencia</th><th>dni</th><th>origen</th><th>destino</th></tr>';
@@ -141,6 +140,29 @@ function ver(){
         $tabla .= "<tr><td>{$campos['referencia']}</td><td>{$campos['dni']}</td><td>{$campos['origen']}</td><td>{$campos['destino']}</td></tr>";
     }
     $tabla.='</table>';
+    $tabla .= "<a href='index.php'>Volver al formulario de introducción de datos</a><br>"
+                . "<a href='index.php?ver=referencias'>Ver las referencias</a><br>"
+                . "<a href='index.php?ver=personas'>Ver las personas</a>";
+    $datos = array(
+        "titulo" => TITULO,
+        "formulario" => $tabla
+    );
+    $plantilla = "plantillas/plantilla.html";
+    $html = respuesta($datos, $plantilla);
+    print ($html);
+}
+
+function verPersonas(){
+    $query = "select dni,nombre FROM billetes.personas";
+    $resultado = select($query);
+    $tabla = '<table class="salida"><tr><th>dni</th><th>nombre</th></tr>';
+    while ($campos = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+        $tabla .= "<tr><td>{$campos['dni']}</td><td>{$campos['nombre']}</td></tr>";
+    }
+    $tabla.='</table>';
+    $tabla .= "<a href='index.php'>Volver al formulario de introducción de datos</a><br>"
+                . "<a href='index.php?ver=referencias'>Ver las referencias</a><br>"
+                . "<a href='index.php?ver=personas'>Ver las personas</a>";
     $datos = array(
         "titulo" => TITULO,
         "formulario" => $tabla

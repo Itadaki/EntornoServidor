@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<!--
+Autor=Paul Lozano Cruzado 
+Fecha=27-feb-2015
+Licencia=gpl30
+Version=1.0
+Descripcion=Crear un formulario donde el usuario podra seleccionar titulaciones
+disponibles, dichas titulaciones se iran guardado en otro select que le mostrara
+todas las titulaciones seleccionadas
+-->
+
+<!--
+Copyright (C) 2015 Paul Lozano Cruzado 
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html>
+    <head>
+        <title>Entrega 7</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+
+            var peticion_http = null;
+
+            /**
+             * Función para obtener el objeto XMLHttpRequest
+             */
+            function inicializa_xhr() {
+
+                if (window.XMLHttpRequest) {
+                    return new XMLHttpRequest();
+                }
+                else if (window.ActiveXObject) {
+                    return new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+
+            /**
+             * Función para obtener la estructura del json
+             */
+            function validar() {
+
+                peticion_http = inicializa_xhr();
+
+                if (peticion_http) {
+                    peticion_http.onreadystatechange = gestionarRespuesta;
+                    peticion_http.open('POST', 'servidor7.php', true);
+                    var parametros_json = "titulacion=" + crea_json();
+                    peticion_http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    peticion_http.send(parametros_json);
+                }
+            }
+
+            /**
+             * Función para crear el objeto json, por la cual creamos un array
+             * donde se guardaran las titulaciones que son seleccionadas,
+             * por otra parte recorremos el select para ver cual ha sido 
+             * seleccionada y asi iremos metiendo las titulaciones una detras de 
+             * otra
+             */
+            function crea_json() {
+                //Laura: no gestionas repetidos, comenta más el código de las funciones
+                var json_object = new Object();
+
+                var titulaciones_selec = new Array();
+                var op_seleccionadas = document.getElementsByTagName("select")[0].options;
+                var con_posicion = 0;
+
+                for (var i = 0; i < op_seleccionadas.length; i++) {
+
+                    if (op_seleccionadas[i].selected == true) {
+
+                        titulaciones_selec[con_posicion] = op_seleccionadas[i].value;
+                        con_posicion++;
+                    }
+                }
+
+                json_object.titulaciones = titulaciones_selec;
+                var objeto_json = JSON.stringify(json_object);
+                return objeto_json;
+            }
+            
+            /**
+             * Función para gestionar la respuesta que nos devuelve el json
+             * y poder asi mostrarlo
+             */
+            function gestionarRespuesta() {
+
+                if (peticion_http.readyState == 4 && peticion_http.status == 200) {
+
+                    var xml = peticion_http.responseXML;
+                    var respuesta = xml.getElementsByTagName("respuesta")[0];
+                    var titulaciones = respuesta.getElementsByTagName("titulacion");
+                    var op_seleccionadas = document.getElementById('especialidades').options;
+
+                    for (i = 0; i < titulaciones.length; i++) {
+
+                        var especialidad = titulaciones[i].getElementsByTagName("especialidad");
+
+                        for (j = 0; j < especialidad.length; j++) {
+                            
+                            //alert(especialidad[j].firstChild.nodeValue);                            
+                            var nombre_especialidad = especialidad[j].firstChild.nodeValue;
+                            var especialidad_selec = new Option(nombre_especialidad, nombre_especialidad);
+                            document.getElementById("especialidades").appendChild(especialidad_selec);
+                        }
+
+                    }
+
+                }
+            }
+        </script>
+    </head>
+    <body>
+    <center>
+
+        <form name="form_cv" method="post" action="">
+            <hr>
+            <table>
+                <tr>
+                    <td>
+                        Nombre*:   <input type="text" id="nombre"><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Apellidos*:   <input type="text" id="apellidos"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Fecha de Nacimiento*:   <input type="text" id="fecha"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Teléfono Móvil*:   <input type="text" id="telefono"><br>
+
+                    </td>
+                </tr>
+                <tr><td>
+                        <table>
+                            <tr>
+                                <td>Titulaciones<br>
+                                    <select id="titulacion" multiple>
+                                        <option value='1'>Técnico FP</option>
+                                        <option value='2'>Técnico Superior FP</option>
+                                        <option value='3'>Grado</option>
+                                    </select>
+                                </td><td>
+                                    <input type="button" id="b1" name="boton" value="get" onclick="validar();">
+                                </td><td>Especialidades<br>
+                                    <select size=4 id="especialidades" style="width:200px"></select>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+            </table>
+
+        </form>
+        <hr>
+    </center>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<!--
+Autor = Daniel Carrasco Bárcena
+Fecha = 27-feb-2015
+Licencia = gpl30
+Version = 1.0
+Descripcion = Envio de datos al servidor JSON - XML
+-->
+<!--
+Copyright (C) 2015 Daniel Carrasco Bárcena
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html>
+    <head>
+        <title>Entrega 7</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+
+
+
+            var READY_STATE_COMPLETE = 4;
+            var peticion_http = null;
+
+            //Función para obtener la instancia del objeto XMLHttpRequest
+
+            function inicializa_xhr() {
+
+                if (window.XMLHttpRequest) {
+                    return new XMLHttpRequest();
+                }
+                else if (window.ActiveXObject) {
+                    return new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+
+            // Creamos el objeto JSON//
+
+            function crea_json() {
+
+                var cont = 0;
+
+                var JSONObject = new Object();
+
+                //Creamos un array para las titulaciones que se van a seleccionar//
+
+                var titulacion = new Array();
+
+                //sacamos un array con las optiones que tiene el select de titulacion//
+
+                var opciones = document.getElementById("titulacion").options;
+
+                //Recorremos el array de optiones y vemos cual está seleccionada para meterla en titulacion//
+
+                for (var i = 0; i < opciones.length; i++) {
+
+                    if (opciones[i].selected === true) {
+                        titulacion[cont] = opciones[i].value;
+                        cont++;
+                    }
+                }
+
+                JSONObject.titulaciones = titulacion;
+
+                //Lo convertimos en una cadena para mandarlo//
+
+                var objeto_json = JSON.stringify(JSONObject);
+
+                return objeto_json;
+            }
+
+            function validar() {
+
+                peticion_http = inicializa_xhr();
+
+                if (peticion_http) {
+                    peticion_http.onreadystatechange = procesaRespuesta;
+                    peticion_http.open("POST", "servidor7.php", true);
+                    var parametros_json = "titulacion=" + crea_json();
+                    peticion_http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    peticion_http.send(parametros_json);
+                }
+            }
+            
+            //Laura: hay que comentar las funciones adecuadamente
+            function procesaRespuesta() {
+                //Laura: tan importantes es espaciar como no utilizarlo indebidamente
+                // Comprobamos que no hay errores al hacer la peticion al servidor);
+
+                if (peticion_http.status === 200 && peticion_http.readyState === 4) {
+
+                    // Obtenemos la respuesta XML
+
+                    var xml = peticion_http.responseXML;
+
+                    // Almacenamos la respuesta  para a ir guardando sus especialidades
+
+
+                    var especialidades = xml.getElementsByTagName("especialidad");
+
+                    document.getElementById('especialidades').innerHTML = "";
+                    //Laura: no hay que borrar, hay que mantener las especialidades anteriores
+                    //Laura: hay que gestionar no hacer peticiones Ajax para repetidos
+                    for (var i = 0; i < especialidades.length; i++) {
+                        //Laura: pedía hacerlo con new Option
+                        document.getElementById('especialidades').innerHTML += "<option>" + especialidades[i].firstChild.nodeValue + "</option>";
+
+
+
+                    }
+
+                }
+            }
+
+        </script>
+    </head>
+    <body>
+    <center>
+
+        <form name="form_cv" method="post" action="">
+            <hr>
+            <table>
+                <tr>
+                    <td>
+                        Nombre*:   <input type="text" id="nombre"><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Apellidos*:   <input type="text" id="apellidos"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Fecha de Nacimiento*:   <input type="text" id="fecha"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Teléfono Móvil*:   <input type="text" id="telefono"><br>
+
+                    </td>
+                </tr>
+                <tr><td>
+                        <table>
+                            <tr>
+                                <td>Titulaciones<br>
+                                    <select id="titulacion" multiple>
+                                        <option value='1'>Técnico FP</option>
+                                        <option value='2'>Técnico Superior FP</option>
+                                        <option value='3'>Grado</option>
+                                    </select>
+                                </td><td>
+                                    <input type="button" id="b1" name="boton" value="get" onclick="validar();">
+                                </td><td>Especialidades<br>
+                                    <select size=4 id="especialidades" style="width:200px"></select>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+            </table>
+
+        </form>
+        <hr>
+    </center>
+</body>
+</html>

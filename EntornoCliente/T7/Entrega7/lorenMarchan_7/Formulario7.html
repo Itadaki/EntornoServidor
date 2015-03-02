@@ -1,0 +1,219 @@
+
+<!--
+Autor=Lorena Marchan
+Fecha=27-feb-2015
+Licencia=gpl30
+Version=1.0
+Descripcion=Documento HTML  con un formulario y un script Javascript que hace una peticion asincrona al servidor cuando se pulsa el boton get,
+            se le pasa un JSON y devuelve un XML
+-->
+
+<!--
+Copyright (C) 2015 Lorena Marchan
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Entrega 7</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+
+        </script>
+    </head>
+    <body>
+    <center>
+
+        <form name="form_cv" method="post" action="">
+            <hr>
+            <table>
+                <tr>
+                    <td>
+                        Nombre*:   <input type="text" id="nombre"><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Apellidos*:   <input type="text" id="apellidos"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Fecha de Nacimiento*:   <input type="text" id="fecha"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Teléfono Móvil*:   <input type="text" id="telefono"><br>
+
+                    </td>
+                </tr>
+                <tr><td>
+                        <table>
+                            <tr>
+                                <td>Titulaciones<br>
+                                    <select id="titulacion" multiple>
+                                        <option value='1'>Técnico FP</option>
+                                        <option value='2'>Técnico Superior FP</option>
+                                        <option value='3'>Grado</option>
+                                    </select>
+                                </td><td>
+                                    <input type="button" id="b1" name="boton" value="get" onclick="preparacionConsulta()">
+                                </td><td>Especialidades<br>
+                                    <select size=4 id="especialidades" style="width:200px"></select>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <hr>
+    </center>    
+    <script type="text/javascript">
+        //VARIABLES GLOBALES////////////////////////////////////////////////////
+        var peticion_http;
+        var historialOpc = [];//array que guarda el historial de las opciones escogidas
+        var opc = [];//array de opciones escogidas
+
+
+        //FUNCIONES/////////////////////////////////////////////////////////////
+        /*
+         * nombre:preparacionConsulta,
+         * argumentos:ninguno,
+         * devuelve:nada
+         * descripcion: prepara las opciones a enviar al servidor para que no se repita ninguna
+         * y controla que en caso de haber seleccionado las opciones con anterioridad no se haga la peticion.
+         */
+
+        function preparacionConsulta() {
+            //Laura: te has complicado mucho para la gestión de repetidos se puede hacer más eficiente y simple
+            opc = []; //vaciamos el array para coger nuevas opciones cada vez que clicamos en get
+            var select1 = document.getElementById('titulacion');
+            var opciones = select1.getElementsByTagName('option');//opciones del select titulacion
+
+            //recorremos los options del select titulaciones para ver cual esta seleccionado
+            for (var i = 0; i < opciones.length; i++) {
+
+                if (opciones[i].selected) {
+                    var anadir = true;//variable auxiliar inicializada en true para indicar si la opcion 
+                    //se debe añadir al array opciones
+                    //recorremos el array historial para ver si la opcion ya se selecciono con anterioridad
+                    for (var j = 0; j < historialOpc.length; j++) {
+                        if (historialOpc[j] == opciones[i].value) {
+                            //en caso de que la opcion marcada estuviera ya en el array del historial anadir pasa a ser false.
+                            anadir = false;
+                            break;
+                        }
+                    }
+                    //si anadir es false quiere decir que estaba en el historial, porque lo que la opcion no se añade al array de opciones
+                    //y no se pasara como valor para la creacion del json.
+                    if (anadir) {
+                        opc.push(opciones[i].value);
+                    }
+                }
+            }
+            //en caso de que el array de opciones este vacio (porque todas las opciones ya han sido seleccionadas antes)
+            //no se hace la peticion ajax, si no, si que se hace.
+            if (opc.length != 0) {
+                peticionAJAX();
+            }
+
+        }
+
+        /*
+         * nombre:peticionAJAX,
+         * argumentos:ninguno,
+         * devuelve:nada
+         * descripcion: prepara la peticion asincrona al servidor.
+         */
+
+        function peticionAJAX() {
+            peticion_http = new XMLHttpRequest();
+            peticion_http.onreadystatechange = procesaRespuesta;
+            peticion_http.open("POST", 'servidor7.php', true);
+            peticion_http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            var parametro = "titulacion=" + creaJSON();
+            peticion_http.send(parametro);
+        }
+
+        /*
+         * nombre:procesaRespuesta,
+         * argumentos:ninguno,
+         * devuelve:nada
+         * descripcion: prepara las ordenes que tendra que seguir en caso de que la peticion haya finalizado y todo este en orden.
+         */
+
+        function procesaRespuesta() {
+            if (peticion_http.readyState == 4 && peticion_http.status == 200) {
+                //cuando se ha hecho la consulta y se ha recibido todo bien, se rellena el historial con las opciones
+                //que habian sido marcadas.
+                for (var i = 0; i < opc.length; i++) {
+                    +
+                            historialOpc.push(opc[i]);
+                }
+                insertar();
+            }
+        }
+
+        /*
+         * nombre:creaJSON,
+         * argumentos:ninguno,
+         * devuelve:nada
+         * descripcion: prepara el JSON que ha de ser enviado al servidor.
+         */
+
+        function creaJSON() {
+            var objetoJson = new Object();
+            objetoJson.titulaciones = [];
+            for (var i = 0; i < opc.length; i++) {
+                objetoJson.titulaciones.push(opc[i]);
+            }
+            var jsonFinal = JSON.stringify(objetoJson);
+            return jsonFinal;
+        }
+
+        /*
+         * nombre:insertar,
+         * argumentos:ninguno,
+         * devuelve:nada
+         * descripcion: produce una version legible en html (introducidas en un select) de la respuesta obtenida del servidor en fotmaro XML.
+         */
+
+        function insertar() {
+            var select2 = document.getElementById('especialidades');
+            var respuesta = peticion_http.responseXML;
+            var titulaciones = respuesta.getElementsByTagName('titulacion');
+            //recorro el array de los tags con nombre titulacion
+            for (var i = 0; i < titulaciones.length; i++) {
+                var especialidades = titulaciones[i].getElementsByTagName('especialidad');
+                //recorro el array de los tags con nombre especialidad que se encontraban dentro de cada tag titulacion
+                for (var j = 0; j < especialidades.length; j++) {
+                    //creo una opcion nueva con value y text de lo que se encontraba dento del tag especialidad
+                    var opcion = new Option(especialidades[j].firstChild.nodeValue, especialidades[j].firstChild.nodeValue);
+                    //especifico que el nodeValue tenga el valor que se encontraba dentro del tag especialidades
+                    opcion.firstChild.nodeValue = especialidades[j].firstChild.nodeValue;
+                    //inserto el otion dentro del select de especialidades
+                    select2.appendChild(opcion);
+                }
+            }
+
+        }
+    </script>
+</body>
+</html>

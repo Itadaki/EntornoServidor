@@ -65,7 +65,9 @@ function procesForm() {
         $insert_query = 'insert into ' . TABLA_REFERENCIAS . " values ($valores)";
         mysqli_query($conexion, $insert_query);
 
-        $enlace = " <a href='index.php'>Volver al formulario de introducción de datos</a>";
+        $enlace = "<a href='index.php'>Volver al formulario de introducción de datos</a><br>"
+                . "<a href='index.php?ver=referencias'>Ver las referencias</a><br>"
+                . "<a href='index.php?ver=personas'>Ver las personas</a>";
         visualizarDatos();
     }
 }

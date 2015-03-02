@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<!--
+Autor=Elias Sanchez Arroyo
+Fecha=12-ene-2015
+Licencia=gpl30
+Version=1.0
+Descripcion= Documento HTML con script Javascript. Examen parcial tema 7.
+
+Copyright (C) 2015 Elias Sanchez
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html>
+    <head>
+        <title>Entrega 7</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            var peticion_http;
+            
+            /**@nombre: inicializa_xhr
+             @description: función que crea la petición http*
+             */
+            function inicializa_xhr() {
+                if (window.XMLHttpRequest) {
+                    return new XMLHttpRequest();
+                }
+                else if (window.ActiveXObject) {
+                    return new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+
+            /**@nombre: crea_json
+             @description: función que crea el objeto json e introduce en el array titulaciones las titulaciones seleccionadas para enviarlo después con el objeto json*
+             */
+            function crea_json() {                     
+                var titulaciones = new Array();
+                /*Utilizamos el metodo selectedOptions para acceder a las opciones seleccionadas. Se podría hacer también condicionando, dentro del for, que la opción esté seleccionada
+                 *(if(options[i].selected===true)...*/
+                var selected = document.getElementById('titulacion').selectedOptions;
+                /*se introducen los elementos de titulaciones que enviaremos en la petición*/
+                for (var i = 0; i < selected.length; i++) {
+                    titulaciones[i] = selected[i].value;
+                }
+                /*se crea el objeto json y se guarda el array titulaciones con las titulaciones seleccionadas*/
+                var jsonObjeto = new Object();
+                jsonObjeto.titulaciones = titulaciones;
+                var objeto_json = JSON.stringify(jsonObjeto);
+                return objeto_json;
+            }
+
+            /**@nombre: validar
+             @description: función que enviará todas las titulaciones seleccionadas (y guardadas en el objeto json) al servidor mediante el POST titulacion*
+             */
+            function validar() {
+                peticion_http = inicializa_xhr();
+
+                if (peticion_http) {
+                    peticion_http.onreadystatechange = gestionarRespuesta;
+                    peticion_http.open("POST", "servidor7.php", true);
+                    var parametros_json = "titulacion=" + crea_json();       
+                    peticion_http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                   
+                    peticion_http.send(parametros_json);                                 
+                }
+            }
+            
+            /**@nombre: gestionarRespuesta
+             @description: función que procesará la respuesta con XML y visualizará los datos en HTML por medio de DOM*
+             */
+            //Laura: borras en vez de añadir especialidades
+            //Laura: no se gestionan por tanto repetidos
+            function gestionarRespuesta() {
+                if (peticion_http.readyState === 4 && peticion_http.status === 200) {
+                    var especialidades = document.getElementById("especialidades");
+                    /*cada vez que se ejecute la función, dejará el select de especialidades vacio*/
+                    especialidades.innerHTML = "";
+                    var xml = peticion_http.responseXML;
+                    /*se crea la variable especialidades, para coger los tags xml correspondientes a especialidad en el documento php, y poder acceder a los values*/
+                    var nueva_esp = xml.getElementsByTagName('especialidad');
+                    for (var i = 0; i < nueva_esp.length; i++) {
+                        /*se dejan todos los values en el select especialidades introduciendolos uno a uno como nueva opción*/
+                        especialidades.options[i] = new Option(nueva_esp[i].firstChild.nodeValue, nueva_esp[i].firstChild.nodeValue);
+                    }
+                }
+            }
+        </script>
+    </head>
+    <body>
+    <center>
+
+        <form name="form_cv" method="post" action="">
+            <hr>
+            <table>
+                <tr>
+                    <td>
+                        Nombre*:   <input type="text" id="nombre"><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Apellidos*:   <input type="text" id="apellidos"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Fecha de Nacimiento*:   <input type="text" id="fecha"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Teléfono Móvil*:   <input type="text" id="telefono"><br>
+
+                    </td>
+                </tr>
+                <tr><td>
+                        <table>
+                            <tr>
+                                <td>Titulaciones<br>
+                                    <select id="titulacion" multiple>
+                                        <option value='1'>Técnico FP</option>
+                                        <option value='2'>Técnico Superior FP</option>
+                                        <option value='3'>Grado</option>
+                                    </select>
+                                </td><td>
+                                    <input type="button" id="b1" name="boton" value="get" onclick="validar()">
+                                </td><td>Especialidades<br>
+                                    <select size=4 id="especialidades" style="width:200px"></select>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+            </table>
+
+        </form>
+        <hr>
+    </center>
+</body>
+</html>

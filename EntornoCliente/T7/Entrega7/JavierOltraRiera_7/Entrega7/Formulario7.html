@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<!-- Laura: falta toda la documentación de plantilla que hay que poner al principio-->
+<html>
+    <head>
+        <title>Entrega 7</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            /**
+             * 
+             * @description Funcion que crea la peticion asincrona con el servidor
+             */
+            function validar() {
+                xhr = new XMLHttpRequest();
+                if (xhr) {
+                    xhr.onreadystatechange = gestionarRespuesta;
+                    xhr.open('POST', 'servidor7.php', true); //Decimos que recibira mediante post y el fichero php que cargara el servidor
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    xhr.send("titulacion=" + crea_json()); //Le pasamos el json
+                }
+            }
+            /**
+             * 
+             * @description Crea un objeto json, que sera enviado al servidor
+             */
+            function crea_json() {
+                var JSONObject = new Object();
+                var options = document.getElementById("titulacion").options; //selecciona las opciones del select titulaciones
+                var titulaciones = new Array();
+                var contador = 0;
+                for (var i = 0; i < options.length; i++) {
+                    if (options[i].selected == true) {
+                        titulaciones[contador] = options[i].value;//Si la opcion esta seleccionada la añade al array titulaciones
+                        contador++;
+                    }
+                }
+                JSONObject.titulaciones = titulaciones;
+                var objeto_json = JSON.stringify(JSONObject);//Convierte el objeto en una cadena para enviarlo
+                return objeto_json; //retorna la cadena
+            }
+            /**
+             * 
+             * @description Metodo que se encarga de gestionar la respuesta del servidor.
+             */
+            function gestionarRespuesta() {
+                if (xhr.readyState == 4 && xhr.status == 200) { //comprueba que todos esta correcto
+                    var xml = xhr.responseXML;
+                    var raiz = xml.getElementsByTagName("respuesta")[0];
+                    var titulacion = raiz.getElementsByTagName("titulacion");
+                    for (var i = 0; i < titulacion.length; i++) {
+                        var especialidad = titulacion[i].getElementsByTagName('especialidad');//Crea un array de especialidad con los tag de especialidades que nos llega del servidor
+                    }
+                    for (var j = 0; j < especialidad.length; j++) {
+                        //Laura: es más eficiente comprobar que no están al hacer la petición AJAX
+                        if (!existen(especialidad[j].firstChild.nodeValue)) { //comprueba que no existe la opcion en el select
+                            var opciones = new Option(especialidad[j].firstChild.nodeValue, especialidad[j].firstChild.nodeValue);
+                            document.getElementById('especialidades').appendChild(opciones);//en caso de no existir se añade al select especialidades
+                        }
+                    }
+
+                }
+            }
+            /**
+             * 
+             * @param {type} especialidad
+             * @returns {Boolean}
+             * @description Comprueba si la opcion que se va a añadir al select especialidad existe o no.
+             */
+            function existen(especialidad) {
+                var repetido = false;
+                var especialidades = document.getElementById("especialidades").options;
+                for (var i = 0; i<especialidades.length;i++){
+                    if (especialidad == especialidades[i].value){
+                        repetido = true;
+                        break;
+                    }
+                }
+                return repetido;
+            }
+            window.onload = function() {
+                document.getElementById("b1").onclick = validar;
+            }
+        </script>
+    </head>
+    <body>
+    <center>
+
+        <form name="form_cv" method="post" action="">
+            <hr>
+            <table>
+                <tr>
+                    <td>
+                        Nombre*:   <input type="text" id="nombre"><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Apellidos*:   <input type="text" id="apellidos"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Fecha de Nacimiento*:   <input type="text" id="fecha"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Teléfono Móvil*:   <input type="text" id="telefono"><br>
+
+                    </td>
+                </tr>
+                <tr><td>
+                        <table>
+                            <tr>
+                                <td>Titulaciones<br>
+                                    <select id="titulacion" multiple>
+                                        <option value='1'>Técnico FP</option>
+                                        <option value='2'>Técnico Superior FP</option>
+                                        <option value='3'>Grado</option>
+                                    </select>
+                                </td><td>
+                                    <input type="button" id="b1" name="boton" value="get">
+                                </td><td>Especialidades<br>
+                                    <select size=4 id="especialidades" style="width:200px"></select>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <hr>
+    </center>
+</body>
+</html>

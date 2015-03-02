@@ -21,6 +21,7 @@ function procesForm() {
         $valor = $_POST["codigo"];
         $valores_campos["$campo"] = $valor;
 //añade precio y cantidad a la variable global $campos si el usuario selecciona las opciones adecuandas en el formulario
+        $campos[] = 'codigo';
         if (isset($_POST['mostrarprecio'])) {
             $campos[] = 'precio';
         }
@@ -33,15 +34,17 @@ function procesForm() {
 }
 
 function load($valores_campos, $tabla) {
+    global $campos;
     addTable($tabla);
     setFuncion("select");
-    addSelect('*');
+    foreach ($campos as $campo ) {
+        addSelect($campo);
+    }
     foreach ($valores_campos as $campo => $valor) {
         addWhere("$campo = ?");
         addTipo($valor);
     }
     $sql_select = generar();
-    echo $sql_select;
     return ejecutar($sql_select, $valores_campos, $tabla);
 }
 

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<!--Laura: falta comentario de plantilla inicial -->
+<html>
+    <head>
+
+        <title>Entrega 7</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script>
+
+            /**
+             * Función para poder inicializar
+             * @returns la inicializacion
+             */
+            function inicializa_xhr() {
+                if (window.XMLHttpRequest) {
+                    return new XMLHttpRequest();
+                }
+                else if (window.ActiveXObject) {
+                    return new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+
+            /**
+             * Funcion para pasarle los parametros al php
+             */
+            function valida() {
+                peticion_http = inicializa_xhr();
+                if (peticion_http) {
+                    peticion_http.onreadystatechange = procesaRespuesta;
+                    peticion_http.open("POST", "servidor7.php", true);
+                    var parametros_json = "titulacion=" + crea_json();
+                    peticion_http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    peticion_http.send(parametros_json);
+                }
+            }
+
+
+            /**
+             * Sirve para crear el json y poder enviarlo al php
+             * @returns {undefined}
+             */
+            function crea_json() {
+                /*Creas el objeto json*/
+                var JSONObject = new Object();
+                /*Creamos un array para las titulaciones que se van a seleccionar*/
+                var Almacenar = new Array();
+                /*sacamos un array con las optiones que tiene el select de titulacion*/
+                var opciones = document.getElementById("titulacion").options;
+                var cont = 0;
+
+                /*Recorremos el array de optiones y vemos cual está seleccionada para meterla en titulacion*/
+                for (var i = 0; i < opciones.length; i++) {//Con este primer for recorremos el array Almacenar.
+                    if (opciones[i].selected == true) {//Con este for recorremos el array opciones seleccionadas.
+                        Almacenar[cont] = opciones[i].value;//Vamos metiendo los valores en el array que enviaremos.
+                        cont++;
+                    }
+                }
+                JSONObject.titulaciones = Almacenar;
+
+                // Siempre que sea enviar JSON se pone(lo que hacemos es convertirlo a un string)
+                var objeto_json = JSON.stringify(JSONObject);
+                return objeto_json;
+            }
+
+            //Laura: comenta las funciones adecuadamente
+            function procesaRespuesta() {
+
+                if (peticion_http.readyState == 4 && peticion_http.status == 200) {
+                    document.getElementById("especialidades").innerHTML = "";
+                    var xml = peticion_http.responseXML;
+//                    Cogemos el primer tag con nombre respuesta  Laura: formatea correctamente
+                    var tagRespuesta = xml.getElementsByTagName('respuesta')[0];
+
+//                    cogemos todos los tag con titulacion
+                    var tagTitulacion = tagRespuesta.getElementsByTagName('titulacion');
+
+//                    cogemos todas las opciones de especialidades que estan en el formulario
+                    var opcionSelec = document.getElementById('especialidades').options;
+
+                    var existe = false;// creamos la variable existe y le damos el valor false por defecto,para que no se repitan los valores 
+                    //Laura: Las especialidades se pueden obtener directamente
+                    for (i = 0; i < tagTitulacion.length; i++) {
+                        var especialidad = tagTitulacion[i].getElementsByTagName('especialidad');
+
+                        //Laura: no añade, crea nuevas y por tanto no gestiona repetidas
+                        for (j = 0; j < especialidad.length; j++) {//Recorremos el array que hemos recibido del php.
+                            for (k = 0; k < opcionSelec.length; k++) {//Recorremos el array de la informacion que ya tenemos.
+                                if (especialidad[j].firstChild.nodeValue == opcionSelec[k].value) {
+                                    existe = true;
+                                }
+                            }
+                            //Laura: la gestión de repetidos al crear el JSON
+                            if (existe == false) {
+                                var opciones = new Option(especialidad[j].firstChild.nodeValue, especialidad[j].firstChild.nodeValue);
+                                document.getElementById('especialidades').appendChild(opciones);
+                            }
+                        }
+                    }
+                }
+            }
+        </script>
+    </head>
+    <body>
+    <center>
+
+        <form name="form_cv" method="post" action="">
+            <hr>
+            <table>
+                <tr>
+                    <td>
+                        Nombre*:   <input type="text" id="nombre"><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Apellidos*:   <input type="text" id="apellidos"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Fecha de Nacimiento*:   <input type="text" id="fecha"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Teléfono Móvil*:   <input type="text" id="telefono"><br>
+
+                    </td>
+                </tr>
+                <tr><td>
+                        <table>
+                            <tr>
+                                <td>Titulaciones<br>
+                                    <select id="titulacion" multiple>
+                                        <option value='1'>Técnico FP</option>
+                                        <option value='2'>Técnico Superior FP</option>
+                                        <option value='3'>Grado</option>
+                                    </select>
+                                </td><td>
+                                    <input type="button" id="b1" name="boton" value="get" onclick="valida();">
+                                </td><td>Especialidades<br>
+                                    <select size=4 id="especialidades" style="width:200px"></select>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+            </table>
+
+        </form>
+        <hr>
+    </center>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<!--
+Autor=Mario Ramírez Padilla
+Fecha=27-feb-2015
+Licencia=gpl30
+Version=1.0
+Descripcion= Formulario en el cual hacemos click sobre una de las especialidades y al presionar el boton get, tienen que mostrarse en el <select> de titulaciones 
+las titulaciones referentes a dicha especialidad. Si es posible que se vayan acumulando.
+-->
+<!--
+Copyright (C) 2014 Mario Ramírez 
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html>
+    <head>
+        <title>Entrega 7</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            var peticion_http = null;
+            /*
+             * @despcription: Función para obtener la instancia del objeto XMLHttpRequest
+             */
+            function inicializa_xhr() {
+                if (window.XMLHttpRequest) {
+                    return new XMLHttpRequest();
+                }
+                else if (window.ActiveXObject) {
+                    return new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+
+            /*
+             * @description: Funcion que comprueba si la petición ha sido la correcta.
+             */
+            function valida() {
+                peticion_http = inicializa_xhr();
+                if (peticion_http) {
+                    peticion_http.onreadystatechange = gestionarRespuesta;
+                    peticion_http.open("POST", "servidor7.php", true);
+                    var parametros_json = "titulacion=" + crea_json();
+                    peticion_http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    peticion_http.send(parametros_json);
+                }
+            }
+            /*
+             * @description: Funcion que crea el objeto json
+             */
+            function crea_json() {
+                var JSONObject = new Object();
+                var ArrayTitulaciones = new Array();
+                var opciones = document.getElementById("titulacion");
+                var cont = 0;
+                for (var i = 0; i < opciones.length; i++) {
+                    if (opciones[i].selected == true) {
+                        ArrayTitulaciones[cont] = opciones[i].value;
+                        cont++;
+                    }
+                }
+                JSONObject.titulaciones = ArrayTitulaciones;
+                var objeto_json = JSON.stringify(JSONObject);
+                return objeto_json;
+            }
+            
+            /*
+             * @description: Funcion que gestiona la respuesta cuando la comunicación se ha realizado con exito
+             */
+            
+            //Laura: comenta el código correctamente
+          
+            function gestionarRespuesta() {
+                if (peticion_http.readyState == 4 && peticion_http.status == 200) {
+                    document.getElementById("especialidades").innerHTML = "";
+                    var respuestaDatos = peticion_http.responseXML;
+                    var DatosRecibidosRespuesta = respuestaDatos.getElementsByTagName('respuesta')[0];
+                    var datosTitulacion = DatosRecibidosRespuesta.getElementsByTagName('titulacion');
+                    var datosEspecialidad= document.getElementById('especialidades');
+
+                    var repetido = false;
+                    //Laura: se pueden obtener las especialidades directamente
+                    for (i = 0; i < datosTitulacion.length; i++) {
+                        var meterDatosEspecialidad = datosTitulacion[i].getElementsByTagName('especialidad');
+
+                        //Laura: no añade, borra y genera de nuevo y por tanto no gestiona repetidos
+                        for (x = 0; x < meterDatosEspecialidad.length; x++) {
+                            for (z = 0; z < datosEspecialidad.length; z++) {
+                                if (meterDatosEspecialidad[x].firstChild.nodeValue == datosEspecialidad[z].value) { 
+                                    repetido = true;
+                                }
+                            }
+                            //Laura: la gestión de repetidos al crear el JSON
+                            if (repetido == false) {
+                                var opciones = new Option(meterDatosEspecialidad[x].firstChild.nodeValue, meterDatosEspecialidad[x].firstChild.nodeValue);
+                                document.getElementById('especialidades').appendChild(opciones);
+                            }
+                        }
+                    }
+
+
+                }
+            }
+        </script>
+    </head>
+    <body>
+    <center>
+
+        <form name="form_cv" method="post" action="">
+            <hr>
+            <table>
+                <tr>
+                    <td>
+                        Nombre*:   <input type="text" id="nombre"><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Apellidos*:   <input type="text" id="apellidos"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Fecha de Nacimiento*:   <input type="text" id="fecha"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Teléfono Móvil*:   <input type="text" id="telefono"><br>
+
+                    </td>
+                </tr>
+                <tr><td>
+                        <table>
+                            <tr>
+                                <td>Titulaciones<br>
+                                    <select id="titulacion" multiple>
+                                        <option value='1'>Técnico FP</option>
+                                        <option value='2'>Técnico Superior FP</option>
+                                        <option value='3'>Grado</option>
+                                    </select>
+                                </td><td>
+                                    <input type="button" id="b1" name="boton" value="get" onclick="valida()">
+                                </td><td>Especialidades<br>
+                                    <select size=4 id="especialidades" style="width:200px"></select>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+            </table>
+
+        </form>
+        <hr>
+    </center>
+</body>
+</html>
+

@@ -1,13 +1,13 @@
 /*
-Autor = Diego Rodríguez Suárez-Bustillo
-Fecha = 26-feb-2015
+Autor = Alejandro Montoya - Cristian Castaño - Diego Rodríguez
+Fecha = 10-dic-2014
 Licencia = gpl30
-Version = 1.0
-Descripcion = 
+Version = 2.0
+Descripcion = Estilos comunes a todas las paginas
 */
 
 /*
-Copyright (C) 2015 Diego Rodríguez Suárez-Bustillo
+Copyright (C) 2014 Diego Rodríguez Suárez-Bustillo
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,40 +23,274 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-*{margin:0;padding:0;}
-#wrapper{width: 900px;margin: 0 auto;border: solid}
+/*Fuentes*/
+@font-face {
+    font-family: Vibes;
+    src: url(../font/GreatVibes-Regular.otf);
+}
+@font-face {
+    font-family: Ovo;
+    src: url(../font/Ovo-Regular.ttf);
+}
+@font-face {
+    font-family: OpenSans;
+    src: url(../font/OpenSans-Regular.ttf);
+}
+@font-face {
+    font-family: Pacifico;
+    src: url(../font/Pacifico.ttf);
+}
+@font-face {
+    font-family: Dancing;
+    src: url(../font/DancingScript-Regular.ttf);
+}
 
-header{
-    background-color: #660066;
-    color: white;
-    text-align: center;
-    line-height: 100px;
-    height: 100px;
+/*Estilos generales*/
+*{margin:0; padding:0;}
+body{
+    font-family: OpenSans;
 }
-a {text-decoration: none;}
-main{
-    padding: 50px 0 50px 0;
-}
-main h2{
-    text-align: center;
-}
-main #formulario{
+#wrapper{
+    width: 950px;
     margin: 0 auto;
-    width: 400px;
+    position: relative;
+    box-shadow: rgba(0,0,0,0.3) 0px 0px 20px 0px ;
 }
-table.salida td{
+h1, h2{font-family: Ovo;}
+p{font-size: 1em;}
+a{
+    text-decoration: none;
+    font-weight: bold;
+    color: #4b755b;
+}
+a:hover, a:visited{font-weight: normal; text-decoration:underline;}
+a:visited{ color: #304a39; }
+.cabeza{
+    color:#32A9C6 !important;
+    font-weight: bold !important;
+}
+.negrita{font-weight: bold;}
+.cursiva{font-style: oblique;}
+.subrayado{text-decoration: underline;}
+/*Estilos de cabecera*/
+header.main{
+    position: relative;
+    height: 200px;
+    background: #d7e8f1 url('../img/header3.jpg');
+    background-color: #d7e8f1;
+    color: #f4f8f9;
+}
+header.main h1, header.main p, header.main img{position: absolute;}
+header.main h1{
+    top: 70px;
+    left: 175px;
+    font-family: Ovo;
+    font-size: 4.6875em;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+header.main p{
+    top: 145px;
+    left: 310px;
+    font-family: Dancing;
+    font-size: 1.375em;
+    font-weight: 500;
+}
+header.main img{
+    left: 85px;
+    top: 30px;
+    height: 150px;
+}
+header.main #buscador{
+    right:15px ;
+    top: 15px;
+    position:absolute;
+}
+
+/*Estilos de barra de navegacion*/
+nav{
+    background: #d7e8f1;
+    height: 40px;
+}
+nav ul{
+    list-style: none;
     text-align: center;
-    padding: 5px;
+    font-family: Ovo;
+    font-weight: bold;
 }
-table{
-   border: solid 1px;
-   margin-top: 10px;
-   padding: 5px;
+nav li {display: inline;}
+nav ul li a{
+    color: black !important; /*Previene del cambio de color por :visited*/
+    transition: border .25s;
+    text-decoration: none;
+    display: inline-block;/*Se convierte en bloque y le afecta width y height*/
+    height: 35px;
+    line-height: 40px; /*Altura de cada linea == altura == alineado vertical*/
+    width: 175px;
+    font-size:1.25em;
+    border-bottom: 5px solid #d7e8f1;
 }
-footer{
-    background-color: #704770;
-    color: white;
+nav ul li a:hover, nav ul li a.activo{
+    font-weight: bold;
+    text-decoration:none;
+    border-bottom: 5px solid #6a96a3;
+}
+
+/*Estilos del main*/
+main{
+    background: #f4f8f9;
+    padding-bottom: 20px;
+}
+main>section{
+    padding: 30px;
+    min-height: 400px;
+    margin: 0 auto;
+    width: 600px;
+    padding: 15px;
+}
+main #migas{
+    margin: 30px auto;
+    width: 600px;
+    font-size: 0.75em;
+    font-style: italic;
+}
+main>section article{
+    margin: 0 auto;
+    width: 600px;
+    padding: 15px;
+}
+main>section  img.left{
+    float:left; 
+    margin: 10px;
+    margin-left: 0;
+}
+main>section  img.right{
+    float:right; 
+    margin: 10px;
+    margin-right: 0;
+}
+
+/*Estilos del pie*/
+footer.main{
+    background: #d7e8f1;
     text-align: center;
-    line-height: 50px;
-    height: 50px;
+}
+
+/*Estilos de publicidad*/
+#banner{
+    background: rgba(0,0,0,.1);
+    height: 100px;
+    width: 600px;
+    margin: 0 auto;
+    position: relative;
+    transition: height 1s;
+    overflow: hidden;
+}
+#banner div{
+    height: 100px;
+    width: 600px;
+    position: absolute;
+}
+/*div#cerrarAnuncio{
+    width: 20px;
+    height: 20px;
+    right: 5px;
+    top: 5px;
+    background: url('../img/close_red.png');
+    background-size: 20px;
+    cursor: pointer;
+}
+
+div#mapa{
+    width: 20px;
+    height: 20px;
+    right: 0px;
+    top: 10px;
+    background: url('../img/close_red.png');
+    background-size: 20px;
+    cursor: pointer;
+}
+
+#tierra{
+    background-image: url('../img/banner/suelo.jpg');
+    background-repeat: repeat;
+    background-position: 0 0;
+    -webkit-animation: fondo 25s infinite linear;
+    animation: fondo 25s infinite linear;
+}
+@keyframes fondo{
+    0% {background-position: 1361px 0;}
+    100% {background-position: -1361px 0;}
+}
+@-webkit-keyframes fondo{
+    0% {background-position-x: -1361px;}
+    100% {background-position-x: 1361px;}
+}
+#cielo{
+    background-image: url('../img/banner/nubes.png');
+    background-repeat: no-repeat;
+}
+#mensaje{
+    background: url('../img/logo.png') no-repeat center;
+    background-size: 60px;
+    height: 100px;
+    line-height: 100px;
+    font-family: Vibes;
+    font-size: 40px;
+    font-size: 2.5em;
+    color:white;
+    text-align: center;
+    -webkit-animation: aparecer 7s infinite alternate;
+    animation: aparecer 7s infinite alternate;
+    overflow: hidden;
+}
+@keyframes aparecer{
+    0% {height: 0;}
+    60% {height: 0;}
+    100% {height: 100px;}
+}
+@-webkit-keyframes aparecer{
+    0% {height: 0;}
+    60% {height: 0;}
+    100% {height: 100px;}
+}
+Comun a todos los caballos
+.caballo{background-repeat: no-repeat;}
+Caballos
+#c1{
+    background-image: url('../img/banner/caballo-1.png');
+    -webkit-animation: mover 6s infinite linear;
+    animation: mover 6s infinite linear;
+}
+@keyframes mover{
+    0% {background-position: -50px 50px;}
+    100% {background-position: 600px 10px;}
+}
+@-webkit-keyframes mover{
+    0% {background-position: -50px 50px;}
+    100% {background-position: 600px 10px;}
+}
+#c2{
+    background-image: url('../img/banner/caballo-2.png');
+    background-position: -50px 10px;
+    -webkit-animation: mover-x 10s infinite linear;
+    animation: mover-x 10s 2s infinite linear;
+    animation-fill-mode: backwards;
+}
+#c3{
+    background-image: url('../img/banner/caballo-3.png');
+    -webkit-animation: mover-x 5s infinite linear reverse backwards;
+    animation: mover-x 5s infinite linear;
+    animation-direction: reverse;
+}
+@keyframes mover-x{
+    0% {background-position: -50px 0;}
+    100% {background-position: 600px 0;}
+}
+@-webkit-keyframes mover-x{
+    0% {background-position: -50px 0;}
+    100% {background-position: 600px 0;}
+}*/
+#error{
+    background: red;
+    color:white;
 }

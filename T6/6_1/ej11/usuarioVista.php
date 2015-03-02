@@ -56,12 +56,15 @@ function visualizarDatos($producto) {
     $enlace = "<a href='index.php'>Volver al formulario de búsqueda de datos</a>";
     if ($producto) {
         $mensaje = 'PRODUCTO ENCONTRADO';
-        $fila = '<b><tr>';
+        $fila = '<b>';
         foreach ($producto as $key => $valor) {
-            $fila.="<td>$key</td>";
+            $fila.="<th>$key</th>";
         }
-        $fila.='</tr></b>';
+        $fila.='</tr>';
         foreach ($producto as $key => $valor) {
+            if($key == 'precio'){
+                $valor = number_format($valor, 2);
+            }
             $fila.="<td>$valor</td>";
         }
         $datos = array(

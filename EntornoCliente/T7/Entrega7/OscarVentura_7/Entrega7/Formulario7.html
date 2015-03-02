@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<!--falta documentación de plantilla de incio-->
+<html>
+    <head>
+        <title>Entrega 7</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script>
+
+            function validar() { /* esta es la funcion que incluye todas */
+                xhr = new XMLHttpRequest();
+                if (xhr) {
+                    xhr.onreadystatechange = gestionarRespuesta;
+                    xhr.open("POST", "servidor7.php", true); /* enviamos por POST a servidor7.php */
+                    var parametros_json = "titulacion=" + crea_json(); /* decimos los parametros que vamos a enviar */
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    xhr.send(parametros_json);
+                }
+            }
+
+            function crea_json() { 
+
+                var JSONObject = new Object(); /* se crea el objeto JSON */
+                var titulacion = new Array();
+                var contador = 0;
+                var opciones = document.getElementById("titulacion").options;
+
+                for (var x = 0; x < opciones.length; x++) {
+                    if (opciones[x].selected === true) {
+                        titulacion[contador] = opciones[x].value;
+                        contador++;
+                    }
+                }
+                JSONObject.titulaciones = titulacion;
+                var objeto_json = JSON.stringify(JSONObject);
+                return objeto_json;
+            }
+
+            function gestionarRespuesta() { /* aqui procesamos la respuesta */
+
+                if (xhr.readyState === 4) { /* si ha recibido la respuesta del ervidor... */
+                    if (xhr.status === 200) { /* ... y esta es correcta, hace lo siguiente */
+                        
+                        //Se pueden obtener las especialidades directamente
+                        var respuesta = xhr.responseXML; /* cogemos el xml que nos devuelve el php */
+                        var respuesta = respuesta.getElementsByTagName('respuesta')[0];  /* cogemos el tag 'respuesta' del php */
+                        var titulacion = respuesta.getElementsByTagName('titulacion'); /* cogemos los tags 'titulacion' del php */
+                        var seleccion = document.getElementById('especialidades').options;
+                        var existe = false; /* iniciamos la variable a false */
+
+                        for (x = 0; x < titulacion.length; x++) { /*Recorremos las etiquetas de 'titulacion' */
+                            var especialidad = titulacion[x].getElementsByTagName('especialidad');/*Creamos la especialidad que se ha seleccionado*/
+
+                            for (y = 0; y < especialidad.length; y++) { /*Recorremos  especialidades*/
+                                //Laura: la gestión de repetidos es más eficiente hacerla al crear el JSON
+                                for (z = 0; z < seleccion.length; z++) { /*Recorremos las selecciones */
+
+                                    if (especialidad[y].firstChild.nodeValue === seleccion[z].value) { /*Comprobamos si ya existe, si existe no la añade*/
+                                        existe = true;
+                                    }
+                                }
+                                if (existe === false) { /* Si no esta, añade la nueva opción */
+                                    var opciones = new Option(especialidad[y].firstChild.nodeValue, especialidad[y].firstChild.nodeValue);
+                                    document.getElementById('especialidades').appendChild(opciones);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        </script>
+    </head>
+    <body> 
+    <center>
+
+        <form name="form_cv" method="post" action="">
+            <hr>
+            <table>
+                <tr>
+                    <td>
+                        Nombre*:   <input type="text" id="nombre"><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Apellidos*:   <input type="text" id="apellidos"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Fecha de Nacimiento*:   <input type="text" id="fecha"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Teléfono Móvil*:   <input type="text" id="telefono"><br>
+
+                    </td>
+                </tr>
+                <tr><td>
+                        <table>
+                            <tr>
+                                <td>Titulaciones<br>
+                                    <select id="titulacion" multiple>
+                                        <option value='1'>Técnico FP</option>
+                                        <option value='2'>Técnico Superior FP</option>
+                                        <option value='3'>Grado</option>
+                                    </select>
+                                </td><td>
+                                    <input type="button" id="b1" name="boton" value="get" onclick="validar()">
+                                </td><td>Especialidades<br>
+                                    <select size=4 id="especialidades" style="width:200px"></select>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+            </table>
+
+        </form>
+        <hr>
+    </center>
+</body>
+</html>

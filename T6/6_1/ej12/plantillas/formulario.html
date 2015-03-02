@@ -1,0 +1,23 @@
+{error}
+<form action = "" method = "post">
+    <label for="asignatura"{validacionasignatura}>Asignatura </label>
+    <input type="text" name="asignatura" id="asignatura" value="{asignatura}" size=50 maxlength=50>
+    <label for="curso">Curso</label>
+    <select name="curso" id="curso" size="1" >
+        <option {selected} value="ninguno"{curso ninguno}>Ninguno</option>
+        <option value="ESO1" {curso ESO1}>1º ESO</option>
+        <option value="ESO2"{curso ESO2>2º ESO</option>
+        <option value="todos"{curso todos}>Todos</option>
+    </select><br><br>
+    <label for="numeroregistros">Mostrar número de registros encontrados</label>
+    <input type="checkbox" name="numeroregistros" id="numeroregistros" value="S" {numeroregistros} > <br>
+    Mostrar:<br>
+    <label for="aprobados">Aprobados</label>
+    <input type="radio" name="nota" id="aprobados" value="aprobados" {checked} {nota aprobados}><br>
+           <label for="suspensos">Suspensos</label>
+    <input type="radio" name="nota" id="Suspensos" value="suspensos"{nota suspensos}><br>
+           <label for="todos">Todos</label>
+    <input type="radio" name="nota" id="todos" value="todos" {nota todos}><br>
+    <hr>
+    <input type="submit" value="Consultar" name="consultar">
+</form>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Entrega 7</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            //Laura: Bárbara no funciona nada ... Atiende a la solución en clase
+            var xhr = null; 
+            var titulaciones = document.getElementById("titulacion");
+            var especialidades = document.getElementById("especialidades");
+            function inicializa_xhr() {
+                if (window.XMLHttpRequest) {
+                    return new XMLHttpRequest();
+                }
+                else if (window.ActiveXObject) {
+                    return new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+           
+            function crea_json() {
+                var JSONObject = new Object();
+                JSONObject.titulaciones = titulaciones;
+                var objeto_json = JSON.stringify(JSONObject);
+                return objeto_json;
+
+            }
+            function validar() {
+                xhr = inicializa_xhr();
+                if (xhr) {
+                    xhr.onreadystatechange = gestionarRespuesta;
+                    xhr.open('POST', 'servidor7.php', true);
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    xhr.send("json=" + crea_json());
+                }
+            }
+
+            function gestionarRespuesta() {
+                document.getElementById("especialidades").disabled = false;
+                document.getElementById("especialidades").innerHTML = "";
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var xml = xhr.responseXML;
+                    var especialidades = xml.getElementsByTagName("especialidad");
+                    for (var i = 0; i < especialidades.length; i++) {
+                        document.getElementById("especialidades").innerHTML += "<option>" + especialidades[i].firstChild.nodeValue + "</option>";
+                    }
+
+                }
+
+            }
+        </script>
+    </head>
+    <body>
+    <center>
+
+        <form name="form_cv" method="post" action="servidor7.php">
+            <hr>
+            <table>
+                <tr>
+                    <td>
+                        Nombre*:   <input type="text" id="nombre"><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Apellidos*:   <input type="text" id="apellidos"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Fecha de Nacimiento*:   <input type="text" id="fecha"><br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Teléfono Móvil*:   <input type="text" id="telefono"><br>
+
+                    </td>
+                </tr>
+                <tr><td>
+                        <table>
+                            <tr>
+                                <td>Titulaciones<br>
+                                    <select id="titulacion" multiple>
+                                        <option value='1'>Técnico FP</option>
+                                        <option value='2'>Técnico Superior FP</option>
+                                        <option value='3'>Grado</option>
+                                    </select>
+                                </td><td>
+                                    <input type="button" id="b1" name="boton" value="get" onclick="validar();">
+                                </td><td>Especialidades<br>
+                                    <select size=4 id="especialidades" style="width:200px"></select>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+            </table>
+
+        </form>
+        <hr>
+    </center>
+</body>
+</html>
