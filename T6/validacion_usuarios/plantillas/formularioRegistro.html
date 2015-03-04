@@ -1,0 +1,19 @@
+{error}
+<h2>Registro de usuario</h2>
+<form action = "index.php" method = "post">
+    <div style="width: 30em;">
+        <label for="usuario"{validacionUsuario}>Usuario</label>
+        <input type="text" name="usuario" id="usuario" value="{usuario}" size=15 maxlength=15><br>
+        <label for="clave"{validacionClave}>Password</label>
+        <input type="password" name="clave" id="clave" value="{clave}" ><br>
+        <label for="nombre"{validacionNombre}>Nombre:</label>
+        <input type="text" name="nombre" id="nombre" value="{nombre}" size=30 maxlength=30><br>
+        <label for="apellidos"{validacionApellidos}>Apellidos:</label>
+        <input type="text" name="apellidos" id="apellidos" value="{apellidos}" size=60 maxlength=60 ><br>
+        <label for="email"{validacionEmail}>Email:</label>
+        <input type="text" name="email" id="email" value="{email}" size=40 maxlength=40 ><br>
+        <div style="clear: both;">
+            <input type="submit" value="Registrar" name="registrar">
+        </div>
+    </div>
+</form>
