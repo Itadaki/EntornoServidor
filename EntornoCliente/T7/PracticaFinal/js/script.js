@@ -73,8 +73,7 @@ function procesaRespuesta() {
             } else {
                 destinos.disabled = true;
             }
-            var documento_xml = peticion_http.responseXML;
-            var root = documento_xml.getElementsByTagName("destinos")[0];
+            var root = peticion_http.responseXML.getElementsByTagName("destinos")[0];
             var ciudades = root.getElementsByTagName("ciudad");
             if (ciudades.length > 0) {
                 for (var i = 0; i < ciudades.length; i++) {
@@ -101,10 +100,11 @@ function validar() {
     validarMail();
     if (!error && document.getElementById('origen').value !== ''
             && document.getElementById('destino').value !== '') {
-//        return true;
-console.log(true);
+        console.log(true);
+        return true;
     }
     document.getElementById('error').innerHTML = error;
+    document.getElementById('error').className = 'open';
     return false;
 }
 
@@ -112,7 +112,7 @@ function validarNombre(nombre) {
     if (/^[a-zA-ZáéíóúÁÉÍÓÚ]+[- a-zA-ZáéíóúÁÉÍÓÚ]*$/.test(nombre)) {
         return true;
     }
-    error += '<p>El <b>nombre</b> o los <b>apellidos</b> que ha introducido es invalido</p>';
+    error += '<li>El <span>nombre</span> o los <span>apellidos</span> que ha introducido es invalido</li>';
     return false;
 }
 
@@ -121,12 +121,9 @@ function validarDni() {
     var letras = ['T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F',
         'P', 'D', 'X', 'B', 'N', 'J', 'Z', 'S', 'Q', 'V',
         'H', 'L', 'C', 'K', 'E', 'T'];
-    if (!(/^\d{8}[A-Z]$/.test(valor))) {
-        error += '<p>El <b>DNI</b> que ha introducido es invalido</p>';
-        return false;
-    }
-    if (valor.charAt(8) !== letras[(valor.substring(0, 8)) % 23]) {
-        error += '<p>El <b>DNI</b> que ha introducido es invalido</p>';
+    if (!(/^\d{8}[A-Z]$/.test(valor)) 
+            ||valor.charAt(8) !== letras[(valor.substring(0, 8)) % 23]) {
+        error += '<li>El <span>DNI</span> que ha introducido es invalido</li>';
         return false;
     }
     return true;
@@ -135,7 +132,7 @@ function validarDni() {
 function validarTelefono() {
     var telefono = document.getElementById("telefono").value;
     if (!(/^[6,9]\d{8}$/.test(telefono))) {
-        error += '<p>El <b>telefono</b> que ha introducido es invalido</p>';
+        error += '<li>El <span>telefono</span> que ha introducido es invalido</li>';
         return false;
     }
     return true;
@@ -147,7 +144,7 @@ function validarMail() {
     if (expresion.test(valor)) {
         return true;
     }
-    error += '<p>El <b>email</b> que ha introducido es invalido</p>';
+    error += '<li>El <span>email</span> que ha introducido es invalido</li>';
     return false;
 }
 

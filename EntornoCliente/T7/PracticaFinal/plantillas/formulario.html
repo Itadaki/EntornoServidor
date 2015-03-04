@@ -1,10 +1,8 @@
 <h2>Introduce tus datos</h2>
 {error}
-<form method="POST" action="" onchange="habilitarEnvio()" onsubmit="return validar()">
+<div id="error" class="close"></div>
+<form id="formulario" method="POST" action="" onchange="habilitarEnvio()" onsubmit="return validar()">
     <table id="tabla_formulario">
-        <tr>
-            <td colspan="2" id="error"></td>
-        </tr>
         <tr>
             <td><label for="nombre" {validacionNombre}>Nombre</label></td>
             <td><input type="text" name="nombre" id="nombre" value="{nombre}" placeholder="p. ej. Diego"/></td>
@@ -34,6 +32,7 @@
             <td>
                 <select name="origen" id="origen" onchange="pedirCiudades()" >
                     {optionsOrigen}
+                </select>
             </td>
         </tr>
         <tr>
@@ -45,7 +44,12 @@
             </td>
         </tr>
         <tr>
-            <td colspan="2"><input type="submit" value="Enviar" name="enviar" id="enviar" disabled/></td>
+            <td>
+                <input type="submit" value="Enviar" name="enviar" id="enviar" disabled/>
+            </td>
+            <td>
+                <input type="reset" value="Borrar" onmouseup="setTimeout(function(){pedirCiudades();habilitarEnvio();},100)" />
+            </td>
         </tr>
     </table>
 </form>

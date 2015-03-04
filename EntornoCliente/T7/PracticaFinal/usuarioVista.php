@@ -135,7 +135,7 @@ function generarOrigen() {
 function verReferencias(){
     $query = "select referencia,dni,origen,destino FROM billetes.referencias";
     $resultado = select($query);
-    $tabla = '<table class="salida"><tr><th>referencia</th><th>dni</th><th>origen</th><th>destino</th></tr>';
+    $tabla = '<style>td{padding:5px;text-align:center;}</style><table class="salida"><tr><th>referencia</th><th>dni</th><th>origen</th><th>destino</th></tr>';
     while ($campos = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
         $tabla .= "<tr><td>{$campos['referencia']}</td><td>{$campos['dni']}</td><td>{$campos['origen']}</td><td>{$campos['destino']}</td></tr>";
     }
@@ -155,7 +155,7 @@ function verReferencias(){
 function verPersonas(){
     $query = "select dni,nombre FROM billetes.personas";
     $resultado = select($query);
-    $tabla = '<table class="salida"><tr><th>dni</th><th>nombre</th></tr>';
+    $tabla = '<style>td{padding:5px;text-align:center;}</style><table class="salida"><tr><th>dni</th><th>nombre</th></tr>';
     while ($campos = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
         $tabla .= "<tr><td>{$campos['dni']}</td><td>{$campos['nombre']}</td></tr>";
     }

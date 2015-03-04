@@ -76,7 +76,7 @@ a:visited{ color: #304a39; }
 header.main{
     position: relative;
     height: 200px;
-    background: #d7e8f1 url('../img/header3.jpg');
+    /*background: #d7e8f1 url('../img/header3.jpg');*/
     background-color: #d7e8f1;
     color: #f4f8f9;
 }
@@ -291,6 +291,96 @@ Caballos
     100% {background-position: 600px 0;}
 }*/
 #error{
-    background: red;
-    color:white;
+    color: red;
+    /*color:white;*/
+    /*padding: 5px;*/
+
+    overflow: hidden;
+    transition: max-height 2s ease-in-out;
+}
+#error.open{ max-height: 500px; }
+#error.close{max-height: 0;}
+#error span{font-weight: bold;text-decoration: underline;}
+#error li{margin: 5px 15px;}
+
+#tabla_formulario{
+    width: 400px;
+    padding: 5px;
+
+}
+#tabla_formulario td{
+    padding: 5px;
+}
+#tabla_formulario input[type='text']{
+    border: 1px solid #AAA;
+    color: #555;
+    border-radius: 10px;
+    padding: 5px;
+    font-family: OpenSans;
+    width: 190px;
+}
+select#origen, select#destino {
+    -webkit-appearance: button;
+    -webkit-border-radius: 2px;
+    -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    -webkit-padding-end: 20px;
+    -webkit-padding-start: 2px;
+    -webkit-user-select: none;
+    border-radius: 10px;
+    background-image: url(http://i62.tinypic.com/15xvbd5.png);
+    background-position: 95% center;
+    background-repeat: no-repeat;
+    border: 1px solid #AAA;
+    color: #555;
+    /*font-size: OpenSans;*/
+    /*margin: 20px;*/
+    overflow: hidden;
+    padding: 5px 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 200px;
+}
+
+select[disabled] {
+    color: #969696 !important;
+    background-image: url(http://i62.tinypic.com/15xvbd5.png), -webkit-linear-gradient(#779126, #779126 40%, #779126);
+    background-color: gainsboro;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    padding-left: 15px;
+}
+
+#tabla_formulario input[type='submit'],#tabla_formulario input[type='reset']{
+    margin: 0px auto 2px auto;
+    border: 1px solid #AAA;
+    color: #555;
+    border-radius: 10px;
+    padding: 5px;
+    font-family: OpenSans;
+    width: 100px;
+    background-color: white;
+    box-shadow: 0px 2px 0px rgba(0,0,0,.2);
+    margin-left:auto;
+      
+    margin-right:auto;
+}
+#tabla_formulario input[type='submit']:active, #tabla_formulario input[type='reset']:active{
+    border: 1px solid #AAA;
+    color: #555;
+    border-radius: 10px;
+    padding: 5px;
+    font-family: OpenSans;
+    width: 100px;
+    background-color: white;
+    box-shadow: 0px 0px 0px rgba(0,0,0,.2);
+     margin: 2px auto 0px auto;
+}
+#tabla_formulario input:focus,#tabla_formulario select:focus {outline:0;}
+#tabla_formulario input[disabled]{
+    color: #969696 !important;
+    background-color: gainsboro;
+}
+#tabla_formulario tr:last-child{
+    /*text-align: center;*/
 }
