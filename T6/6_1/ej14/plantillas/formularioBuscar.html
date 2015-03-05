@@ -1,0 +1,13 @@
+<hr>
+<center><b>Buscar coche: para modificarlo o borrarlo</b></center>
+<hr>
+{error2}
+{mensaje}
+<form action = "index.php" method = "post">
+    <label for="marca" {validacionmarca} >Marca*:</label>
+    <input type="text" name="marca" id="marca" value="{marca}" size=15 maxlength=15><br>
+    <label for="modelo"{validacionmodelo} >Modelo*:</label>
+    <input type="text" name="modelo" id="modelo" value="{modelo}" ><br>
+    <input type="submit" value="Buscar" name="buscar">
+</form>
+<br><a href='index.php'>Volver al menú principal</a>

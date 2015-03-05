@@ -343,7 +343,7 @@ select#origen, select#destino {
 
 select[disabled] {
     color: #969696 !important;
-    background-image: url(http://i62.tinypic.com/15xvbd5.png), -webkit-linear-gradient(#779126, #779126 40%, #779126);
+    background-image: url(../img/arrow.png), -webkit-linear-gradient(#779126, #779126 40%, #779126);
     background-color: gainsboro;
     -webkit-border-radius: 20px;
     -moz-border-radius: 20px;

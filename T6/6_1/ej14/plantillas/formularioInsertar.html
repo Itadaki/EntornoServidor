@@ -1,0 +1,18 @@
+<hr>
+<center><b>Insertar Coche Nuevo</b></center>
+<hr>
+{error1}
+{error2}
+{error3}
+{error3}
+{mensaje}
+<form action = "index.php" method = "post"enctype="multipart/form-data" >
+    <label for="marca"{validacionmarca}>Marca*:</label>
+    <input type="text" name="marca" id="marca" value="{marca}" size=15 maxlength=15><br>
+    <label for="modelo"{validacionmodelo}>Modelo*:</label>
+    <input type="text" name="modelo" id="modelo" value="{modelo}" ><br>
+    <label for="foto"{validacionfoto}> Foto:</label>
+    <input type="file" name="foto" id="foto" value=""><br><br>
+    <input type="submit" value="Guardar" name="guardar_coche">
+</form>
+<br><a href='index.php'>Volver al menú principal</a>
