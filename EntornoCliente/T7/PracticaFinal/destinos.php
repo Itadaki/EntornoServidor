@@ -24,30 +24,44 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once("MySQL.php");
-require_once("SQL.php");
+
 require_once("constantes.php");
 
+function conexion() {
+    global $mensajeAbrirConexion;
+    $conexion = @mysqli_connect(SERVIDOR, USUARIO, PASSWORD);
+    $errorNo = mysqli_connect_errno();
+    $errorMsg = mysqli_connect_error();
+    if ($errorNo == 0) {
+        $mensajeAbrirConexion = "<h2>Conexión establecida con el servidor</h2>";
+    } else {
+        $mensajeAbrirConexion = "<h2>No se ha podido establecer la conexión con el servidor. Se ha producido un error nº $errorNo que corresponde a: $errorMsg</h2>";
+    }
+    return $conexion;
+}
+
+function cerrarConexion() {
+    global $conexion, $mensajeCerrarConexion;
+    $operacion = true;
+    if (@mysqli_close($conexion)) {
+        $mensajeCerrarConexion = "<h2> Conexión cerrada con exito</h2>";
+    } else {
+        $mensajeCerrarConexion = "<h2> No se ha podido cerrar la conexión</h2>";
+    }
+}
+
 function generarDestino($id_origen) {
-    $conexion = conexion();
-    $consulta = mysqli_stmt_init($conexion);
-    mysqli_stmt_prepare($consulta, "select destino FROM billetes.viajes where origen=$id_origen");
-    mysqli_stmt_execute($consulta);
-    mysqli_stmt_bind_result($consulta, $destino);
-    $arrDestinos = array();
-    while (mysqli_stmt_fetch($consulta)) {
-        $arrDestinos[] = $destino;
+    global $conexion;
+    $query = "select id,nombre FROM billetes.ciudades where id in (select destino FROM billetes.viajes where origen='$id_origen') order by id desc";
+    $resultado = @mysqli_query($conexion, $query);
+    $errorNo = mysqli_errno($conexion);
+    $errorMsg = mysqli_error($conexion);
+    $ciudades = array();
+    while ($campos = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+        $ciudades[] = array($campos['id'] => $campos['nombre']);
     }
-    $destinos = implode(',', $arrDestinos);
-    mysqli_stmt_prepare($consulta, "select id,nombre FROM billetes.ciudades where id in ($destinos)");
-    mysqli_stmt_execute($consulta);
-    mysqli_stmt_bind_result($consulta, $idDestino, $nombreDestino);
-    $destinos = array();
-    while (mysqli_stmt_fetch($consulta)) {
-        $destinos[$idDestino] = $nombreDestino;
-    }
-    cerrarConsulta($consulta);
-    return $destinos;
+    cerrarConexion();
+    return $ciudades;
 }
 
 /*
@@ -63,20 +77,24 @@ function generarDestino($id_origen) {
  * </destinos>
  */
 header('Content-Type: text/xml');
-if (isset($_GET['origen'])) {
-    $origen = $_GET['origen'];
-    $destinos = generarDestino($origen);
-
-    //Generar contenidos XML de respuesta
-    $xml = '<destinos>';
-
-    foreach ($destinos as $id => $nombre) {
-        $xml .= "<ciudad><id>$id</id><nombre>$nombre</nombre></ciudad>";
+//Generar contenidos XML de respuesta
+$xml = new DOMDocument('1.0', 'utf-8');
+$root = $xml->createElement('destinos');
+if (isset($_POST['origen']) && $conexion = conexion()) {
+    $destinos = generarDestino($_POST['origen']);
+    cerrarConexion();
+    foreach ($destinos as $destino) {
+        foreach ($destino as $id => $nombre) {
+            $ciudad = $xml->createElement('ciudad');
+            $tagID = $xml->createElement('id', $id);
+            $tagNombre = $xml->createElement('nombre', $nombre);
+            $ciudad->appendChild($tagID);
+            $ciudad->appendChild($tagNombre);
+            $root->appendChild($ciudad);
+        }
     }
-    $xml.='</destinos>';
-    echo $xml;
-} else {
-    echo'<destinos/>';
 }
+$xml->appendChild($root);
+echo $xml->saveXML();
 
 

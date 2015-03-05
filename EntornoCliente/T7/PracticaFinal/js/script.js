@@ -41,7 +41,7 @@ function pedirCiudades() {
     peticion_http = inicializa_xhr();
     if (peticion_http) {
         peticion_http.onreadystatechange = procesaRespuesta;
-        peticion_http.open("POST", "./destinos2.php", true);
+        peticion_http.open("POST", "./destinos.php", true);
         var query = "origen=" + origen.value + "&nocache=" + Math.random();
         peticion_http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         peticion_http.send(query);
