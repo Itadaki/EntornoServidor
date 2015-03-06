@@ -3,7 +3,7 @@
  * Fecha = 24-feb-2015
  * Licencia = gpl30
  * Version = 1.0
- * Descripcion = 
+ * Descripcion = Contiene funciones para la compra de billetes
  */
 
 /* 
@@ -35,7 +35,9 @@ function inicializa_xhr() {
         return new ActiveXObject("Microsoft.XMLHTTP");
     }
 }
-
+/**
+ * @description Realiza la peticion ajax para rellenar el select destino
+ */
 function pedirCiudades() {
     var origen = document.getElementById('origen');
     peticion_http = inicializa_xhr();
@@ -49,7 +51,7 @@ function pedirCiudades() {
 }
 
 /*
- Respuesta del servidor
+ * Respuesta del servidor
  * <destinos>
  *   <ciudad>
  *     <id>#</id>
@@ -60,6 +62,9 @@ function pedirCiudades() {
  *     <nombre>""</nombre>
  *   </ciudad>
  * </destinos>
+ */
+/**
+ * @description Procesa la respuesta AJAX e inserta en el select destino
  */
 function procesaRespuesta() {
     if (peticion_http.readyState === READY_STATE_COMPLETE) {
@@ -81,14 +86,18 @@ function procesaRespuesta() {
                     var option = document.createElement("option");
                     option.value = ciudad.firstChild.firstChild.nodeValue;
                     option.text = ciudad.lastChild.firstChild.nodeValue;
-                    console.log(option);
                     destinos.options.add(option, 1);
                 }
             }
         }
     }
 }
+
 var error = '';
+/**
+ * @description Permite o no el envio del formulario
+ * @returns {Boolean}
+ */
 function validar() {
     error = '';
     var nombre = document.getElementById('nombre').value;
@@ -100,22 +109,28 @@ function validar() {
     validarMail();
     if (!error && document.getElementById('origen').value !== ''
             && document.getElementById('destino').value !== '') {
-        console.log(true);
         return true;
     }
     document.getElementById('error').innerHTML = error;
     document.getElementById('error').className = 'open';
     return false;
 }
-
+/**
+ * @description Valida un nombre
+ * @param {type} nombre
+ * @returns {Boolean}
+ */
 function validarNombre(nombre) {
-    if (/^[a-zA-ZáéíóúÁÉÍÓÚ]+[- a-zA-ZáéíóúÁÉÍÓÚ]*$/.test(nombre)) {
+    if (/^[a-zA-ZáéíóúÁÉÍÓÚ]+$/.test(nombre)) {
         return true;
     }
-    error += '<li>El <span>nombre</span> o los <span>apellidos</span> que ha introducido es invalido</li>';
+    error += '<li>El <span>nombre</span> o los <span>apellidos</span> que ha introducido es inválido</li>';
     return false;
 }
-
+/**
+ * @description Valida tamaño y letra del DNI
+ * @returns {Boolean}
+ */
 function validarDni() {
     var valor = document.getElementById("dni").value.toUpperCase();
     var letras = ['T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F',
@@ -123,31 +138,39 @@ function validarDni() {
         'H', 'L', 'C', 'K', 'E', 'T'];
     if (!(/^\d{8}[A-Z]$/.test(valor)) 
             ||valor.charAt(8) !== letras[(valor.substring(0, 8)) % 23]) {
-        error += '<li>El <span>DNI</span> que ha introducido es invalido</li>';
+        error += '<li>El <span>DNI</span> que ha introducido es inválido</li>';
         return false;
     }
     return true;
 }
-
+/**
+ * @description Valida un telefono fijo o movil
+ * @returns {Boolean}
+ */
 function validarTelefono() {
     var telefono = document.getElementById("telefono").value;
     if (!(/^[6,9]\d{8}$/.test(telefono))) {
-        error += '<li>El <span>telefono</span> que ha introducido es invalido</li>';
+        error += '<li>El <span>teléfono</span> que ha introducido es inválido</li>';
         return false;
     }
     return true;
 }
-
+/**
+ * @description Valida la forma de un email
+ * @returns {Boolean}
+ */
 function validarMail() {
     var valor = document.getElementById("email").value;
     var expresion = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     if (expresion.test(valor)) {
         return true;
     }
-    error += '<li>El <span>email</span> que ha introducido es invalido</li>';
+    error += '<li>El <span>email</span> que ha introducido es inválido</li>';
     return false;
 }
-
+/**
+ * @description Habilita el boton de envio
+ */
 function habilitarEnvio() {
     var habilitado = true;
     var inputs = document.getElementsByTagName('input');
@@ -157,6 +180,7 @@ function habilitarEnvio() {
     for (var i = 0; i < inputs.length && habilitado; i++) {
         if (!inputs[i].value) {
             habilitado = false;
+            break;
         }
     }
     document.getElementById('enviar').disabled = !habilitado;

@@ -1,5 +1,5 @@
 /*
-Autor = Alejandro Montoya - Cristian Casta?o - Diego Rodr?guez
+Autor = Diego Rodríguez
 Fecha = 10-dic-2014
 Licencia = gpl30
 Version = 2.0
@@ -381,6 +381,8 @@ select[disabled] {
     color: #969696 !important;
     background-color: gainsboro;
 }
-#tabla_formulario tr:last-child{
-    /*text-align: center;*/
+
+.error_back2{
+    color:white;
+    background:red;
 }

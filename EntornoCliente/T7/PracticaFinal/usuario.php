@@ -17,13 +17,13 @@ function procesForm() {
             $camposPendientes[] = $campoObligatorio;
         }
     }
-    if (isset($_POST["nombre"]) && !empty($_POST["nombre"]) && !preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚ][a-zA-ZáéíóúÁÉÍÓÚ ]+$/", $_POST["nombre"])) {
+    if (isset($_POST["nombre"]) && !empty($_POST["nombre"]) && !preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚ ]+$/", $_POST["nombre"])) {
         $camposErroneos[] = "nombre";
     }
-    if (isset($_POST["ap1"]) && !empty($_POST["ap1"]) && !preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚ][-a-zA-ZáéíóúÁÉÍÓÚ ]+$/", $_POST["ap1"])) {
+    if (isset($_POST["ap1"]) && !empty($_POST["ap1"]) && !preg_match("/^[-a-zA-ZáéíóúÁÉÍÓÚ ]+$/", $_POST["ap1"])) {
         $camposErroneos[] = "ap1";
     }
-    if (isset($_POST["ap2"]) && !empty($_POST["ap2"]) && !preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚ][-a-zA-ZáéíóúÁÉÍÓÚ ]+$/", $_POST["ap2"])) {
+    if (isset($_POST["ap2"]) && !empty($_POST["ap2"]) && !preg_match("/^[-a-zA-ZáéíóúÁÉÍÓÚ ]+$/", $_POST["ap2"])) {
         $camposErroneos[] = "ap2";
     }
     if (isset($_POST["dni"]) && !empty($_POST["dni"]) && !preg_match("/^[0-9]{7,8}[a-zA-Z]$/", $_POST["dni"])) {
@@ -40,13 +40,6 @@ function procesForm() {
     }
     if (isset($_POST["destino"]) && !empty($_POST["destino"]) && !preg_match("/^\d{1,2}$/", $_POST["destino"])) {
         $camposErroneos[] = "destino";
-    }
-
-    foreach ($camposPendientes as $value) {
-        echo "Pendiente: $value<br>";
-    }
-    foreach ($camposErroneos as $value) {
-        echo "Error en $value<br>";
     }
     //ACCIONES A TOMAR
     //Algo mal

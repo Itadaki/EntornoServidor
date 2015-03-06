@@ -58,19 +58,25 @@ function visualizarDatos() {
 }
 
 function displayForm($camposErroneos, $camposPendientes) {
-    $error = '';
+    $error='';
     if ($camposPendientes and $camposErroneos) {
-        $error = '<p class="error_back2">Hubo algunos problemas con el formulario que usted presentó.
+        $error .= '<p class="error_back2">Hubo algunos problemas con el formulario que usted presentó.
 Por favor, introduzca valores adecuados en los campos.</p>';
     } elseif ($camposPendientes) {
-        $error = '<p class="error_back">Hubo algunos problemas con el formulario que usted presentó.
+        $error .= '<p class="error_back">Hubo algunos problemas con el formulario que usted presentó.
 Por favor, complete los campos en negrita de abajo y haga clic en Enviar
 para volver a enviar el formulario.</p>';
     } elseif ($camposErroneos) {
-        $error = '<p class="error_back2">Hubo algunos problemas con el formulario que usted presentó.
+        $error .= '<p class="error_back2">Hubo algunos problemas con el formulario que usted presentó.
 Por favor, introduzca valores adecuados en los campos .</p>';
     } else {
         $error .= '<p>Por favor, rellene sus datos a continuación y haga clic en Enviar.</p>';
+    }
+     foreach ($camposPendientes as $value) {
+        $error .= "<p class='error_back2'>Falta el campo $value</p>";
+    }
+    foreach ($camposErroneos as $value) {
+        $error .= "<p class='error_back2'>Error en el campo $value</p>";
     }
     $datos = array(
         "error" => $error,

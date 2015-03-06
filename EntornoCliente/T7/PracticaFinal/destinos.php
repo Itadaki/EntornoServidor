@@ -5,7 +5,7 @@
  * Fecha = 23-feb-2015
  * Licencia = gpl30 
  * Version = 1.0
- * Descripcion = 
+ * Descripcion = Contiene funciones para generar respuesta ajax xml
  */
 
 /*
@@ -49,7 +49,12 @@ function cerrarConexion() {
         $mensajeCerrarConexion = "<h2> No se ha podido cerrar la conexión</h2>";
     }
 }
-
+/**
+ * @description Genera un array con los destinos
+ * @global mysqli_connect $conexion
+ * @param int $id_origen
+ * @return array
+ */
 function generarDestino($id_origen) {
     global $conexion;
     $query = "select id,nombre FROM billetes.ciudades where id in (select destino FROM billetes.viajes where origen='$id_origen') order by id desc";
