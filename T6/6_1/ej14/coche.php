@@ -1,5 +1,5 @@
 <?php
-###DADA###
+
 function procesForm($operacion) {
     global $mensaje;
     global $enlace;
@@ -40,7 +40,7 @@ function procesForm($operacion) {
      */
     if (isset($_FILES['foto']) && ! $_FILES['foto']['name'] && $operacion == "insercion") {
         $camposPendientes[] = "foto";
-        $message = 'vacio';
+        $message = 'No has elegido ninguna foto';
     } elseif (isset($_FILES['foto']) && $_FILES['foto']['name'] != '') {
         foreach ($fotos as $valor) {
             if (isset($_FILES["$valor"]) && $_FILES["$valor"]["error"] == UPLOAD_ERR_OK) {
@@ -146,7 +146,7 @@ function procesForm($operacion) {
         }
     }
 }
-###DADA###
+
 function obtener($valores_campos, $tabla) {
     global $campos;
     global $mensaje;
@@ -159,7 +159,7 @@ function obtener($valores_campos, $tabla) {
         return $resultado;
     }
 }
-###DADA###
+
 function guardar($valores_campos, $tabla) {
     global $campos;
     global $mensaje;
@@ -172,7 +172,7 @@ function guardar($valores_campos, $tabla) {
         return $resultado;
     }
 }
-###DADA###
+
 function eliminar($valores_campos, $tabla) {
     global $campos;
     global $mensaje;
@@ -185,7 +185,7 @@ function eliminar($valores_campos, $tabla) {
         return $resultado;
     }
 }
-###DADA###
+
 function modificar($valores_campos, $tabla) {
     global $campos;
     global $mensaje;
@@ -197,7 +197,7 @@ function modificar($valores_campos, $tabla) {
         return $resultado;
     }
 }
-###DADA###
+
 function cambiar($valores_campos, $tabla) {
     global $tipos;
     $tipos = '';
@@ -222,7 +222,7 @@ function cambiar($valores_campos, $tabla) {
     if (ejecutar($sql_modificar, $valores_campos, $tabla))
         return true;
 }
-###DADA###
+
 function insertar($valores_campos, $tabla) {
     global $tipos;
     $tipos = '';
@@ -238,7 +238,7 @@ function insertar($valores_campos, $tabla) {
     if (ejecutar($sql_insertar, $valores_campos, $tabla))
         return true;
 }
-###DADA###
+
 function borrar($valores_campos, $tabla) {
     global $tipos;
     $tipos = '';
@@ -256,7 +256,7 @@ function borrar($valores_campos, $tabla) {
     if (ejecutar($sql_eliminar, $valores_campos, $tabla))
         return true;
 }
-###DADA###
+
 function load($valores_campos, $tabla) {
     global $tipos;
     $tipos = '';

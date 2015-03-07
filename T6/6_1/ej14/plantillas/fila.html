@@ -1,14 +1,18 @@
-<table>
-    <tr><td align='left' valign='baseline'>
-            <b>Id:</b> {id} <b>Marca:</b> {marca} <b>Modelo:</b> {modelo}
-        </td><td align='left' valign='baseline'>
-            <form action='index.php' method=post>
-                <input type=hidden name='id' value='{id}'>
-                <input type=hidden name='marca' value='{marca}'>
-                <input type=hidden name='modelo' value='{modelo}'>
-                <input type=hidden name='foto' value='{foto}'>
-                <input type=submit name='editar' value='Editar'>
-                <input type=submit name='eliminar' value='Eliminar'></td></tr><tr><td>
-                        <img src='fotos/{foto}'>
-                    </td></tr></form>
-</table>
+<tr>
+    <td>
+        <img src='fotos/{foto}'>
+    </td>
+    <td>{id}</td>
+    <td>{marca}</td>
+    <td>{modelo}</td>
+    <td>
+        <form action='index.php' method=post>
+            <input type=hidden name='id' value='{id}'>
+            <input type=hidden name='marca' value='{marca}'>
+            <input type=hidden name='modelo' value='{modelo}'>
+            <input type=hidden name='foto' value='{foto}'>
+            <input type=submit name='editar' value='Editar'>
+            <input type=submit name='eliminar' value='Eliminar'>
+        </form>
+    </td>
+</tr>

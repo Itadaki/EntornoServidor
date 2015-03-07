@@ -1,20 +1,15 @@
-<hr>
-<center><b>Modificar Coche</b></center>
-<hr>
-{error1}
-{error2}
-{error3}
-{error3}
+<h2>Modificar Coche</h2>
+{error}
 {mensaje}
 <form action = "index.php" method = "post" enctype="multipart/form-data">
-    <input type='hidden' name='id' value="{id}">
-    <label for="marca"{validacionmarca}>Marca*:</label>
-    <input type="text" name="marca" id="marca" value="{marca}" size=15 maxlength=15><br>
-    <label for="modelo"{validacionmodelo}>Modelo*:</label>
+    <label for="marca"{validacionMarca}>Marca*:</label>
+    <input type="text" name="marca" id="marca" value="{marca}"><br>
+    <label for="modelo"{validacionModelo}>Modelo*:</label>
     <input type="text" name="modelo" id="modelo" value="{modelo}" ><br>
-    <img src='fotos/{foto}'>
-    <label for="foto"{validacionfoto}> Foto:</label>
-    <input type="file" name="foto" id="foto" value=""><br><br>
+    <label for="foto"{validacionFoto}>Foto:</label>
+    <input type="file" name="foto" id="foto" value=""><br>
+    <img src='fotos/{foto}'><br>
+    <input type='hidden' name='id' value="{id}">
     <input type="submit" value="Guardar" name="guardar_modificacion">
 </form>
 <br><a href='index.php'>Volver al menú principal</a>
